@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   class stock extends Model {
     /**
      * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
+     * This method is not a part of DataTypes lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
@@ -27,26 +27,41 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      stock: {
-        type: DataTypes.STRING,
+      tahanan_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true,
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      price_buy: {
+      NIK: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      price_sell: {
+      jenisKelamin: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      alamat: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      pengikut: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       img: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      waktuKunjungan: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
       },
     },
     {

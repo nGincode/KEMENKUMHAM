@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 
-const ImgUpload = ({ name, src, id, empty }: any) => {
+const ImgUpload = ({ name, src, id, empty, label }: any) => {
     const [profileImg, setprofileImg] = useState<any>();
     const [srcDelete, setsrcDelete] = useState(false);
 
@@ -27,6 +27,7 @@ const ImgUpload = ({ name, src, id, empty }: any) => {
     return (
         <>
             <div className="mb-3 col-md-12">
+                <div className="text-center font-bold -mb-3">{label}</div>
                 <div className="form-group">
                     <div
                         style={{

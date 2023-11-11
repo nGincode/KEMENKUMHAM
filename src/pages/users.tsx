@@ -8,6 +8,7 @@ import Link from "next/link";
 import Select from "../components/reactSelect";
 import ReactTable from "../components/reactTable";
 import DebouncedInput from "../components/debouncedInput"
+import ImgUpload from "@/components/imgUpload";
 
 export default function Users({ userData, setuserData }: any) {
     const [pagePermission, setpagePermission] = useState([]);
@@ -54,20 +55,47 @@ export default function Users({ userData, setuserData }: any) {
         }
     }
 
-    const submitUsers = (event: any) => {
+    const submitUsers = async (event: any) => {
         event.preventDefault();
         if (event.target.password.value !== event.target.confirm_password.value) {
-            toast.error("Password not match");
+            toast.error("Password tidak sama");
             return;
         }
 
         if (event.target.password.value < 8 || event.target.confirm_password.value < 8) {
-            toast.error("Password min 8 char");
+            toast.error("Password min 8 karakter");
             return;
+        }
+
+
+
+        const convertFileToBase64 = (file: any) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+            });
+        }
+        let img = null;
+        let files = event.target.file.files?.[0];
+        if (files) {
+            let extension = files.type;
+            let size = files.size;
+            if (extension === 'image/jpeg' || extension === 'image/png') {
+                if (size > 1000000) {
+                    return toast.error("Size img only < 1000kb");
+                } else {
+                    img = await convertFileToBase64(files);
+                }
+            } else {
+                return toast.error("Extension img not valid, only jpeg/png");
+            }
         }
 
         let data = {
             username: event.target.username.value,
+            NIP: event.target.NIP.value,
             email: event.target.email.value,
             fullName: event.target.fullName.value,
             phone: event.target.phone.value,
@@ -76,6 +104,7 @@ export default function Users({ userData, setuserData }: any) {
             role: event.target.role_val.value,
             password: event.target.password.value,
             confirm_password: event.target.confirm_password.value,
+            img: img
         };
         handleApi('create_user', data);
 
@@ -149,14 +178,14 @@ export default function Users({ userData, setuserData }: any) {
 
                         {pagePermission.find((val: any) => val == "create") ?
                             <div className="col hp-flex-none w-auto">
-                                <Button type="button" className="w-100 px-5" variant="gradient" color="orange" data-bs-toggle="modal" data-bs-target="#addNewUser"><i className="ri-add-line remix-icon"></i> Add Users</Button>
+                                <Button type="button" className="w-100 px-5" variant="gradient" color="orange" data-bs-toggle="modal" data-bs-target="#addNewUser"><i className="ri-add-line remix-icon"></i> Tambah Users</Button>
                             </div>
                             : null}
                         <div className="modal fade -mt-2" id="addNewUser" tabIndex={-1} aria-labelledby="addNewUserLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
                             <div className="modal-dialog modal-dialog-centered">
                                 <div className="modal-content">
                                     <div className="modal-header py-16 px-24">
-                                        <h5 className="modal-title font-bold" id="addNewUserLabel">Add Users</h5>
+                                        <h5 className="modal-title font-bold" id="addNewUserLabel">Tambah Users</h5>
                                         <button type="button" className="btn-close hp-bg-none d-flex align-items-center justify-content-center" data-bs-dismiss="modal" aria-label="Close">
                                             <i className="ri-close-line hp-text-color-dark-0 lh-1" style={{ fontSize: "24px" }}></i>
                                         </button>
@@ -168,9 +197,20 @@ export default function Users({ userData, setuserData }: any) {
                                         <form onSubmit={submitUsers} id="formCreate">
                                             <div className="modal-body">
                                                 <div className="row gx-8">
+
+                                                    <ImgUpload
+                                                        label="Upload Avatar"
+                                                        name="file"
+                                                        id="file" />
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
-                                                            <Input type="text" required variant="standard" className="border-b-1" name="fullName" label="Full Name" id="name" />
+                                                            <Input type="number" required variant="standard" className="border-b-1" name="NIP" label="NIP" id="NIP" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="text" required variant="standard" className="border-b-1" name="fullName" label="Nama Lengkap" id="name" />
                                                         </div>
                                                     </div>
 
@@ -188,25 +228,25 @@ export default function Users({ userData, setuserData }: any) {
 
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
-                                                            <Input type="number" required variant="standard" className="border-b-1" name="phone" label="Phone" id="nophone" />
+                                                            <Input type="number" required variant="standard" className="border-b-1" name="phone" label="No HP" id="nophone" />
                                                         </div>
                                                     </div>
 
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
-                                                            <Input type="date" required variant="standard" className="border-b-1" name="dateOfBirth" label="Date Of Birth" id="dateOfBirth" />
+                                                            <Input type="date" required variant="standard" className="border-b-1" name="dateOfBirth" label="Tanggal Lahir" id="dateOfBirth" />
                                                         </div>
                                                     </div>
 
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
-                                                            <Select variant="standard" required={true} label="Role" name="role" id="role" data={dataPermission} />
+                                                            <Select variant="standard" required={true} label="Permission" name="role" id="role" data={dataPermission} />
                                                         </div>
                                                     </div>
 
-                                                    <div className="col-12">
+                                                    <div className="col-12  col-md-6">
                                                         <div className="mb-24">
-                                                            <Textarea required variant="standard" className="border-b-1" id="address" label="Address" name="address"></Textarea>
+                                                            <Input required variant="standard" className="border-b-1" id="address" label="Alamat" name="address"></Input>
                                                         </div>
                                                     </div>
 
@@ -218,7 +258,7 @@ export default function Users({ userData, setuserData }: any) {
 
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
-                                                            <Input required type="password" autoComplete="" variant="standard" className="border-b-1" name="confirm_password" label="Confirm Password" id="confirm_password" />
+                                                            <Input required type="password" autoComplete="" variant="standard" className="border-b-1" name="confirm_password" label="Ulangi Password" id="confirm_password" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -248,9 +288,23 @@ export default function Users({ userData, setuserData }: any) {
                                 reload={dataCreate}
                                 modalData={[
                                     {
-                                        name: 'fullName',
+                                        name: 'img',
+                                        type: 'img',
+                                        id: 'img',
+                                        label: 'Avatar',
+                                        full: true
+                                    },
+                                    {
+                                        name: 'NIP',
+                                        type: 'number',
+                                        id: 'NIP',
+                                        required: true
+                                    },
+                                    {
+                                        name: 'namaLengkap',
                                         type: 'text',
-                                        id: 'fullName',
+                                        id: 'namaLengkap',
+                                        label: "Nama Lengkap",
                                         required: true
                                     },
                                     {
@@ -266,20 +320,23 @@ export default function Users({ userData, setuserData }: any) {
                                         required: true
                                     },
                                     {
-                                        name: 'phone',
+                                        name: 'noHp',
                                         type: 'number',
-                                        id: 'nophoneEdit',
+                                        id: 'noHpEdit',
+                                        label: 'No Hp',
                                         required: true
                                     },
                                     {
-                                        name: 'dateOfBirth',
+                                        name: 'tanggalLahir',
+                                        label: 'Tanggal Lahir',
                                         type: 'date',
-                                        id: 'dateOfBirthEdit',
+                                        id: 'tanggalLahir',
                                         required: true
                                     },
                                     {
                                         name: 'role',
                                         type: 'reactSelect',
+                                        label: 'Permission',
                                         id: 'roleEdit',
                                         select: dataPermission,
                                         required: true
@@ -296,11 +353,11 @@ export default function Users({ userData, setuserData }: any) {
                                         required: true
                                     },
                                     {
-                                        name: 'address',
-                                        type: 'textarea',
-                                        id: 'addressEdit',
-                                        required: true,
-                                        full: true
+                                        name: 'alamat',
+                                        label: 'Alamat',
+                                        type: 'text',
+                                        id: 'alamatEdit',
+                                        required: true
                                     },
                                 ]}
                             />

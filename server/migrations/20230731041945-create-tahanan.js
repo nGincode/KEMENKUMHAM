@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("user", {
+    await queryInterface.createTable("tahanan", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -10,53 +10,40 @@ module.exports = {
       },
       uuid: {
         type: Sequelize.UUID,
+        allowNull: false,
         unique: true,
       },
-      permission_id: {
+      user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      username: {
+      BIN: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      nama: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
       },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      namaLengkap: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      noHp: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      tanggalLahir: {
+      tanggalMasuk: {
         type: Sequelize.DATEONLY,
-        allowNull: true,
+        allowNull: false,
       },
-      alamat: {
+      perkara: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
       },
-      NIP: {
+      kamar: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
+      },
+      statusTahanan: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       img: {
         type: Sequelize.STRING,
-        allowNull: true,
-      },
-      status: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -69,6 +56,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("user");
+    await queryInterface.dropTable("tahanan");
   },
 };

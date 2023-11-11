@@ -145,12 +145,13 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
         } else {
             Swal.fire({
                 icon: "info",
-                title: "Delete data !!!",
-                text: `Are You sure want to delete ${dataHandle.name ?? ''} ?`,
+                title: "Hapus data !!!",
+                text: `Yakin ingin menghapus data ${dataHandle.nama ?? ''} ?`,
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
                 cancelButtonColor: "#686868",
-                confirmButtonText: "Delete",
+                confirmButtonText: "Hapus",
+                cancelButtonText: "Kembali"
             }).then((result: any) => {
                 if (result.isConfirmed) {
                     handleApi('delete', url, dataHandle.uuid, dataHandle)
@@ -169,10 +170,9 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                         header: () => null,
                         cell: ({ row }: any) => {
                             if (row.original.img) {
-                                return <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle"><Image width={50} height={50} src={row.original.img} className=" object-cover rounded-full w-12 h-12" alt={row.original.name ?? row.original.uuid} />
-                                </div>
+                                return <a target="_blank" href={row.original.img}><div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle"><Image width={50} height={50} src={row.original.img} className=" object-cover rounded-full w-12 h-12" alt={row.original.nama ?? row.original.uuid} /></div></a>
                             } else {
-                                return <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">{(row.original.name ?? row.original.username).substring(0, 2)}</div>
+                                return <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">{(row.original.nama ?? row.original.username).substring(0, 2)}</div>
                             }
                         },
                         footer: (props: any) => props.column.id,
@@ -797,6 +797,8 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                                                             : val.type === 'img' ?
                                                                 <div className="mb-5" >
                                                                     <ImgUpload name={val.name} id={val.id + "Edit"}
+
+                                                                        label={val.label}
                                                                         src={dataEdit?.[val.name]}
                                                                         empty={
                                                                             dataEdit?.[val.name]

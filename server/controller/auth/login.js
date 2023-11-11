@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   if (!body.email || !body.password) {
     return res.json({
       status: 400,
-      message: "Email and password must be provided",
+      message: "Email dan password belum terisi",
     });
   }
 
@@ -28,14 +28,14 @@ module.exports = async (req, res) => {
   if (!User) {
     return res.json({
       status: 404,
-      message: "Email not found",
+      message: "Email tidak ada",
     });
   }
 
   if (!User.status === "active") {
     return res.json({
       status: 404,
-      message: "Account not active",
+      message: "Account belum aktif",
     });
   }
 
@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
   if (!isPasswordCorrect) {
     return res.json({
       status: 404,
-      message: "Wrong Password",
+      message: "Salah Password",
     });
   }
 

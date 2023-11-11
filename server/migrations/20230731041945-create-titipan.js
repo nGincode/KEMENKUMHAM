@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("stock", {
+    await queryInterface.createTable("titipanBarang", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -17,25 +17,32 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      stock: {
+      tahanan_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      NIK: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      price_buy: {
+      jenisKelamin: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      price_sell: {
+      alamat: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      keterangan: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       img: {
         type: Sequelize.STRING,
+      },
+      waktuKunjungan: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -48,6 +55,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("stock");
+    await queryInterface.dropTable("titipanBarang");
   },
 };

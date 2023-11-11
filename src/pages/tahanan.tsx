@@ -10,14 +10,15 @@ import Select from "../components/reactSelect";
 import ImgUpload from "../components/imgUpload";
 import ReactTable from "../components/reactTable";
 import DebouncedInput from "../components/debouncedInput"
+import ReactSelect from "../components/reactSelect";
 
-export default function Spwp({ userData, setuserData }: any) {
+export default function Tahanan({ userData, setuserData }: any) {
     const [pagePermission, setpagePermission] = useState([]);
     const [dataPermission, setdataPermission] = useState([]);
     const [dataCreate, setdataCreate] = useState();
     const [search, setsearch] = useState('');
-    const URLAPI = "/api/stock";
-    const Subject = "Stock";
+    const URLAPI = "/api/tahanan";
+    const Subject = "Tahanan";
 
     useEffect(() => {
         (document as any).title = Subject;
@@ -65,6 +66,62 @@ export default function Spwp({ userData, setuserData }: any) {
     }
 
 
+    const modalData =
+        [
+            {
+                name: 'img',
+                type: 'img',
+                id: 'img',
+                full: true
+            },
+            {
+                name: 'tanggalMasuk',
+                type: 'date',
+                id: 'tanggalMasuk',
+                label: "Tanggal Masuk",
+                required: true
+            },
+            {
+                name: 'nama',
+                type: 'text',
+                id: 'nama',
+                label: "Nama",
+                required: true
+            },
+            {
+                name: 'BIN',
+                type: 'text',
+                id: 'BIN',
+                label: "BIN",
+                required: true
+            },
+            {
+                name: 'kamar',
+                type: 'text',
+                id: 'kamar',
+                label: "No Kamar",
+                required: true
+            },
+            {
+                name: 'perkara',
+                type: 'reactSelect',
+                id: 'perkara',
+                label: "Perkara",
+                required: true,
+                select: [
+                    { label: 'PiDum', value: 'PiDum' },
+                    { label: 'Narkoba', value: 'Narkoba' },
+                    { label: 'Tipikor', value: 'Tipikor' }
+                ]
+            },
+            {
+                name: 'statusTahanan',
+                type: 'text',
+                id: 'statusTahanan',
+                label: "Status Tahanan",
+                required: true
+            },
+        ]
     const convertFileToBase64 = (file: any) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -82,8 +139,8 @@ export default function Spwp({ userData, setuserData }: any) {
             let extension = files.type;
             let size = files.size;
             if (extension === 'image/jpeg' || extension === 'image/png') {
-                if (size > 100000) {
-                    return toast.error("Size img only < 100kb");
+                if (size > 1000000) {
+                    return toast.error("Size img only < 1000kb");
                 } else {
                     img = await convertFileToBase64(files);
                 }
@@ -94,11 +151,12 @@ export default function Spwp({ userData, setuserData }: any) {
 
 
         let data = {
-            stock: numeral(event.target.stock.value).value(),
-            name: event.target.name.value,
-            price_buy: numeral(event.target.price_buy.value).value(),
-            price_sell: numeral(event.target.price_sell.value).value(),
-            stock_val: event.target.stock.value,
+            nama: event.target.nama.value,
+            tanggal: event.target.tanggal.value,
+            BIN: event.target.BIN.value,
+            kamar: event.target.kamar.value,
+            status: event.target.status.value,
+            perkara: event.target.perkara_val.value,
             img: img
         };
 
@@ -151,15 +209,15 @@ export default function Spwp({ userData, setuserData }: any) {
 
                         {pagePermission.find((val: any) => val == "create") ?
                             <div className="col hp-flex-none w-auto">
-                                <Button type="button" className="w-100 px-5" variant="gradient" color="orange" data-bs-toggle="modal" data-bs-target="#addNewUser"><i className="ri-add-line remix-icon"></i> Add Stock</Button>
+                                <Button type="button" className="w-100 px-5" variant="gradient" color="orange" data-bs-toggle="modal" data-bs-target="#addNewUser"><i className="ri-add-line remix-icon"></i> Tambah {Subject}</Button>
                             </div>
                             : null}
 
                         <div className="modal fade -mt-2" id="addNewUser" tabIndex={-1} aria-labelledby="addNewUserLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-                            <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-dialog modal-xl  modal-dialog-centered">
                                 <div className="modal-content">
                                     <div className="modal-header py-16 px-24">
-                                        <h5 className="modal-title font-bold" id="addNewUserLabel">Add Stock</h5>
+                                        <h5 className="modal-title font-bold" id="addNewUserLabel">Tambah {Subject}</h5>
                                         <button type="button" className="btn-close hp-bg-none d-flex align-items-center justify-content-center" data-bs-dismiss="modal" aria-label="Close">
                                             <i className="ri-close-line hp-text-color-dark-0 lh-1" style={{ fontSize: "24px" }}></i>
                                         </button>
@@ -169,31 +227,54 @@ export default function Spwp({ userData, setuserData }: any) {
                                     <form onSubmit={submitAdd} id="formCreate">
                                         <div className="modal-body">
                                             <ImgUpload
+                                                label="Foto"
                                                 name="file"
                                                 id="file" />
                                             <div className="row gx-8">
+
                                                 <div className="col-12 col-md-6">
                                                     <div className="mb-24">
-                                                        <Input type="text" required variant="standard" className="border-b-1" name="name" label="Name Stock" id="name" />
+                                                        <Input type="date" required variant="standard" className="border-b-1" name="tanggal" label="Tanggal Masuk" id="tanggal" />
+                                                    </div>
+                                                </div>
+
+
+                                                <div className="col-12 col-md-6">
+                                                    <div className="mb-24">
+                                                        <Input type="text" required variant="standard" className="border-b-1" name="nama" label="Nama" id="nama" />
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-md-6">
+                                                    <div className="mb-24">
+                                                        <Input type="texy=t" required variant="standard" className="border-b-1" name="BIN" label="BIN" id="BIN" />
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-md-6">
+                                                    <div className="mb-24">
+                                                        <Input type="text" required variant="standard" className="border-b-1" name="kamar" label="No Kamar" id="kamar" />
                                                     </div>
                                                 </div>
 
                                                 <div className="col-12 col-md-6">
                                                     <div className="mb-24">
-                                                        <Input type="number" step="any" required variant="standard" className="border-b-1" name="stock" label="Stock" id="stock" />
+                                                        <ReactSelect
+                                                            name='perkara'
+                                                            id="perkara"
+                                                            label='Perkara'
+                                                            data={[
+                                                                { label: 'PiDum', value: 'PiDum' },
+                                                                { label: 'Narkoba', value: 'Narkoba' },
+                                                                { label: 'Tipikor', value: 'Tipikor' },
+                                                            ]}
+                                                            required={true}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-md-6">
                                                     <div className="mb-24">
-                                                        <Input type="text" onChange={byNumeral} required variant="standard" className="border-b-1" name="price_buy" label="Purchase Price" id="price_buy" />
+                                                        <Input type="text" required variant="standard" className="border-b-1" name="status" label="Status" id="status" />
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="text" onChange={byNumeral} required variant="standard" className="border-b-1" name="price_sell" label="Selling Price" id="price_sell" />
-                                                    </div>
-                                                </div>
-
                                             </div>
                                         </div>
 
@@ -218,43 +299,7 @@ export default function Spwp({ userData, setuserData }: any) {
                                 }}
                                 urlFatch={URLAPI}
                                 reload={dataCreate}
-                                modalData={[
-                                    {
-                                        name: 'img',
-                                        type: 'img',
-                                        id: 'img',
-                                        full: true
-                                    },
-                                    {
-                                        name: 'name',
-                                        type: 'text',
-                                        label: 'Name Stock',
-                                        id: 'name',
-                                        required: true
-                                    },
-                                    {
-                                        name: 'stock',
-                                        type: 'number',
-                                        id: 'stock',
-                                        required: true
-                                    },
-                                    {
-                                        name: 'priceBuy',
-                                        type: 'number',
-                                        id: 'price_buy',
-                                        required: true,
-                                        numeral: true,
-                                        label: "Purchase Price"
-                                    },
-                                    {
-                                        name: 'priceSell',
-                                        type: 'number',
-                                        label: "Selling Price",
-                                        id: 'price_sell',
-                                        required: true,
-                                        numeral: true,
-                                    },
-                                ]}
+                                modalData={modalData}
                             />
                         </div>
                     </div>

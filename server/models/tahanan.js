@@ -1,20 +1,17 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class user extends Model {
+  class tahanan extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of DataTypes lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.permission, {
-        as: "permission",
-        foreignKey: "permission_id",
-      });
+      // define association here
     }
   }
-  user.init(
+  tahanan.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -23,53 +20,40 @@ module.exports = (sequelize, DataTypes) => {
       },
       uuid: {
         type: DataTypes.UUID,
+        allowNull: false,
         unique: true,
       },
-      permission_id: {
+      user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      username: {
+      BIN: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      nama: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
       },
-      password: {
+      tanggalMasuk: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      perkara: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      email: {
+      kamar: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
       },
-      namaLengkap: {
+      statusTahanan: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
-      noHp: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      tanggalLahir: {
-        type: DataTypes.DATEONLY,
-        allowNull: true,
-      },
-      alamat: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      NIP: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       img: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
-      status: {
-        type: DataTypes.STRING,
-        allowNull: false,
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -82,10 +66,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "user",
-      tableName: "user",
+      modelName: "tahanan",
+      tableName: "tahanan",
+      // timestamps: true,
       freezeTableName: true,
+      // createdAt: "created_at",
+      // updatedAt: "updated_at",
     }
   );
-  return user;
+  return tahanan;
 };

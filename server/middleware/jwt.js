@@ -38,7 +38,7 @@ const jwtProses = async (req, res, next) => {
 
     if (!User) {
       return res.json({
-        message: "User not found",
+        message: "User tidak ada",
       });
     }
 

@@ -24,9 +24,9 @@ module.exports = {
           {
             data: [
               {
-                link: "/analytics",
-                name: "analytics[]",
-                label: "Analytics",
+                link: "/scanning",
+                name: "scanning[]",
+                label: "Scanning",
                 checklist: ["view", "create", "edit", "delete"],
               },
             ],
@@ -58,24 +58,6 @@ module.exports = {
                 name: "npwp[]",
                 label: "NPWP",
                 checklist: ["view", "create", "edit", "delete"],
-              },
-              {
-                data: [
-                  {
-                    link: "/efaktur/in",
-                    name: "efakturIn[]",
-                    label: "E-Faktur In",
-                    checklist: ["view", "create", "edit", "delete"],
-                  },
-                  {
-                    link: "/efaktur/out",
-                    name: "efakturOut[]",
-                    label: "E-Faktur Out",
-                    checklist: ["view", "create", "edit", "delete"],
-                  },
-                ],
-                check: true,
-                label: "E-Faktur",
               },
             ],
             check: true,

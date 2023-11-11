@@ -11,17 +11,6 @@ const getId = async (req, res) => {
 
   const User = await user.findOne({
     where: { uuid: uuid },
-    attributes: [
-      "uuid",
-      "img",
-      "fullName",
-      "email",
-      "username",
-      "dateOfBirth",
-      "phone",
-      "address",
-      "status",
-    ],
     include: [
       {
         model: permission,
@@ -35,12 +24,12 @@ const getId = async (req, res) => {
 
   if (!User) {
     return res.json({
-      massage: "User not found",
+      massage: "User tidak ada",
     });
   }
 
   res.json({
-    massage: "Get data successful",
+    massage: "Berhasil Mengambil data",
     data: User,
   });
 };
@@ -50,13 +39,15 @@ const putId = async (req, res) => {
   const {
     username,
     email,
-    fullName,
-    phone,
-    address,
-    dateOfBirth,
+    namaLengkap,
+    noHp,
+    alamat,
+    tanggalLahir,
     role,
     status,
-    active,
+    NIP,
+    image,
+    imgDel,
   } = req.body;
   const { uuid } = req.params;
 
@@ -64,24 +55,12 @@ const putId = async (req, res) => {
 
   if (!Permission) {
     return res.status(400).json({
-      massage: "Role not valid",
+      massage: "Role tidak valid",
     });
   }
 
   const User = await user.findOne({
     where: { uuid: uuid },
-    attributes: [
-      "id",
-      "uuid",
-      "img",
-      "fullName",
-      "email",
-      "username",
-      "dateOfBirth",
-      "phone",
-      "address",
-      "status",
-    ],
     include: [
       {
         model: permission,
@@ -95,7 +74,7 @@ const putId = async (req, res) => {
 
   if (!User) {
     return res.status(400).json({
-      massage: "User not found",
+      massage: "User tidak ada",
     });
   }
 
@@ -106,7 +85,7 @@ const putId = async (req, res) => {
 
     if (Email) {
       return res.status(400).json({
-        massage: "Email already used",
+        massage: "Email telah digunakan",
       });
     }
   }
@@ -118,27 +97,50 @@ const putId = async (req, res) => {
 
     if (Username) {
       return res.status(400).json({
-        massage: "Username already used",
+        massage: "Username telah digunakan",
       });
+    }
+  }
+  let type = null;
+
+  let imgData = null;
+  if (!imgDel) {
+    if (image) {
+      type = image.split(";")[0].split("/")[1];
+      require("fs").writeFile(
+        __dirname + `/../../public/upload/profile/${uuid}.${type}`,
+        new Buffer.from(
+          image.replace(/^data:image\/\w+;base64,/, ""),
+          "base64"
+        ),
+        (err) => {
+          console.log(err);
+        }
+      );
+      imgData = "/upload/profile/" + uuid + "." + type;
+    } else {
+      imgData = Stock.img;
     }
   }
 
   const data = {
     username: username,
     email: email,
-    fullName: fullName,
-    phone: phone,
-    address: address,
-    dateOfBirth: dateOfBirth,
+    namaLengkap: namaLengkap,
+    noHp: noHp,
+    alamat: alamat,
+    NIP: NIP,
+    tanggalLahir: tanggalLahir,
     permission_id: Permission.id,
     status: status,
+    img: imgData,
   };
 
   await User.update(data);
 
   res.json({
     status: 200,
-    massage: "Update data successful",
+    massage: "Berhasil diubah",
     data: data,
   });
 };
@@ -147,17 +149,6 @@ const get = async (req, res) => {
   const { users_id, users_uuid, email, username } = req.user;
 
   const User = await user.findAll({
-    attributes: [
-      "uuid",
-      "img",
-      "fullName",
-      "email",
-      "username",
-      "dateOfBirth",
-      "phone",
-      "address",
-      "status",
-    ],
     include: [
       {
         model: permission,
@@ -181,15 +172,16 @@ const get = async (req, res) => {
       return {
         uuid: val.uuid,
         img: val.img,
-        fullName: val.fullName,
+        namaLengkap: val.namaLengkap,
         email: val.email,
         username: val.username,
-        dateOfBirth: val.dateOfBirth
-          ? moment(val.dateOfBirth).format("DD/MM/YYYY")
+        tanggalLahir: val.tanggalLahir
+          ? moment(val.tanggalLahir).format("DD/MM/YYYY")
           : "-",
-        phone: val.phone,
+        noHp: val.noHp,
+        NIP: val.NIP,
         role: val?.permission?.name,
-        address: val.address,
+        alamat: val.alamat,
         status: val.status,
       };
     }),
@@ -201,14 +193,15 @@ const put = async (req, res) => {
   const {
     username,
     email,
-    fullName,
-    phone,
-    address,
-    dateOfBirth,
+    namaLengkap,
+    noHp,
+    alamat,
+    tanggalLahir,
     files,
     old_password,
     password,
     confirm_password,
+    NIP,
   } = req.body;
 
   const User = await user.findOne({
@@ -226,7 +219,7 @@ const put = async (req, res) => {
 
   if (!User) {
     return res.json({
-      massage: "User not found",
+      massage: "User tidak ada",
     });
   }
 
@@ -234,12 +227,13 @@ const put = async (req, res) => {
     const data = {
       username: username,
       email: email,
-      fullName: fullName,
-      phone: phone,
-      address: address,
-      dateOfBirth: dateOfBirth,
+      namaLengkap: namaLengkap,
+      noHp: noHp,
+      alamat: alamat,
+      tanggalLahir: tanggalLahir,
       permission: User.permission,
       img: User.img,
+      NIP: NIP,
     };
 
     await User.update(data);
@@ -259,7 +253,7 @@ const put = async (req, res) => {
 
     res.json({
       status: 200,
-      massage: "Update data successful",
+      massage: "Berhasil diubah",
       data: data,
       token,
     });
@@ -270,20 +264,20 @@ const put = async (req, res) => {
       confirm_password.length < 8
     ) {
       return res.status(400).json({
-        massage: "Password min 8 char",
+        massage: "Password min 8 karakter",
       });
     }
 
     if (password !== confirm_password) {
       return res.status(400).json({
-        massage: "Password not match",
+        massage: "Password tidak sama",
       });
     }
 
     const isPasswordCorrect = verify(old_password, User.password);
     if (!isPasswordCorrect) {
       return res.status(404).json({
-        massage: "Wrong Old Password",
+        massage: "Password lama salah",
       });
     }
 
@@ -295,7 +289,7 @@ const put = async (req, res) => {
 
     res.json({
       status: 200,
-      massage: "Update password successful",
+      massage: "Berhasil diubah",
     });
   } else if (files) {
     const type = files.split(";")[0].split("/")[1];
@@ -310,10 +304,10 @@ const put = async (req, res) => {
     const data = {
       username: User.username,
       email: User.email,
-      fullName: User.fullName,
-      phone: User.phone,
-      address: User.address,
-      dateOfBirth: User.dateOfBirth,
+      namaLengkap: User.namaLengkap,
+      noHp: User.noHp,
+      alamat: User.alamat,
+      tanggalLahir: User.tanggalLahir,
       permission: User.permission,
       img: "/upload/profile/" + users_uuid + "." + type,
     };
@@ -322,12 +316,12 @@ const put = async (req, res) => {
     });
 
     return res.json({
-      massage: "Upload Avatar Success",
+      massage: "Avatar berhasil diganti",
       data: data,
     });
   } else {
     return res.json({
-      massage: "User not found",
+      massage: "User tidak ada",
     });
   }
 };
@@ -338,23 +332,11 @@ const del = async (req, res) => {
 
   const User = await user.findOne({
     where: { uuid: uuid },
-    attributes: [
-      "id",
-      "uuid",
-      "img",
-      "fullName",
-      "email",
-      "username",
-      "dateOfBirth",
-      "phone",
-      "address",
-      "status",
-    ],
   });
 
   if (!User) {
     return res.json({
-      massage: "User not found",
+      massage: "User tidak ada",
     });
   }
 
@@ -365,13 +347,14 @@ const del = async (req, res) => {
   await User.destroy();
 
   res.json({
-    massage: "Delete successful",
+    massage: "Berhasil dihapus",
     data: User,
   });
 };
 
 const post = async (req, res) => {
   const {
+    NIP,
     username,
     email,
     fullName,
@@ -381,6 +364,7 @@ const post = async (req, res) => {
     role,
     password,
     confirm_password,
+    img,
   } = req.body;
 
   const User = await user.findOne({
@@ -400,51 +384,66 @@ const post = async (req, res) => {
 
   if (User) {
     return res.status(400).json({
-      massage: "Email or Username already used",
+      massage: "Email atau Username telah digunakan",
     });
   }
 
   if (!role) {
     return res.status(400).json({
-      massage: "Role required",
+      massage: "Permission harus ada",
     });
   }
 
   if (!Permission) {
     return res.status(400).json({
-      massage: "Role not valid",
+      massage: "Permission tidak valid",
     });
   }
 
   if (password.length < 8 || confirm_password.length < 8) {
     return res.status(400).json({
-      massage: "Password min 8 char",
+      massage: "Password min 8 karakter",
     });
   }
 
   if (password !== confirm_password) {
     return res.status(400).json({
-      massage: "Password not match",
+      massage: "Password tidak sama",
     });
   }
 
+  const uuid = Crypto.randomUUID();
+  let type = null;
+  if (img) {
+    type = img.split(";")[0].split("/")[1];
+    require("fs").writeFile(
+      __dirname + `/../../public/upload/profile/${uuid}.${type}`,
+      new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
   const data = {
-    uuid: Crypto.randomUUID(),
+    uuid: uuid,
     username: username,
+    NIP: NIP,
     email: email,
-    fullName: fullName,
-    phone: phone,
-    address: address,
-    dateOfBirth: dateOfBirth,
+    namaLengkap: fullName,
+    noHp: phone,
+    alamat: address,
+    tanggalLahir: dateOfBirth,
     password: hash(password),
     status: "active",
     permission_id: Permission.id,
+    img: img ? "/upload/profile/" + uuid + "." + type : null,
   };
   await user.create(data);
 
   res.json({
     status: 200,
-    massage: "Create successful",
+    massage: "Berhasil ditambhakan",
     data: data,
   });
 };
