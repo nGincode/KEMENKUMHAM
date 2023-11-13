@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Surat Izin Kunjungan</title>
+  </head>
+  <body style="width: 210mm; text-align: center" onload="window.print()">
+    <div
+      style="
+        display: flex;
+        width: 100%;
+        background: #4f4326;
+        color: white;
+        padding: 10px;
+        align-items: center;
+        justify-content: center;
+        border: solid black 2px;
+        font-weight: bolder;
+        margin-bottom: 20px;
+      "
+    >
+      <img src="img/logo2.jpeg" style="height: 60px; margin-right: 110px" />
+      <div>
+        KEMENTRIAN HUKUM DAN HAM RI<br />
+        KANTOR WILAYAH BENGKULU<br />
+        RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
+      </div>
+      <img src="img/logo1.jpeg" style="height: 60px; margin-left: 110px" />
+    </div>
+    <div style="text-align: center; font-weight: bolder; font-size: larger">
+      SURAT IZIN KUNJUNGAN
+    </div>
+    <div
+      style="
+        text-align: left;
+        margin-left: 10px;
+        margin-top: 20px;
+        font-size: large;
+      "
+    >
+      <div
+        style="
+          float: right;
+          text-align: center;
+          padding: 20px;
+          background: #025b01;
+          color: white;
+          border-radius: 10px;
+          font-weight: bolder;
+        "
+      >
+        No Antrian <br />
+        <div style="font-size: xx-large" id="antrian">1</div>
+      </div>
+      <div style="margin-bottom: 20px" id="nama">Nama : -</div>
+      <div style="margin-bottom: 20px" id="nik">NIK KTP : -</div>
+      <div style="margin-bottom: 20px" id="kelamin">JENIS KELAMIN : -</div>
+      <div style="margin-bottom: 20px" id="alamat">ALAMAT : -</div>
+      <div style="margin-bottom: 20px" id="foto_ktp">FOTO KTP : -</div>
+      <div style="margin-bottom: 25px" id="pengikut_kunjungan">
+        PENGIKUT KUNJUNGAN : <span id="pengikutPria">-</span> Orang Laki-Laki &
+        <span id="pengikutWanita">-</span> Orang Perempuan
+      </div>
+      <div style="margin-bottom: 20px; font-weight: bolder">
+        TAHANAN/NARAPIDANA YANG DIKUNJUNGI
+      </div>
+      <div style="margin-bottom: 20px; margin-left: 10px" id="nama_tahanan">
+        NAMA : Fembi Nur Ilham
+      </div>
+      <div style="margin-bottom: 25px; margin-left: 10px" id="status_tahanan">
+        STATUS TAHANAN : Fembi Nur Ilham
+      </div>
+      <div style="margin-bottom: 20px; font-weight: bolder">
+        WAKTU BERKUNJUNG PADA
+      </div>
+      <div style="margin-bottom: 20px; margin-left: 10px" id="hari">
+        HARI/TANGGAL : Fembi Nur Ilham
+      </div>
+      <div style="margin-bottom: 30px; margin-left: 10px" id="jam">
+        JAM : Fembi Nur Ilham
+      </div>
+      <div style="float: right; text-align: center">
+        Petugas Loket
+        <br />
+        <br />
+        <br />
+        <br />
+        <div id="petugas">__________________________</div>
+        <br />
+        <div id="petugas_nip">NIP:______________________</div>
+      </div>
+    </div>
+  </body>
+  <script>
+    function GetURLParameter(sParam) {
+      var sPageURL = window.location.search.substring(1);
+      var sURLVariables = sPageURL.split("&");
+      for (var i = 0; i < sURLVariables.length; i++) {
+        var sParameterName = sURLVariables[i].split("=");
+        if (sParameterName[0] == sParam) {
+          return sParameterName[1];
+        }
+      }
+    }
+
+    const api = async () => {
+      const formData = new FormData();
+      formData.append("uuid", GetURLParameter("uuid"));
+
+      const dt = await fetch("api/suratKunjungan", {
+        method: "POST",
+        body: formData,
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          console.log(data.data);
+          document.getElementById("nama").innerHTML =
+            "NAMA : " + data.data.nama;
+          document.getElementById("nik").innerHTML =
+            "NIK KTP : " + data.data.NIK;
+          document.getElementById("kelamin").innerHTML =
+            "JENIS KELAMIN : " + data.data.jenisKelamin;
+          document.getElementById("alamat").innerHTML =
+            "ALAMAT : " + data.data.alamat;
+          if (data.data.img) {
+            document.getElementById("foto_ktp").innerHTML =
+              "FOTO KTP : <img style='height:100px' src='" +
+              data.data.img +
+              "' />";
+          } else {
+            document.getElementById("foto_ktp").innerHTML =
+              "FOTO KTP : Tidak ditemukan";
+          }
+          document.getElementById("pengikutPria").innerHTML =
+            "" + data.data.pengikutPria;
+          document.getElementById("pengikutWanita").innerHTML =
+            "" + data.data.pengikutWanita;
+
+          document.getElementById("nama_tahanan").innerHTML =
+            "NAMA : " + data.data.tahanan.nama;
+          document.getElementById("status_tahanan").innerHTML =
+            "STATUS : " + data.data.tahanan.statusTahanan;
+          document.getElementById("antrian").innerHTML = data.data.antrian;
+
+          const d = new Date(data.data.waktuKunjungan);
+          document.getElementById("hari").innerHTML =
+            "HARI/TANGGAL : " + data.data.waktuKunjungan.slice(0, 10);
+          document.getElementById("jam").innerHTML =
+            "JAM : " + d.getUTCHours() + ":" + d.getUTCMinutes();
+        });
+    };
+    api();
+  </script>
+</html>

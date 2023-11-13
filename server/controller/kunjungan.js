@@ -7,25 +7,22 @@ const numeral = require("numeral");
 const moment = require("moment");
 
 const getId = async (req, res) => {
-  const { users_id, users_uuid, email, username } = req.user;
-  const { uuid } = req.params;
-
-  const Npwp = await stock.findOne({
-    where: { uuid: uuid },
-    attributes: ["uuid", "stock", "name", "phone", "address"],
-  });
-
-  if (!Npwp) {
-    return res.json({
-      massage: "STOCK not found",
-    });
-  }
-
-  res.json({
-    status: 200,
-    massage: "Get data successful",
-    data: Npwp,
-  });
+  // const { users_id, users_uuid, email, username } = req.user;
+  // const { uuid } = req.params;
+  // const Npwp = await stock.findOne({
+  //   where: { uuid: uuid },
+  //   attributes: ["uuid", "stock", "name", "phone", "address"],
+  // });
+  // if (!Npwp) {
+  //   return res.json({
+  //     message: "STOCK not found",
+  //   });
+  // }
+  // res.json({
+  //   status: 200,
+  //   massage: "Get data successful",
+  //   data: Npwp,
+  // });
 };
 const put = async (req, res) => {
   const { users_id, users_uuid } = req.user;
@@ -64,7 +61,7 @@ const put = async (req, res) => {
 
   if (!Npwp) {
     return res.json({
-      massage: "STOCK not found",
+      message: "STOCK not found",
     });
   }
 
@@ -102,32 +99,26 @@ const putId = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const {
     nama,
-    tanggalMasuk,
-    BIN,
-    kamar,
-    statusTahanan,
-    perkara,
+    waktuKunjungan,
+    NIK,
+    alamat,
+    jenisKelamin,
+    pengikutPria,
+    pengikutWanita,
+    tahanan_id,
+    noHp,
     image,
     imgDel,
   } = req.body;
 
-  const Tahanan = await tahanan.findOne({
+  const Kunjungan = await kunnjungan.findOne({
     where: { uuid: uuid },
   });
 
-  if (!Tahanan) {
+  if (!Kunjungan) {
     return res.status(400).json({
-      massage: "Tahanan tidak ada",
+      massage: "Kunjungan tidak ada",
     });
-  }
-
-  if (nama !== Tahanan.nama) {
-    const cek = await tahanan.findOne({ where: { nama: nama } });
-    if (cek) {
-      return res.status(400).json({
-        massage: "Nama Tahanan telah ada",
-      });
-    }
   }
 
   let type = null;
@@ -137,7 +128,7 @@ const putId = async (req, res) => {
     if (image) {
       type = image.split(";")[0].split("/")[1];
       require("fs").writeFile(
-        __dirname + `/../../public/upload/tahanan/${uuid}.${type}`,
+        __dirname + `/../../public/upload/kunjungan/${uuid}.${type}`,
         new Buffer.from(
           image.replace(/^data:image\/\w+;base64,/, ""),
           "base64"
@@ -153,13 +144,15 @@ const putId = async (req, res) => {
   }
 
   const data = {
+    waktuKunjungan: waktuKunjungan,
     nama: nama,
-    tanggalMasuk: tanggalMasuk,
-    nama: nama,
-    BIN: BIN,
-    kamar: kamar,
-    statusTahanan: statusTahanan,
-    perkara: perkara,
+    NIK: NIK,
+    alamat: alamat,
+    jenisKelamin: jenisKelamin,
+    pengikutPria: pengikutPria,
+    pengikutWanita: pengikutWanita,
+    tahanan_id: tahanan_id,
+    noHp: noHp,
     img: imgData,
   };
 
@@ -175,50 +168,61 @@ const del = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const { uuid } = req.params;
 
-  const Tahanan = await tahanan.findOne({
+  const Kunjungan = await kunjungan.findOne({
     where: { uuid: uuid },
   });
 
-  const Kunjungan = await kunjungan.findOne({
-    where: { tahanan_id: Tahanan.id },
-  });
-
-  if (Kunjungan) {
-    return res.status(400).json({
-      massage: "Tahanan digunakan pada kunjungan",
+  if (!Kunjungan) {
+    return res.status(500).json({
+      massage: "Kunjungan tidak ada",
     });
   }
 
-  if (!Tahanan) {
-    return res.status(400).json({
-      massage: "Tahanan tidak ada",
-    });
-  }
-
-  await Tahanan.destroy();
+  await Kunjungan.destroy();
 
   res.json({
     massage: "Hapus Berhasil",
-    data: Tahanan,
+    data: Kunjungan,
   });
 };
 const get = async (req, res) => {
   const { users_id, users_uuid, email, username, permission } = req.user;
 
-  const tahananDb = await tahanan.findAll({
+  const Kunjungan = await kunjungan.findAll({
     order: [["id", "DESC"]],
+    include: [
+      {
+        model: tahanan,
+        as: "tahanan",
+        attributes: {
+          exclude: ["uuid", "createdAt", "updatedAt"],
+        },
+      },
+    ],
   });
-  const data = tahananDb.map((val) => {
+  const data = Kunjungan.map((val) => {
     return {
-      id: val.id,
       img: val.img,
       uuid: val.uuid,
+      waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD HH:mm:ss").format(
+        "DD/MM/YYYY HH:mm:ss"
+      ),
+      tahanan: val.tahanan.nama,
+      tahanan_id: {
+        value: val.tahanan.id,
+        label: val.tahanan.nama,
+      },
+      kamar: val.tahanan.kamar,
+      perkara: val.tahanan.perkara,
       nama: val.nama,
-      BIN: val.BIN,
-      kamar: val.kamar,
-      tanggalMasuk: moment(val.tanggalMasuk, "YYYY-MM-DD").format("DD/MM/YYYY"),
-      perkara: val.perkara,
-      statusTahanan: val.statusTahanan,
+      noHp: val.noHp,
+      NIK: val.NIK,
+      jenisKelamin: val.jenisKelamin,
+      alamat: val.alamat,
+      pengikutPria: val.pengikutPria,
+      pengikutWanita: val.pengikutWanita,
+      antrian: val.antrian,
+      suratIzin: val.suratIzin,
     };
   });
 
@@ -229,23 +233,53 @@ const get = async (req, res) => {
   });
 };
 const post = async (req, res) => {
-  const { nama, tanggal, BIN, kamar, status, perkara, img } = req.body;
+  const {
+    nama,
+    waktuKunjungan,
+    NIK,
+    alamat,
+    jenisKelamin,
+    pengikut,
+    tahanan_id,
+    img,
+    noHp,
+    suratIzin,
+  } = req.body;
   const { users_id, users_uuid } = req.user;
 
-  const cek = await tahanan.findOne({ where: { nama: nama } });
+  const antrian = await kunjungan.findAll({
+    where: {
+      waktuKunjungan: {
+        [Op.between]: [
+          moment(waktuKunjungan).format("YYYY-MM-DD") + "T00:00:48.000Z",
+          moment(waktuKunjungan).format("YYYY-MM-DD") + "T23:59:59.000Z",
+        ],
+      },
+    },
+  });
 
-  if (cek) {
-    return res.status(400).json({
-      massage: "Nama telah ada",
-    });
-  }
   const uuid = Crypto.randomUUID();
   let type = null;
   if (img) {
     type = img.split(";")[0].split("/")[1];
     require("fs").writeFile(
-      __dirname + `/../../public/upload/tahanan/${uuid}.${type}`,
+      __dirname + `/../../public/upload/kunjungan/${uuid}.${type}`,
       new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  let type2 = null;
+  if (suratIzin) {
+    type2 = suratIzin.split(";")[0].split("/")[1];
+    require("fs").writeFile(
+      __dirname + `/../../public/upload/kunjungan/${uuid}_suratIzin.${type2}`,
+      new Buffer.from(
+        suratIzin.replace(/^data:image\/\w+;base64,/, ""),
+        "base64"
+      ),
       (err) => {
         console.log(err);
       }
@@ -254,17 +288,24 @@ const post = async (req, res) => {
 
   const data = {
     uuid: uuid,
-    tanggalMasuk: tanggal,
+    waktuKunjungan: waktuKunjungan,
     user_id: users_id,
     nama: nama,
-    BIN: BIN,
-    kamar: kamar,
-    statusTahanan: status,
-    perkara: perkara,
-    img: img ? "/upload/tahanan/" + uuid + "." + type : null,
+    NIK: NIK,
+    alamat: alamat,
+    jenisKelamin: jenisKelamin,
+    pengikutPria: pengikut.pria,
+    pengikutWanita: pengikut.wanita,
+    tahanan_id: tahanan_id,
+    noHp: noHp,
+    antrian: antrian.length + 1,
+    img: img ? "/upload/kunjungan/" + uuid + "." + type : null,
+    suratIzin: suratIzin
+      ? "/upload/kunjungan/" + uuid + "_suratIzin." + type2
+      : null,
   };
 
-  await tahanan.create(data);
+  await kunjungan.create(data);
 
   res.json({
     status: 200,

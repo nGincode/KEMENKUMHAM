@@ -120,8 +120,8 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
             let extension = files.type;
             let size = files.size;
             if (extension === 'image/jpeg' || extension === 'image/png') {
-                if (size > 100000) {
-                    return toast.error("Size img only < 100kb");
+                if (size > 1000000) {
+                    return toast.error("Size img only < 1000kb");
                 } else {
                     let img: any = await convertFileToBase64(files);
                     dataPost.append('image', img);
@@ -163,7 +163,7 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
     let array: any = [];
     if (data?.[0]) {
         Object.keys(data[0]).map((val: any, i: number) => {
-            if (val == 'uuid' || val == 'addressJson' || val == 'itemJson') { } else {
+            if (val == 'uuid' || val == 'addressJson' || val == 'itemJson' || val == 'id' || val == 'tahanan_id') { } else {
                 if (val === 'img') {
                     array.push({
                         id: 'img',
@@ -172,7 +172,20 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                             if (row.original.img) {
                                 return <a target="_blank" href={row.original.img}><div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle"><Image width={50} height={50} src={row.original.img} className=" object-cover rounded-full w-12 h-12" alt={row.original.nama ?? row.original.uuid} /></div></a>
                             } else {
-                                return <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">{(row.original.nama ?? row.original.username).substring(0, 2)}</div>
+                                return <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">{(row.original.nama ?? row.original.uuid).substring(0, 2)}</div>
+                            }
+                        },
+                        footer: (props: any) => props.column.id,
+                    })
+                } else if (val === 'suratIzin') {
+                    array.push({
+                        id: 'suratIzin',
+                        header: () => <div style={{ marginTop: "-56px" }}>{convertCamelCase(val)}</div>,
+                        cell: ({ row }: any) => {
+                            if (row.original.suratIzin) {
+                                return <a target="_blank" href={row.original.suratIzin}><Button>Lihat</Button></a>
+                            } else {
+                                return '-'
                             }
                         },
                         footer: (props: any) => props.column.id,
@@ -474,6 +487,7 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
             cell: ({ row }: any) => {
                 if (action.edit && action.delete) {
                     return <>
+                        <a href={'suratKunjungan/' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                         <i onClick={() => { handleStatus('edit', action.edit, row.original) }} data-bs-toggle="modal" data-bs-target="#editUser" className="iconly-Curved-Edit hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80" style={{ fontSize: "24px" }} />
                         <i onClick={() => { handleStatus('delete', action.delete, row.original) }} className="ml-2 iconly-Light-Delete hp-cursor-pointer hp-transition hp-hover-text-color-danger-1 text-black-80" style={{ fontSize: "24px" }} />
                     </>
@@ -785,14 +799,18 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
 
                                                 return <div className={val.full ? "col-12 col-md-12" : "col-12 col-md-6"} key={i}>
                                                     {
-                                                        val.type === 'text' || val.type === 'number' || val.type === 'email' || val.type === 'date' ?
+                                                        val.type === 'text' || val.type === 'number' || val.type === 'email' || val.type === 'date' || val.type === 'datetime-local' ?
                                                             <div className="mb-24">
                                                                 <Input required={val.required} step="any" label={convertCamelCase(val.label ?? val.name)} variant="standard" className="border-b-1" type={val.type} defaultValue={
                                                                     val.type === 'date' ?
                                                                         dataEdit?.[val.name] ?
                                                                             moment(dataEdit?.[val.name], 'DD/MM/YYYY').format('YYYY-MM-DD') :
                                                                             dataEdit?.[val.name] ? dataEdit?.[val.name] : ''
-                                                                        : dataEdit?.[val.name] ? val.numeral ? numeral(dataEdit?.[val.name]).value() : dataEdit?.[val.name] : ''} name={val.name} id={`${val.id}Edit`} />
+                                                                        : val.type === 'datetime-local' ?
+                                                                            dataEdit?.[val.name] ?
+                                                                                moment(dataEdit?.[val.name], 'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss') :
+                                                                                dataEdit?.[val.name] ? dataEdit?.[val.name] : ''
+                                                                            : dataEdit?.[val.name] ? val.numeral ? numeral(dataEdit?.[val.name]).value() : dataEdit?.[val.name] : ''} name={val.name} id={`${val.id}Edit`} />
                                                             </div>
                                                             : val.type === 'img' ?
                                                                 <div className="mb-5" >
@@ -815,7 +833,7 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                                                                             : null}
                                                                         <div className="input-group">
                                                                             {val.group.map((vall: any, ii: number) => {
-                                                                                return (<input key={ii} type={vall.type} required={val.required} defaultValue={dataEdit?.address ? dataEdit?.addressJson[vall.name] : dataEdit?.[val.name]} readOnly={vall.readOnly} placeholder={vall.placeholder} name={vall.name} className="form-control" />)
+                                                                                return (<input key={ii} type={vall.type} required={val.required} defaultValue={dataEdit?.address ? dataEdit?.addressJson[vall.name] : dataEdit?.[vall.name]} readOnly={vall.readOnly} placeholder={vall.placeholder} name={vall.name} className="form-control" />)
                                                                             })}
                                                                         </div>
                                                                     </div>
@@ -829,9 +847,11 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                                                                                     id={`${val.id}Edit`}
                                                                                     name={val.name}
                                                                                     data={val.select}
+                                                                                    search={val.search}
                                                                                     required={val.required}
-                                                                                    label={convertCamelCase(val.name)}
-                                                                                    defaultValue={dataEdit?.[val.name] ? { label: convertCamelCase(dataEdit?.[val.name]), value: dataEdit?.[val.name] } : ''} />
+                                                                                    label={convertCamelCase(val.label ?? val.name)}
+                                                                                    defaultValue={dataEdit?.[val.name] ? dataEdit?.[val.name]?.value ? dataEdit?.[val.name] : { label: convertCamelCase(dataEdit?.[val.name]), value: dataEdit?.[val.name] } : ''}
+                                                                                />
                                                                             </div>
                                                                             : val.type === 'address' ?
                                                                                 <div className="w-full">
@@ -990,7 +1010,7 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
         return (<div className="text-center w-full text-gray-500">
             <div className="flex justify-center -mt-10 -mb-7 ">
                 <Image src="/img/noResult.gif" width={200} height={200} alt="noResult" /> </div>
-            <div className="text-lg">No results found</div></div>)
+            <div className="text-lg">Tidak ada ditemukan</div></div>)
 
     }
 }

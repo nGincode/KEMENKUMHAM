@@ -21,6 +21,18 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      nama: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      noHp: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      antrian: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       NIK: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -33,7 +45,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      pengikut: {
+      pengikutPria: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      pengikutWanita: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -41,8 +57,12 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      waktuKunjungan: {
+      suratIzin: {
         type: Sequelize.STRING,
+        allowNull: true,
+      },
+      waktuKunjungan: {
+        type: Sequelize.DATE,
         allowNull: false,
       },
       createdAt: {
@@ -56,6 +76,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("tahanan");
+    await queryInterface.dropTable("kunjungan");
   },
 };

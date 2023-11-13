@@ -116,10 +116,14 @@ export default function Tahanan({ userData, setuserData }: any) {
             },
             {
                 name: 'statusTahanan',
-                type: 'text',
+                type: 'reactSelect',
                 id: 'statusTahanan',
                 label: "Status Tahanan",
-                required: true
+                required: true,
+                select: [
+                    { label: 'Tetap', value: 'Tetap' },
+                    { label: 'Titipan', value: 'Titipan' }
+                ]
             },
         ]
     const convertFileToBase64 = (file: any) => {
@@ -155,7 +159,7 @@ export default function Tahanan({ userData, setuserData }: any) {
             tanggal: event.target.tanggal.value,
             BIN: event.target.BIN.value,
             kamar: event.target.kamar.value,
-            status: event.target.status.value,
+            status: event.target.status_val.value,
             perkara: event.target.perkara_val.value,
             img: img
         };
@@ -272,7 +276,16 @@ export default function Tahanan({ userData, setuserData }: any) {
                                                 </div>
                                                 <div className="col-12 col-md-6">
                                                     <div className="mb-24">
-                                                        <Input type="text" required variant="standard" className="border-b-1" name="status" label="Status" id="status" />
+                                                        <ReactSelect
+                                                            name='status'
+                                                            id="status"
+                                                            label='Status'
+                                                            data={[
+                                                                { label: 'Tetap', value: 'Tetap' },
+                                                                { label: 'Titipan', value: 'Titipan' }
+                                                            ]}
+                                                            required={true}
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>

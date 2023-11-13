@@ -1,17 +1,20 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class stock extends Model {
+  class kunjungan extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of DataTypes lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.tahanan, {
+        as: "tahanan",
+        foreignKey: "tahanan_id",
+      });
     }
   }
-  stock.init(
+  kunjungan.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -27,9 +30,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      nama: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       tahanan_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      noHp: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      antrian: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       NIK: {
         type: DataTypes.STRING,
@@ -43,11 +58,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      pengikut: {
+      pengikutPria: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      pengikutWanita: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       img: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      suratIzin: {
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -66,13 +89,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "stock",
-      tableName: "stock",
+      modelName: "kunjungan",
+      tableName: "kunjungan",
       // timestamps: true,
       freezeTableName: true,
       // createdAt: "created_at",
       // updatedAt: "updated_at",
     }
   );
-  return stock;
+  return kunjungan;
 };

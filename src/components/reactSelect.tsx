@@ -126,44 +126,50 @@ export default function ReactSelect({
                             id={id}
                         />
                     ) : search ? (
-                        <Select
-                            options={dataSelect}
-                            name={name}
-                            value={value ? value : ""}
-                            onChange={handleOnChangeReactSelect}
-                            // className={"form-control " + className}
-                            classNamePrefix="react-select"
-                            id={id}
-                            required={required}
-                            isOptionDisabled={(dataSelect: any) => dataSelect.disabled}
-                        // styles={{
-                        //     input: (base) => ({
-                        //         ...base,
-                        //         'input': {
-                        //             boxShadow: 'none',
-                        //             border: 'none',
-                        //             padding: '0px'
-                        //         }
-                        //     }),
-                        //     control: (provided: any, state: any) => ({
-                        //         ...provided,
-                        //         boxShadow: "none",
-                        //         border: "black",
-                        //         padding: '0px'
-                        //     }),
-                        //     menu: (provided: any, state: any) => ({
-                        //         ...provided,
-                        //         // border: "none",
-                        //         // boxShadow: "none"
-                        //         // borderRadius: '10px'
-                        //     }),
-                        //     option: (provided: any, state: any) => ({
-                        //         ...provided,
-                        //         // backgroundColor: state.isFocused && "lightgray",
-                        //         // color: state.isFocused && "red"
-                        //     })
-                        // }}
-                        />
+                        <>
+
+                            <label htmlFor={id} className="form-label">
+                                <span className="text-danger me-4">*</span>{label}
+                            </label>
+                            <Select
+                                options={dataSelect}
+                                name={name}
+                                value={value ? value : ""}
+                                onChange={handleOnChangeReactSelect}
+                                // className={"form-control " + className}
+                                classNamePrefix="react-select"
+                                id={id}
+                                required={required}
+                            // isOptionDisabled={(dataSelect: any) => dataSelect.disabled}
+                            // styles={{
+                            //     input: (base) => ({
+                            //         ...base,
+                            //         'input': {
+                            //             boxShadow: 'none',
+                            //             border: 'none',
+                            //             padding: '0px'
+                            //         }
+                            //     }),
+                            //     control: (provided: any, state: any) => ({
+                            //         ...provided,
+                            //         boxShadow: "none",
+                            //         border: "black",
+                            //         padding: '0px'
+                            //     }),
+                            //     menu: (provided: any, state: any) => ({
+                            //         ...provided,
+                            //         // border: "none",
+                            //         // boxShadow: "none"
+                            //         // borderRadius: '10px'
+                            //     }),
+                            //     option: (provided: any, state: any) => ({
+                            //         ...provided,
+                            //         // backgroundColor: state.isFocused && "lightgray",
+                            //         // color: state.isFocused && "red"
+                            //     })
+                            // }}
+                            />
+                        </>
                     ) : multi ? (
                         <Select
                             id={id}

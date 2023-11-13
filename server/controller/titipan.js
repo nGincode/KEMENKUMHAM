@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { hash, verify } = require("node-php-password");
-const { User, tahanan, kunjungan } = require("../models");
+const { User, tahanan } = require("../models");
 const { Op } = require("sequelize");
 const Crypto = require("crypto");
 const numeral = require("numeral");
@@ -17,7 +17,7 @@ const getId = async (req, res) => {
 
   if (!Npwp) {
     return res.json({
-      massage: "STOCK not found",
+      message: "STOCK not found",
     });
   }
 
@@ -64,7 +64,7 @@ const put = async (req, res) => {
 
   if (!Npwp) {
     return res.json({
-      massage: "STOCK not found",
+      message: "STOCK not found",
     });
   }
 
@@ -117,7 +117,7 @@ const putId = async (req, res) => {
 
   if (!Tahanan) {
     return res.status(400).json({
-      massage: "Tahanan tidak ada",
+      message: "Tahanan tidak ada",
     });
   }
 
@@ -179,19 +179,9 @@ const del = async (req, res) => {
     where: { uuid: uuid },
   });
 
-  const Kunjungan = await kunjungan.findOne({
-    where: { tahanan_id: Tahanan.id },
-  });
-
-  if (Kunjungan) {
-    return res.status(400).json({
-      massage: "Tahanan digunakan pada kunjungan",
-    });
-  }
-
   if (!Tahanan) {
-    return res.status(400).json({
-      massage: "Tahanan tidak ada",
+    return res.status(200).json({
+      message: "Tahanan tidak ada",
     });
   }
 
@@ -210,7 +200,6 @@ const get = async (req, res) => {
   });
   const data = tahananDb.map((val) => {
     return {
-      id: val.id,
       img: val.img,
       uuid: val.uuid,
       nama: val.nama,
