@@ -1,10 +1,10 @@
 import React, { Component, useEffect, useState, Suspense } from "react"
 import toast, { Toaster } from 'react-hot-toast';
 import Image from "next/image";
-import { Html5QrcodeScanner } from "html5-qrcode";
+// import { Html5QrcodeScanner } from "html5-qrcode";
 
 // To use Html5Qrcode (more info below)
-import { Html5Qrcode } from "html5-qrcode";
+// import { Html5Qrcode } from "html5-qrcode";
 
 export default function Index({ userData, setuserData }: any) {
 
