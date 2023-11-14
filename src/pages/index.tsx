@@ -22,12 +22,12 @@ export default function Index({ userData, setuserData }: any) {
     useEffect(() => {
         (document as any).title = 'Dashboard';
 
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader",
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-            false);
+        // let html5QrcodeScanner = new Html5QrcodeScanner(
+        //     "reader",
+        //     { fps: 10, qrbox: { width: 250, height: 250 } },
+        //     false);
 
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        // html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
         $("#qr-reader img").hide();
         $("#qr-reader").css({
