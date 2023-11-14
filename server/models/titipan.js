@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.tahanan, {
+        as: "tahanan",
+        foreignKey: "tahanan_id",
+      });
     }
   }
   titipan.init(
@@ -31,6 +34,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      nama: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      noHp: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       NIK: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -50,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
       img: {
         type: DataTypes.STRING,
       },
-      waktuKunjungan: {
+      hubungan: {
         type: DataTypes.STRING,
         allowNull: false,
       },

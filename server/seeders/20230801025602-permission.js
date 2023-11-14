@@ -22,46 +22,58 @@ module.exports = {
         view: "all",
         data: JSON.stringify([
           {
-            data: [
-              {
-                link: "/scanning",
-                name: "scanning[]",
-                label: "Scanning",
-                checklist: ["view", "create", "edit", "delete"],
-              },
-            ],
             check: true,
             label: "Dashboards",
-          },
-          {
             data: [
               {
-                link: "/users",
-                name: "users[]",
-                label: "Users",
-                checklist: ["view", "create", "edit", "delete"],
-              },
-              {
-                link: "/permission",
-                name: "permission[]",
-                label: "Permission",
-                checklist: ["view", "create", "edit", "delete"],
-              },
-              {
-                link: "/company",
-                name: "company[]",
-                label: "Company",
-                checklist: ["view", "create", "edit", "delete"],
-              },
-              {
-                link: "/npwp",
-                name: "npwp[]",
-                label: "NPWP",
+                name: "scanning[]",
+                label: "Scanning",
+                link: "/scanning",
                 checklist: ["view", "create", "edit", "delete"],
               },
             ],
+          },
+          {
             check: true,
             label: "Accounts",
+            data: [
+              {
+                name: "users[]",
+                label: "Users",
+                link: "/users",
+                checklist: ["view", "create", "edit", "delete"],
+              },
+              {
+                name: "permission[]",
+                label: "Permission",
+                link: "/permission",
+                checklist: ["view", "create", "edit", "delete"],
+              },
+            ],
+          },
+          {
+            check: true,
+            label: "Fitur",
+            data: [
+              {
+                name: "tahanan[]",
+                label: "Tahanan",
+                link: "/tahanan",
+                checklist: ["view", "create", "edit", "delete"],
+              },
+              {
+                name: "kunjungan[]",
+                label: "Kunjungan",
+                link: "/kunjungan",
+                checklist: ["view", "create", "edit", "delete"],
+              },
+              {
+                name: "titipan[]",
+                label: "Titipan",
+                link: "/titipan",
+                checklist: ["view", "create", "edit", "delete"],
+              },
+            ],
           },
         ]),
         uuid: Crypto.randomUUID(),

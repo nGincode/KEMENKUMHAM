@@ -5,6 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import numeral from "numeral";
+import moment from "moment";
 
 import Select from "../components/reactSelect";
 import ImgUpload from "../components/imgUpload";
@@ -14,10 +15,11 @@ import ReactSelect from "../components/reactSelect";
 
 export default function Titipan({ userData, setuserData }: any) {
     const [pagePermission, setpagePermission] = useState([]);
-    const [dataPermission, setdataPermission] = useState([]);
+    const [dataTahanan, setdataTahanan] = useState<any>([]);
     const [dataCreate, setdataCreate] = useState();
+    const [SearchValue, setSearchValue] = useState<any>();
     const [search, setsearch] = useState('');
-    const URLAPI = "/api/stock";
+    const URLAPI = "/api/titipan";
     const Subject = "Titipan";
 
     useEffect(() => {
@@ -28,7 +30,39 @@ export default function Titipan({ userData, setuserData }: any) {
                     return vall;
                 }
             })
-        })?.filter((val: any) => val !== undefined)?.[0]?.checklist ?? [])
+        })?.filter((val: any) => val !== undefined)?.[0]?.checklist ?? []);
+
+
+        const handleApiFirst = async (data: any = null) => {
+            try {
+                await axios({
+                    method: "GET",
+                    url: '/api/tahanan',
+                    timeout: 5000,
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }).then((res: any) => {
+                    setdataTahanan(res.data.data)
+                }).catch(error => {
+                    if (error.code === 'ECONNABORTED') {
+                        toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
+                    } else {
+                        if (error?.response?.data?.massage) {
+                            toast.error(error.response.data.massage);
+                        } else {
+                            toast.error(error.message);
+                        }
+                    }
+                });
+            } catch (error: any) {
+                toast.error(error.response.data.massage);
+            }
+
+        }
+
+        handleApiFirst();
+
     }, [userData]);
 
     const handleApi = async (url: any, data: any = null) => {
@@ -72,30 +106,76 @@ export default function Titipan({ userData, setuserData }: any) {
                 name: 'img',
                 type: 'img',
                 id: 'img',
-                full: true
+                full: true,
+                label: 'Foto KTP',
             },
             {
-                name: 'pengikut',
-                type: 'group',
-                label: "Pengikut Kunjungan",
-                id: 'pengikut',
-                group: [
-                    {
-                        name: 'laki',
-                        type: 'number',
-                        id: 'nik',
-                        placeholder: 'Jumlah Laki-Laki'
-                    },
-                    {
-                        name: 'perempuan',
-                        type: 'number',
-                        id: 'perempuan',
-                        placeholder: 'Jumlah Perempuan'
-                    },
+                require: true,
+                name: 'nama',
+                type: 'text',
+                id: 'nama',
+                Label: 'Nama'
+            },
+            {
+                require: true,
+                name: 'NIK',
+                type: 'number',
+                id: 'NIK',
+                Label: 'NIK KTP'
+            },
+            {
+                require: true,
+                name: 'jenisKelamin',
+                type: 'reactSelect',
+                id: 'jenisKelamin',
+                label: 'Jenis Kelamin',
+                select: [
+                    { value: 'Laki-Laki', label: 'Laki-Laki' },
+                    { value: 'Perempuan', label: 'Perempuan' },
                 ]
-
+            },
+            {
+                require: true,
+                name: 'alamat',
+                type: 'text',
+                id: 'alamat',
+                Label: 'Alamat',
+            },
+            {
+                require: true,
+                name: 'noHp',
+                type: 'number',
+                id: 'noHp',
+                Label: 'No Wa'
+            },
+            {
+                require: true,
+                name: 'hubungan',
+                type: 'text',
+                id: 'hubungan',
+                Label: 'Hubungan Dengan Tahanan',
+            },
+            {
+                require: true,
+                full: true,
+                name: 'keterangan',
+                type: 'text',
+                id: 'keterangan',
+                Label: 'Uraian Titipan Barang',
+            },
+            {
+                require: true,
+                name: 'tahanan_id',
+                type: 'reactSelect',
+                id: 'tahanan_id',
+                label: 'Tahanan yang dikunjungi',
+                search: true,
+                select: dataTahanan.map((val: any) => {
+                    return { value: val.id, label: val.nama }
+                })
             },
         ]
+
     const convertFileToBase64 = (file: any) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -113,8 +193,8 @@ export default function Titipan({ userData, setuserData }: any) {
             let extension = files.type;
             let size = files.size;
             if (extension === 'image/jpeg' || extension === 'image/png') {
-                if (size > 100000) {
-                    return toast.error("Size img only < 100kb");
+                if (size > 1000000) {
+                    return toast.error("Size img only < 1000kb");
                 } else {
                     img = await convertFileToBase64(files);
                 }
@@ -124,18 +204,32 @@ export default function Titipan({ userData, setuserData }: any) {
         }
 
 
+
+        if (!event.target.tahanan_id.value) {
+            return toast.error("Tahanan dikunjungi belum terisi");
+        }
+
+        if (!event.target.kelamin_val.value) {
+            return toast.error("Jenis Kelamin belum terisi");
+        }
+
+        if (!img) {
+            return toast.error("Foto KTP Wajib Terisi");
+        }
+
         let data = {
-            stock: numeral(event.target.stock.value).value(),
-            name: event.target.name.value,
-            price_buy: numeral(event.target.price_buy.value).value(),
-            price_sell: numeral(event.target.price_sell.value).value(),
-            stock_val: event.target.stock.value,
+            nama: event.target.nama.value,
+            NIK: event.target.nik_ktp.value,
+            alamat: event.target.alamat.value,
+            jenisKelamin: event.target.kelamin_val.value,
+            tahanan_id: event.target.tahanan_id.value,
+            noHp: event.target.noHp.value,
+            ket: event.target.ket.value,
+            hubungan: event.target.hub.value,
             img: img
         };
 
         handleApi('create', data);
-
-
     };
 
     const byNumeral = (val: any) => {
@@ -197,73 +291,105 @@ export default function Titipan({ userData, setuserData }: any) {
                                     </div>
 
                                     <div className="divider m-0"></div>
-                                    <form onSubmit={submitAdd} id="formCreate">
-                                        <div className="modal-body">
-                                            <ImgUpload
-                                                label="Foto KTP"
-                                                name="file"
-                                                id="file" />
-                                            <div className="row gx-8">
-
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="datetime-local" required variant="standard" className="border-b-1" name="waktu" label="Waktu Kunjungan" id="waktu" />
-                                                    </div>
-                                                </div>
 
 
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="text" required variant="standard" className="border-b-1" name="nama" label="Nama" id="nama" />
+                                    {dataTahanan.length ?
+                                        <form onSubmit={submitAdd} id="formCreate">
+                                            <div className="modal-body">
+                                                <ImgUpload
+                                                    label="Foto KTP"
+                                                    name="file"
+                                                    id="file" />
+                                                <div className="row gx-8">
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="text" required variant="standard" className="border-b-1" name="nama" label="Nama" id="nama" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="number" required variant="standard" className="border-b-1" name="nik_ktp" label="NIK KTP" id="nik_ktp" />
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="number" required variant="standard" className="border-b-1" name="nik_ktp" label="NIK KTP" id="nik_ktp" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <ReactSelect
-                                                            name='kelamin'
-                                                            label='Jenis Kelamin'
-                                                            data={[
-                                                                { label: 'Laki-Laki', value: 'Laki-Laki' },
-                                                                { label: 'Perempuan', value: 'Perempuan' },
-                                                            ]}
-                                                            required={true}
-                                                        />
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
+                                                            <ReactSelect
+                                                                name='kelamin'
+                                                                label='Jenis Kelamin'
+                                                                data={[
+                                                                    { label: 'Laki-Laki', value: 'Laki-Laki' },
+                                                                    { label: 'Perempuan', value: 'Perempuan' },
+                                                                ]}
+                                                                required={true}
+                                                            />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="text" required variant="standard" className="border-b-1" name="alamat" label="Alamat" id="alamat" />
+                                                    <div className="col-12  col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="text" required variant="standard" className="border-b-1" name="alamat" label="Alamat" id="alamat" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="text" required variant="standard" className="border-b-1" name="alamat" label="Alamat" id="alamat" />
-                                                    </div>
-                                                </div>
 
-                                                <div className="col-12 col-md-6 -mt-5">
-                                                    <label htmlFor="pengikut" className="form-label">
-                                                        <span className="text-danger me-4">*</span>Pengikut Kunjungan
-                                                    </label>
-                                                    <div className="input-group">
-                                                        <input type="number" required placeholder="Jumlah Laki-Laki" name="pengikut_laki" className="form-control" />
-                                                        <input type="number" required placeholder="Jumlah Perempuan" name="pengikut_perempuan" className="form-control" />
+                                                    <div className="col-12  col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="number" required variant="standard" className="border-b-1" name="noHp" label="No WA" id="noHp" />
+                                                        </div>
                                                     </div>
-                                                </div>
 
+                                                    <div className="col-12  col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="text" required variant="standard" className="border-b-1" name="hub" label="Hubungan Dengan Tahanan" id="hub" />
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div className="col-12">
+                                                        <div className="mb-24">
+                                                            <Input type="text" required variant="standard" className="border-b-1" name="ket" label="Uraian Titipan Barang" id="ket" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-12">
+                                                        <div className="mb-24">
+                                                            <ReactSelect
+                                                                name='tahanan_id'
+                                                                search={true}
+                                                                label='Tahanan yang dikunjungi'
+                                                                setSearchValue={setSearchValue}
+                                                                data={dataTahanan.map((val: any) => {
+                                                                    return { value: val.id, label: val.nama }
+                                                                })}
+                                                                required={true}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    {dataTahanan.map((val: any, i: number) => {
+                                                        return <div className="row" key={i}>
+                                                            {val.id == SearchValue?.value ? <>
+                                                                <div className="col-12  col-md-6">
+                                                                    <div className="mb-24">
+                                                                        <Input readOnly label="Perkara" type="text" value={val.perkara} variant="standard" className="border-b-1" />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-12  col-md-6">
+                                                                    <div className="mb-24">
+                                                                        <Input readOnly label="No Kamar" type="text" value={val.kamar} variant="standard" className="border-b-1" />
+                                                                    </div>
+                                                                </div>
+                                                            </> : null}
+                                                        </div>
+
+                                                    })}
+
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div className="modal-footer pt-0 px-24 pb-24">
-                                            <div className="divider"></div>
-                                            <Button type="submit" className="w-full" color="blue">Submit</Button>
-                                        </div>
-                                    </form>
+                                            <div className="modal-footer pt-0 px-24 pb-24">
+                                                <div className="divider"></div>
+                                                <Button type="submit" className="w-full" color="blue">Submit</Button>
+                                            </div>
+                                        </form>
+                                        : <div className="text-center m-5">Data Tahanan Isi Terlebih Dahulu</div>}
                                 </div>
                             </div>
                         </div>

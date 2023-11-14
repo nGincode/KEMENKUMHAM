@@ -28,3 +28,54 @@
   background-color: darkgrey;
   border-radius:10px;
 }
+
+
+
+
+
+#html5-qrcode-button-camera-start {
+    padding: 0.625rem 1rem;
+    font-size: 0.813rem;
+    border-radius: 1.125rem;
+    font-weight: 400;
+    color: white;
+    background-color: #68e365;
+    border-color: #68e365;
+    margin: 10px;
+}
+
+#html5-qrcode-button-camera-stop {
+    padding: 0.625rem 1rem;
+    font-size: 0.813rem;
+    border-radius: 1.125rem;
+    font-weight: 400;
+    color: white;
+    background-color: #68e365;
+    border-color: #68e365;
+    margin: 10px;
+}
+
+img {
+    display: unset;
+}
+
+video {
+    border-radius: 40px 40px 0px 0px;
+}
+
+#qr-shaded-region {
+    border-radius: 40px 40px 0px 0px;
+}
+
+#qr-reader {
+    background-color: silver;
+    border: unset;
+}
+
+.imgManage {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+

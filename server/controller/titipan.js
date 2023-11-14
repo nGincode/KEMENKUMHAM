@@ -1,31 +1,28 @@
 const jwt = require("jsonwebtoken");
 const { hash, verify } = require("node-php-password");
-const { User, tahanan } = require("../models");
+const { titipan, tahanan, kunjungan } = require("../models");
 const { Op } = require("sequelize");
 const Crypto = require("crypto");
 const numeral = require("numeral");
 const moment = require("moment");
 
 const getId = async (req, res) => {
-  const { users_id, users_uuid, email, username } = req.user;
-  const { uuid } = req.params;
-
-  const Npwp = await stock.findOne({
-    where: { uuid: uuid },
-    attributes: ["uuid", "stock", "name", "phone", "address"],
-  });
-
-  if (!Npwp) {
-    return res.json({
-      message: "STOCK not found",
-    });
-  }
-
-  res.json({
-    status: 200,
-    massage: "Get data successful",
-    data: Npwp,
-  });
+  // const { users_id, users_uuid, email, username } = req.user;
+  // const { uuid } = req.params;
+  // const Npwp = await stock.findOne({
+  //   where: { uuid: uuid },
+  //   attributes: ["uuid", "stock", "name", "phone", "address"],
+  // });
+  // if (!Npwp) {
+  //   return res.json({
+  //     message: "STOCK not found",
+  //   });
+  // }
+  // res.json({
+  //   status: 200,
+  //   massage: "Get data successful",
+  //   data: Npwp,
+  // });
 };
 const put = async (req, res) => {
   const { users_id, users_uuid } = req.user;
@@ -102,32 +99,25 @@ const putId = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const {
     nama,
-    tanggalMasuk,
-    BIN,
-    kamar,
-    statusTahanan,
-    perkara,
+    hubungan,
+    NIK,
+    alamat,
+    jenisKelamin,
+    tahanan_id,
+    noHp,
+    keterangan,
     image,
     imgDel,
   } = req.body;
 
-  const Tahanan = await tahanan.findOne({
+  const Titipan = await titipan.findOne({
     where: { uuid: uuid },
   });
 
-  if (!Tahanan) {
+  if (!Titipan) {
     return res.status(400).json({
-      message: "Tahanan tidak ada",
+      massage: "Titipan tidak ada",
     });
-  }
-
-  if (nama !== Tahanan.nama) {
-    const cek = await tahanan.findOne({ where: { nama: nama } });
-    if (cek) {
-      return res.status(400).json({
-        massage: "Nama Tahanan telah ada",
-      });
-    }
   }
 
   let type = null;
@@ -137,7 +127,7 @@ const putId = async (req, res) => {
     if (image) {
       type = image.split(";")[0].split("/")[1];
       require("fs").writeFile(
-        __dirname + `/../../public/upload/tahanan/${uuid}.${type}`,
+        __dirname + `/../../public/upload/titipan/${uuid}.${type}`,
         new Buffer.from(
           image.replace(/^data:image\/\w+;base64,/, ""),
           "base64"
@@ -146,24 +136,25 @@ const putId = async (req, res) => {
           console.log(err);
         }
       );
-      imgData = "/upload/tahanan/" + uuid + "." + type;
+      imgData = "/upload/titipan/" + uuid + "." + type;
     } else {
-      imgData = Tahanan.img;
+      imgData = Titipan.img;
     }
   }
 
   const data = {
+    hubungan: hubungan,
     nama: nama,
-    tanggalMasuk: tanggalMasuk,
-    nama: nama,
-    BIN: BIN,
-    kamar: kamar,
-    statusTahanan: statusTahanan,
-    perkara: perkara,
+    NIK: NIK,
+    alamat: alamat,
+    jenisKelamin: jenisKelamin,
+    keterangan: keterangan,
+    tahanan_id: tahanan_id,
+    noHp: noHp,
     img: imgData,
   };
 
-  await Tahanan.update(data);
+  await Titipan.update(data);
 
   res.json({
     status: 200,
@@ -175,39 +166,57 @@ const del = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const { uuid } = req.params;
 
-  const Tahanan = await tahanan.findOne({
+  const Titipan = await titipan.findOne({
     where: { uuid: uuid },
   });
 
-  if (!Tahanan) {
-    return res.status(200).json({
-      message: "Tahanan tidak ada",
+  if (!Titipan) {
+    return res.status(500).json({
+      massage: "Titipan tidak ada",
     });
   }
 
-  await Tahanan.destroy();
+  await Titipan.destroy();
 
   res.json({
     massage: "Hapus Berhasil",
-    data: Tahanan,
+    data: Titipan,
   });
 };
 const get = async (req, res) => {
   const { users_id, users_uuid, email, username, permission } = req.user;
 
-  const tahananDb = await tahanan.findAll({
+  const Titipan = await titipan.findAll({
     order: [["id", "DESC"]],
+    include: [
+      {
+        model: tahanan,
+        as: "tahanan",
+        attributes: {
+          exclude: ["uuid", "createdAt", "updatedAt"],
+        },
+      },
+    ],
   });
-  const data = tahananDb.map((val) => {
+  const data = Titipan.map((val) => {
     return {
       img: val.img,
       uuid: val.uuid,
+      tahanan: val.tahanan.nama,
+      tahanan_id: {
+        value: val.tahanan.id,
+        label: val.tahanan.nama,
+      },
+      kamar: val.tahanan.kamar,
+      perkara: val.tahanan.perkara,
       nama: val.nama,
-      BIN: val.BIN,
-      kamar: val.kamar,
-      tanggalMasuk: moment(val.tanggalMasuk, "YYYY-MM-DD").format("DD/MM/YYYY"),
-      perkara: val.perkara,
-      statusTahanan: val.statusTahanan,
+      noHp: val.noHp,
+      NIK: val.NIK,
+      jenisKelamin: val.jenisKelamin,
+      alamat: val.alamat,
+      hubungan: val.hubungan,
+      antrian: val.antrian,
+      keterangan: val.keterangan,
     };
   });
 
@@ -218,22 +227,25 @@ const get = async (req, res) => {
   });
 };
 const post = async (req, res) => {
-  const { nama, tanggal, BIN, kamar, status, perkara, img } = req.body;
+  const {
+    nama,
+    hubungan,
+    NIK,
+    alamat,
+    jenisKelamin,
+    tahanan_id,
+    img,
+    noHp,
+    ket,
+  } = req.body;
   const { users_id, users_uuid } = req.user;
 
-  const cek = await tahanan.findOne({ where: { nama: nama } });
-
-  if (cek) {
-    return res.status(400).json({
-      massage: "Nama telah ada",
-    });
-  }
   const uuid = Crypto.randomUUID();
   let type = null;
   if (img) {
     type = img.split(";")[0].split("/")[1];
     require("fs").writeFile(
-      __dirname + `/../../public/upload/tahanan/${uuid}.${type}`,
+      __dirname + `/../../public/upload/titipan/${uuid}.${type}`,
       new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
       (err) => {
         console.log(err);
@@ -243,17 +255,19 @@ const post = async (req, res) => {
 
   const data = {
     uuid: uuid,
-    tanggalMasuk: tanggal,
+    hubungan: hubungan,
     user_id: users_id,
     nama: nama,
-    BIN: BIN,
-    kamar: kamar,
-    statusTahanan: status,
-    perkara: perkara,
-    img: img ? "/upload/tahanan/" + uuid + "." + type : null,
+    NIK: NIK,
+    alamat: alamat,
+    jenisKelamin: jenisKelamin,
+    keterangan: ket,
+    tahanan_id: tahanan_id,
+    noHp: noHp,
+    img: img ? "/upload/titipan/" + uuid + "." + type : null,
   };
 
-  await tahanan.create(data);
+  await titipan.create(data);
 
   res.json({
     status: 200,

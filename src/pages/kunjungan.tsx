@@ -200,7 +200,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
     const submitAdd = async (event: any) => {
         event.preventDefault();
         let img = null;
-        let files = event.target.file.files?.[0];
+        let files = event.target.file?.files?.[0];
         if (files) {
             let extension = files.type;
             let size = files.size;
@@ -217,7 +217,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
 
 
         let suratIzin = null;
-        let files2 = event.target.suratIzin.files?.[0];
+        let files2 = event.target.suratIzin?.files?.[0];
         if (files2) {
             let size2 = files2.size;
             if (size2 > 5000000) {
@@ -233,6 +233,10 @@ export default function Kunjungan({ userData, setuserData }: any) {
 
         if (!event.target.kelamin_val.value) {
             return toast.error("Jenis Kelamin belum terisi");
+        }
+
+        if (!img) {
+            return toast.error("Foto KTP Wajib Terisi");
         }
 
         let data = {
@@ -312,114 +316,116 @@ export default function Kunjungan({ userData, setuserData }: any) {
                                     </div>
 
                                     <div className="divider m-0"></div>
-                                    <form onSubmit={submitAdd} id="formCreate">
-                                        <div className="modal-body">
-                                            <ImgUpload
-                                                label="Foto KTP"
-                                                name="file"
-                                                id="file" />
-                                            <div className="row gx-8">
+                                    {dataTahanan.length ?
+                                        <form onSubmit={submitAdd} id="formCreate">
+                                            <div className="modal-body">
+                                                <ImgUpload
+                                                    label="Foto KTP"
+                                                    name="file"
+                                                    id="file" />
+                                                <div className="row gx-8">
 
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="datetime-local" required variant="standard" className="border-b-1" name="waktu" label="Waktu Kunjungan" id="waktu" />
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="datetime-local" required variant="standard" className="border-b-1" name="waktu" label="Waktu Kunjungan" id="waktu" />
+                                                        </div>
                                                     </div>
-                                                </div>
 
 
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="text" required variant="standard" className="border-b-1" name="nama" label="Nama" id="nama" />
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="text" required variant="standard" className="border-b-1" name="nama" label="Nama" id="nama" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="number" required variant="standard" className="border-b-1" name="nik_ktp" label="NIK KTP" id="nik_ktp" />
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="number" required variant="standard" className="border-b-1" name="nik_ktp" label="NIK KTP" id="nik_ktp" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <ReactSelect
-                                                            name='kelamin'
-                                                            label='Jenis Kelamin'
-                                                            data={[
-                                                                { label: 'Laki-Laki', value: 'Laki-Laki' },
-                                                                { label: 'Perempuan', value: 'Perempuan' },
-                                                            ]}
-                                                            required={true}
-                                                        />
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
+                                                            <ReactSelect
+                                                                name='kelamin'
+                                                                label='Jenis Kelamin'
+                                                                data={[
+                                                                    { label: 'Laki-Laki', value: 'Laki-Laki' },
+                                                                    { label: 'Perempuan', value: 'Perempuan' },
+                                                                ]}
+                                                                required={true}
+                                                            />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12  col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="text" required variant="standard" className="border-b-1" name="alamat" label="Alamat" id="alamat" />
+                                                    <div className="col-12  col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="text" required variant="standard" className="border-b-1" name="alamat" label="Alamat" id="alamat" />
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div className="col-12  col-md-6">
-                                                    <div className="mb-24">
-                                                        <Input type="number" required variant="standard" className="border-b-1" name="noHp" label="No WA" id="noHp" />
+                                                    <div className="col-12  col-md-6">
+                                                        <div className="mb-24">
+                                                            <Input type="number" required variant="standard" className="border-b-1" name="noHp" label="No WA" id="noHp" />
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div className="col-12 col-md-6 mb-5">
-                                                    <label htmlFor="pengikut" className="form-label">
-                                                        <span className="text-danger me-4">*</span>Pengikut Kunjungan
-                                                    </label>
-                                                    <div className="input-group">
-                                                        <input type="number" required placeholder="Jumlah Laki-Laki" name="pengikut_laki" className="form-control" />
-                                                        <input type="number" required placeholder="Jumlah Perempuan" name="pengikut_perempuan" className="form-control" />
+                                                    <div className="col-12 col-md-6 mb-5">
+                                                        <label htmlFor="pengikut" className="form-label">
+                                                            <span className="text-danger me-4">*</span>Pengikut Kunjungan
+                                                        </label>
+                                                        <div className="input-group">
+                                                            <input type="number" required placeholder="Jumlah Laki-Laki" name="pengikut_laki" className="form-control" />
+                                                            <input type="number" required placeholder="Jumlah Perempuan" name="pengikut_perempuan" className="form-control" />
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div className="col-12 col-md-6">
-                                                    <div className="mb-24">
-                                                        <ReactSelect
-                                                            name='tahanan_id'
-                                                            search={true}
-                                                            label='Tahanan yang dikunjungi'
-                                                            setSearchValue={setSearchValue}
-                                                            data={dataTahanan.map((val: any) => {
-                                                                return { value: val.id, label: val.nama }
-                                                            })}
-                                                            required={true}
-                                                        />
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
+                                                            <ReactSelect
+                                                                name='tahanan_id'
+                                                                search={true}
+                                                                label='Tahanan yang dikunjungi'
+                                                                setSearchValue={setSearchValue}
+                                                                data={dataTahanan.map((val: any) => {
+                                                                    return { value: val.id, label: val.nama }
+                                                                })}
+                                                                required={true}
+                                                            />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                {dataTahanan.map((val: any, i: number) => {
-                                                    return <div className="row" key={i}>
-                                                        {val.id == SearchValue?.value ? <>
-                                                            <div className="col-12  col-md-6">
-                                                                <div className="mb-24">
-                                                                    <Input readOnly label="Perkara" type="text" value={val.perkara} variant="standard" className="border-b-1" />
+                                                    {dataTahanan.map((val: any, i: number) => {
+                                                        return <div className="row" key={i}>
+                                                            {val.id == SearchValue?.value ? <>
+                                                                <div className="col-12  col-md-6">
+                                                                    <div className="mb-24">
+                                                                        <Input readOnly label="Perkara" type="text" value={val.perkara} variant="standard" className="border-b-1" />
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div className="col-12  col-md-6">
-                                                                <div className="mb-24">
-                                                                    <Input readOnly label="No Kamar" type="text" value={val.kamar} variant="standard" className="border-b-1" />
+                                                                <div className="col-12  col-md-6">
+                                                                    <div className="mb-24">
+                                                                        <Input readOnly label="No Kamar" type="text" value={val.kamar} variant="standard" className="border-b-1" />
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </> : null}
-                                                        {val.statusTahanan == "Titipan" && val.id == SearchValue?.value ?
-                                                            <div className="col-12  col-md-6 ">
-                                                                <label>Surat Izin</label>
-                                                                <div className="mb-24">
-                                                                    <input type="file" required name="suratIzin" id="suratIzin" />
+                                                            </> : null}
+                                                            {val.statusTahanan == "Titipan" && val.id == SearchValue?.value ?
+                                                                <div className="col-12  col-md-6 ">
+                                                                    <label>Surat Izin</label>
+                                                                    <div className="mb-24">
+                                                                        <input type="file" required name="suratIzin" id="suratIzin" />
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            : null}
-                                                    </div>
+                                                                : null}
+                                                        </div>
 
-                                                })}
+                                                    })}
 
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div className="modal-footer pt-0 px-24 pb-24">
-                                            <div className="divider"></div>
-                                            <Button type="submit" className="w-full" color="blue">Submit</Button>
-                                        </div>
-                                    </form>
+                                            <div className="modal-footer pt-0 px-24 pb-24">
+                                                <div className="divider"></div>
+                                                <Button type="submit" className="w-full" color="blue">Submit</Button>
+                                            </div>
+                                        </form>
+                                        : <div className="text-center m-5">Data Tahanan Isi Terlebih Dahulu</div>}
                                 </div>
                             </div>
                         </div>

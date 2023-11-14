@@ -111,7 +111,7 @@ const putId = async (req, res) => {
     imgDel,
   } = req.body;
 
-  const Kunjungan = await kunnjungan.findOne({
+  const Kunjungan = await kunjungan.findOne({
     where: { uuid: uuid },
   });
 
@@ -137,9 +137,9 @@ const putId = async (req, res) => {
           console.log(err);
         }
       );
-      imgData = "/upload/tahanan/" + uuid + "." + type;
+      imgData = "/upload/kunjungan/" + uuid + "." + type;
     } else {
-      imgData = Tahanan.img;
+      imgData = Kunjungan.img;
     }
   }
 
@@ -156,7 +156,7 @@ const putId = async (req, res) => {
     img: imgData,
   };
 
-  await Tahanan.update(data);
+  await Kunjungan.update(data);
 
   res.json({
     status: 200,
