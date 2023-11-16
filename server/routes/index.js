@@ -65,8 +65,8 @@ router.post("/suratKunjungan", async (req, res) => {
       },
     });
 
-    await Kunjungan.update({ antrian: antrian.length + 1 });
-    Kunjungan.antrian = antrian.length + 1;
+    await Kunjungan.update({ antrian: antrian.length ?? 0 + 1 });
+    Kunjungan.antrian = antrian.length ?? 0 + 1;
   }
 
   return res.json({
