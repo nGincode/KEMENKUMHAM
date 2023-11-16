@@ -437,6 +437,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
                             <ReactTable
                                 search={search}
                                 action={{
+                                    kunjungan: true,
                                     delete: pagePermission.find((val: any) => val == "delete") ? URLAPI : null,
                                     edit: pagePermission.find((val: any) => val == "edit") ? URLAPI : null
                                 }}

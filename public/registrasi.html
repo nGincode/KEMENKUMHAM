@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrasi</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  </head>
+  <body style="width: 650px; text-align: center">
+    <div
+      style="
+        display: flex;
+        width: 100%;
+        background: #4f4326;
+        color: white;
+        padding: 10px;
+        align-items: center;
+        justify-content: center;
+        border: solid black 2px;
+        font-weight: bolder;
+        margin-bottom: 20px;
+      "
+    >
+      <img src="img/logo2.jpeg" style="height: 60px; margin-right: 110px" />
+      <div>
+        KEMENTRIAN HUKUM DAN HAM RI<br />
+        KANTOR WILAYAH BENGKULU<br />
+        RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
+      </div>
+      <img src="img/logo1.jpeg" style="height: 60px; margin-left: 110px" />
+    </div>
+    <div style="text-align: center; font-weight: bolder; font-size: larger">
+      Terima Kasih <br />
+      Sudah Mendaftar Kunjungan Online Rutan <br />
+      Malabero Bengkulu
+    </div>
+    <br />
+    <div style="text-align: center">
+      Barcode Registrasion
+      <br />
+      <br />
+      <div id="barcode" style="display: flex; justify-content: center"></div>
+      <div id="uuid" style="margin-top: 10px"></div>
+    </div>
+    <div style="text-align: left">
+      Note :<br />
+      Silahkan disimpan Barcode Anda dengan screenshoot/<a
+        style="color: blue; text-decoration: underline; cursor: pointer"
+        onclick="copylink()"
+        >copy link</a
+      >
+      <br />
+      dan perlihatkan Barcode anda ke petugas loket rutan
+    </div>
+  </body>
+  <script>
+    function GetURLParameter(sParam) {
+      var sPageURL = window.location.search.substring(1);
+      var sURLVariables = sPageURL.split("&");
+      for (var i = 0; i < sURLVariables.length; i++) {
+        var sParameterName = sURLVariables[i].split("=");
+        if (sParameterName[0] == sParam) {
+          return sParameterName[1];
+        }
+      }
+    }
+
+    const copylink = () => {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Berhasil dicopy");
+    };
+
+    const api = async () => {
+      const formData = new FormData();
+      formData.append("uuid", GetURLParameter("uuid"));
+      formData.append("barcode", true);
+
+      const dt = await fetch("api/suratKunjungan", {
+        method: "POST",
+        body: formData,
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.data.uuid) {
+            new QRCode(document.getElementById("barcode"), data.data.uuid);
+            document.getElementById("uuid").innerHTML = data.data.uuid;
+          }
+        });
+    };
+    api();
+  </script>
+</html>

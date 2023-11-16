@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Surat Izin Kunjungan</title>
+    <title>Surat Izin Titipan Barang</title>
   </head>
   <body style="width: 210mm; text-align: center" onload="window.print()">
     <div
@@ -29,7 +29,7 @@
       <img src="img/logo1.jpeg" style="height: 60px; margin-left: 110px" />
     </div>
     <div style="text-align: center; font-weight: bolder; font-size: larger">
-      SURAT IZIN KUNJUNGAN
+      SURAT IZIN TITIPAN BARANG
     </div>
     <div
       style="
@@ -39,31 +39,16 @@
         font-size: large;
       "
     >
-      <div
-        style="
-          float: right;
-          text-align: center;
-          padding: 20px;
-          background: #025b01;
-          color: white;
-          border-radius: 10px;
-          font-weight: bolder;
-        "
-      >
-        No Antrian <br />
-        <div style="font-size: xx-large" id="antrian">1</div>
-      </div>
       <div style="margin-bottom: 20px" id="nama">Nama : -</div>
       <div style="margin-bottom: 20px" id="nik">NIK KTP : -</div>
       <div style="margin-bottom: 20px" id="kelamin">JENIS KELAMIN : -</div>
       <div style="margin-bottom: 20px" id="alamat">ALAMAT : -</div>
       <div style="margin-bottom: 20px" id="foto_ktp">FOTO KTP : -</div>
-      <div style="margin-bottom: 25px" id="pengikut_kunjungan">
-        PENGIKUT KUNJUNGAN : <span id="pengikutPria">-</span> Orang Laki-Laki &
-        <span id="pengikutWanita">-</span> Orang Perempuan
+      <div style="margin-bottom: 20px" id="hubungan">
+        HUBUNGAN DENGAN WBA : -
       </div>
       <div style="margin-bottom: 20px; font-weight: bolder">
-        TAHANAN/NARAPIDANA YANG DIKUNJUNGI
+        TUJUAN TITIPAN KEPADA
       </div>
       <div style="margin-bottom: 20px; margin-left: 10px" id="nama_tahanan">
         NAMA : -
@@ -71,13 +56,15 @@
       <div style="margin-bottom: 25px; margin-left: 10px" id="status_tahanan">
         STATUS TAHANAN : -
       </div>
-      <div style="margin-bottom: 20px; font-weight: bolder">
-        WAKTU BERKUNJUNG PADA
+      <div style="margin-bottom: 25px; margin-left: 10px" id="perkara_tahanan">
+        PERKARA TAHANAN : -
       </div>
-      <div style="margin-bottom: 20px; margin-left: 10px" id="hari">
-        HARI/TANGGAL : -
+      <div style="margin-bottom: 25px; margin-left: 10px" id="kamar_tahanan">
+        NO KAMAR : -
       </div>
-      <div style="margin-bottom: 30px; margin-left: 10px" id="jam">JAM : -</div>
+      <div style="margin-bottom: 20px; margin-left: 10px" id="ket">
+        URAIAN TITIPAN BARANG : -
+      </div>
       <div style="float: right; text-align: center">
         Petugas Loket
         <br />
@@ -106,7 +93,7 @@
       const formData = new FormData();
       formData.append("uuid", GetURLParameter("uuid"));
 
-      const dt = await fetch("api/suratKunjungan", {
+      const dt = await fetch("api/suratTitipan", {
         method: "POST",
         body: formData,
       })
@@ -130,22 +117,19 @@
             document.getElementById("foto_ktp").innerHTML =
               "FOTO KTP : Tidak ditemukan";
           }
-          document.getElementById("pengikutPria").innerHTML =
-            "" + data.data.pengikutPria;
-          document.getElementById("pengikutWanita").innerHTML =
-            "" + data.data.pengikutWanita;
+          document.getElementById("ket").innerHTML =
+            "URAIAN TITIPAN BARANG : " + data.data.keterangan;
+          document.getElementById("hubungan").innerHTML =
+            "HUBUNGAN DENGAN WBA : " + data.data.hubungan;
 
           document.getElementById("nama_tahanan").innerHTML =
-            "NAMA : " + data.data.tahanan.nama;
+            "NAMA WBA : " + data.data.tahanan.nama;
           document.getElementById("status_tahanan").innerHTML =
             "STATUS : " + data.data.tahanan.statusTahanan;
-          document.getElementById("antrian").innerHTML = data.data.antrian;
-
-          const d = new Date(data.data.waktuKunjungan);
-          document.getElementById("hari").innerHTML =
-            "HARI/TANGGAL : " + data.data.waktuKunjungan.slice(0, 10);
-          document.getElementById("jam").innerHTML =
-            "JAM : " + d.getUTCHours() + ":" + d.getUTCMinutes();
+          document.getElementById("kamar_tahanan").innerHTML =
+            "NO KAMAR : " + data.data.tahanan.kamar;
+          document.getElementById("perkara_tahanan").innerHTML =
+            "PERKARA : " + data.data.tahanan.perkara;
         });
     };
     api();

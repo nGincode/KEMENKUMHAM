@@ -487,15 +487,34 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
             cell: ({ row }: any) => {
                 if (action.edit && action.delete) {
                     return <>
-                        <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                        {action.kunjungan ?
+                            <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                            : null}
+                        {action.titipan ?
+                            <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                            : null}
                         <i onClick={() => { handleStatus('edit', action.edit, row.original) }} data-bs-toggle="modal" data-bs-target="#editUser" className="iconly-Curved-Edit hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80" style={{ fontSize: "24px" }} />
                         <i onClick={() => { handleStatus('delete', action.delete, row.original) }} className="ml-2 iconly-Light-Delete hp-cursor-pointer hp-transition hp-hover-text-color-danger-1 text-black-80" style={{ fontSize: "24px" }} />
                     </>
                 } else {
                     if (action.edit) {
-                        return <i onClick={() => { handleStatus('edit', action.edit, row.original) }} data-bs-toggle="modal" data-bs-target="#editUser" className="iconly-Curved-Edit hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80" style={{ fontSize: "24px" }} />
+                        return <>
+                            {action.titipan ?
+                                <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                                : null}
+                            {action.kunjungan ?
+                                <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                                : null}<i onClick={() => { handleStatus('edit', action.edit, row.original) }} data-bs-toggle="modal" data-bs-target="#editUser" className="iconly-Curved-Edit hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80" style={{ fontSize: "24px" }} />
+                        </>
                     } else if (action.delete) {
-                        return <i onClick={() => { handleStatus('delete', action.delete, row.original) }} className="iconly-Light-Delete hp-cursor-pointer hp-transition hp-hover-text-color-danger-1 text-black-80" style={{ fontSize: "24px" }} />
+                        return <>
+                            {action.titipan ?
+                                <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                                : null}
+                            {action.kunjungan ?
+                                <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                                : null}<i onClick={() => { handleStatus('delete', action.delete, row.original) }} className="iconly-Light-Delete hp-cursor-pointer hp-transition hp-hover-text-color-danger-1 text-black-80" style={{ fontSize: "24px" }} />
+                        </>
                     } else {
                         return "-"
                     }

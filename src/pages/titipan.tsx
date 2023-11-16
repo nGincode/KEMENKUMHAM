@@ -401,6 +401,7 @@ export default function Titipan({ userData, setuserData }: any) {
                             <ReactTable
                                 search={search}
                                 action={{
+                                    titipan: true,
                                     delete: pagePermission.find((val: any) => val == "delete") ? URLAPI : null,
                                     edit: pagePermission.find((val: any) => val == "edit") ? URLAPI : null
                                 }}
