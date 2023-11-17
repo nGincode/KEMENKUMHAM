@@ -6,7 +6,7 @@
     <title>Registrasi</title>
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
   </head>
-  <body style="width: 650px; text-align: center">
+  <body style="width: 650px; text-align: center" id="body">
     <div
       style="
         display: flex;
@@ -84,6 +84,9 @@
           if (data.data.uuid) {
             new QRCode(document.getElementById("barcode"), data.data.uuid);
             document.getElementById("uuid").innerHTML = data.data.uuid;
+          } else {
+            document.getElementById("body").innerHTML =
+              "<div>Tidak ditemukan data</div>";
           }
         });
     };

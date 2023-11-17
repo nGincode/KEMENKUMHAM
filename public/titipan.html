@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Surat Izin Titipan Barang</title>
   </head>
-  <body style="width: 210mm; text-align: center" onload="window.print()">
+  <body
+    style="width: 210mm; text-align: center"
+    onload="window.print()"
+    id="body"
+  >
     <div
       style="
         display: flex;
@@ -99,37 +103,41 @@
       })
         .then((r) => r.json())
         .then((data) => {
-          console.log(data.data);
-          document.getElementById("nama").innerHTML =
-            "NAMA : " + data.data.nama;
-          document.getElementById("nik").innerHTML =
-            "NIK KTP : " + data.data.NIK;
-          document.getElementById("kelamin").innerHTML =
-            "JENIS KELAMIN : " + data.data.jenisKelamin;
-          document.getElementById("alamat").innerHTML =
-            "ALAMAT : " + data.data.alamat;
-          if (data.data.img) {
-            document.getElementById("foto_ktp").innerHTML =
-              "FOTO KTP : <img style='height:100px' src='" +
-              data.data.img +
-              "' />";
-          } else {
-            document.getElementById("foto_ktp").innerHTML =
-              "FOTO KTP : Tidak ditemukan";
-          }
-          document.getElementById("ket").innerHTML =
-            "URAIAN TITIPAN BARANG : " + data.data.keterangan;
-          document.getElementById("hubungan").innerHTML =
-            "HUBUNGAN DENGAN WBA : " + data.data.hubungan;
+          if (data.data.nama) {
+            document.getElementById("nama").innerHTML =
+              "NAMA : " + data.data.nama;
+            document.getElementById("nik").innerHTML =
+              "NIK KTP : " + data.data.NIK;
+            document.getElementById("kelamin").innerHTML =
+              "JENIS KELAMIN : " + data.data.jenisKelamin;
+            document.getElementById("alamat").innerHTML =
+              "ALAMAT : " + data.data.alamat;
+            if (data.data.img) {
+              document.getElementById("foto_ktp").innerHTML =
+                "FOTO KTP : <img style='height:100px' src='" +
+                data.data.img +
+                "' />";
+            } else {
+              document.getElementById("foto_ktp").innerHTML =
+                "FOTO KTP : Tidak ditemukan";
+            }
+            document.getElementById("ket").innerHTML =
+              "URAIAN TITIPAN BARANG : " + data.data.keterangan;
+            document.getElementById("hubungan").innerHTML =
+              "HUBUNGAN DENGAN WBA : " + data.data.hubungan;
 
-          document.getElementById("nama_tahanan").innerHTML =
-            "NAMA WBA : " + data.data.tahanan.nama;
-          document.getElementById("status_tahanan").innerHTML =
-            "STATUS : " + data.data.tahanan.statusTahanan;
-          document.getElementById("kamar_tahanan").innerHTML =
-            "NO KAMAR : " + data.data.tahanan.kamar;
-          document.getElementById("perkara_tahanan").innerHTML =
-            "PERKARA : " + data.data.tahanan.perkara;
+            document.getElementById("nama_tahanan").innerHTML =
+              "NAMA WBA : " + data.data.tahanan.nama;
+            document.getElementById("status_tahanan").innerHTML =
+              "STATUS : " + data.data.tahanan.statusTahanan;
+            document.getElementById("kamar_tahanan").innerHTML =
+              "NO KAMAR : " + data.data.tahanan.kamar;
+            document.getElementById("perkara_tahanan").innerHTML =
+              "PERKARA : " + data.data.tahanan.perkara;
+          } else {
+            document.getElementById("body").innerHTML =
+              "<div>Tidak ditemukan data</div>";
+          }
         });
     };
     api();

@@ -44,9 +44,11 @@ export default function Index({ userData, setuserData }: any) {
     }
     const alatBarcode = (val: any) => {
         window.open(
-            url + '/suratIzin.html?uuid=' + val,
+            url + '/suratIzin.html?uuid=' + val.target.value,
             '_blank'
         );
+
+        (document.getElementById('barcode') as any).value = '';
 
     }
     return (
