@@ -1,33 +1,18 @@
 import React, { Component, useEffect, useState, Suspense } from "react"
 import toast, { Toaster } from 'react-hot-toast';
 import Image from "next/image";
-// import { Html5QrcodeScanner } from "html5-qrcode";
+const hostname = process.env.HOSTNAME;
+const port = process.env.PORT;
+const url = process.env.URL;
 
-// To use Html5Qrcode (more info below)
-// import { Html5Qrcode } from "html5-qrcode";
+import Html5QrcodePlugin from "./../components/html5QrcodePlugin"
 
 export default function Index({ userData, setuserData }: any) {
-
-    function onScanSuccess(decodedText: any, decodedResult: any) {
-        // handle the scanned code as you like, for example:
-        console.log(`Code matched = ${decodedText}`, decodedResult);
-    }
-
-    function onScanFailure(error: any) {
-        // handle scan failure, usually better to ignore and keep scanning.
-        // for example:
-        console.warn(`Code scan error = ${error}`);
-    }
+    const [onNewScanResult, setonNewScanResult] = useState();
 
     useEffect(() => {
         (document as any).title = 'Dashboard';
 
-        // let html5QrcodeScanner = new Html5QrcodeScanner(
-        //     "reader",
-        //     { fps: 10, qrbox: { width: 250, height: 250 } },
-        //     false);
-
-        // html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
         $("#qr-reader img").hide();
         $("#qr-reader").css({
@@ -50,27 +35,31 @@ export default function Index({ userData, setuserData }: any) {
             .addClass("mb-2");
     }, []);
 
+    const scan = (val: any) => {
+        (document.getElementById('html5-qrcode-button-camera-stop') as any).click();
+        window.open(
+            url + '/suratIzin.html?uuid=' + val,
+            '_blank'
+        );
+    }
+    const alatBarcode = (val: any) => {
+        window.open(
+            url + '/suratIzin.html?uuid=' + val,
+            '_blank'
+        );
 
+    }
     return (
         <div className="row mb-32 g-32">
 
             <div className="mt-3">
-                <div
-                    style={{
-                        textAlign: "center",
-                        color: "black",
-                        fontWeight: "bolder",
-                        fontSize: "larger",
-                        width: "100%",
-                        background: "#b6b6b6",
-                        height: "90px",
-                        marginBottom: "-60px",
-                        borderRadius: "30px",
-                    }}
-                >
-                    Scan Kunjungan
-                </div>
-                <div id="reader" className="bg-gray-500"></div>
+                <Html5QrcodePlugin
+                    fps={10}
+                    qrbox={250}
+                    disableFlip={false}
+                    qrCodeSuccessCallback={scan} />
+
+                <input onChange={alatBarcode} type="text" id="barcode" placeholder="Klik untuk gunakan alat barcode sampai berkedip" className="w-full border-none text-center focus:border-none" autoFocus />
             </div>
         </div>
     )
