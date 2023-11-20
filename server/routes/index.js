@@ -54,19 +54,15 @@ router.post("/suratKunjungan", async (req, res) => {
   if (!Kunjungan.antrian && !barcode) {
     const antrian = await kunjungan.findAll({
       where: {
-        waktuKunjungan: {
-          [Op.between]: [
-            moment(Kunjungan.waktuKunjungan).format("YYYY-MM-DD") +
-              "T00:00:48.000Z",
-            moment(Kunjungan.waktuKunjungan).format("YYYY-MM-DD") +
-              "T23:59:59.000Z",
-          ],
+        waktuKunjungan: Kunjungan.waktuKunjungan,
+        antrian: {
+          [Op.not]: null,
         },
       },
     });
 
-    await Kunjungan.update({ antrian: antrian.length ?? 0 + 1 });
-    Kunjungan.antrian = antrian.length ?? 0 + 1;
+    await Kunjungan.update({ antrian: antrian ? antrian.length + 1 : 1 });
+    Kunjungan.antrian = antrian ? antrian.length + 1 : 1;
   }
 
   return res.json({
@@ -164,6 +160,20 @@ router.post("/kunjunganUsers", async (req, res) => {
     );
   }
 
+  const totalWaktuKunj = kunjungan.findAll({
+    where: {
+      waktuKunjungan: waktuKunjungan,
+    },
+  });
+
+  if (totalWaktuKunj.length > 100) {
+    return res.json({
+      status: 400,
+      massage: "Maaf, Waktu Kunjungan Melebihi Batas",
+      data: data,
+    });
+  }
+
   const data = {
     uuid: uuid,
     waktuKunjungan: waktuKunjungan,
@@ -194,6 +204,7 @@ router.post("/kunjunganUsers", async (req, res) => {
 
 router.post("/titipanUsers", async (req, res) => {
   const {
+    tanggal,
     nama,
     NIK,
     alamat,
@@ -234,6 +245,7 @@ router.post("/titipanUsers", async (req, res) => {
     keterangan: ket,
     tahanan_id: tahanan,
     noHp: noHp,
+    tanggal: tanggal,
     img: ktpData ? "/upload/titipan/" + uuid + "." + type : null,
   };
 

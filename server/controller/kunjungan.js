@@ -186,26 +186,47 @@ const del = async (req, res) => {
   });
 };
 const get = async (req, res) => {
-  const { users_id, users_uuid, email, username, permission } = req.user;
+  const { tanggal_akhir, tanggal_mulai } = req.query;
 
-  const Kunjungan = await kunjungan.findAll({
-    order: [["id", "DESC"]],
-    include: [
-      {
-        model: tahanan,
-        as: "tahanan",
-        attributes: {
-          exclude: ["uuid", "createdAt", "updatedAt"],
+  let Kunjungan;
+  if (tanggal_mulai && tanggal_akhir) {
+    Kunjungan = await kunjungan.findAll({
+      where: {
+        waktuKunjungan: {
+          [Op.between]: [tanggal_mulai, tanggal_akhir],
         },
       },
-    ],
-  });
+      order: [["id", "DESC"]],
+      include: [
+        {
+          model: tahanan,
+          as: "tahanan",
+          attributes: {
+            exclude: ["uuid", "createdAt", "updatedAt"],
+          },
+        },
+      ],
+    });
+  } else {
+    Kunjungan = await kunjungan.findAll({
+      order: [["id", "DESC"]],
+      include: [
+        {
+          model: tahanan,
+          as: "tahanan",
+          attributes: {
+            exclude: ["uuid", "createdAt", "updatedAt"],
+          },
+        },
+      ],
+    });
+  }
   const data = Kunjungan.map((val) => {
     return {
       img: val.img,
       uuid: val.uuid,
-      waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD HH:mm:ss").format(
-        "DD/MM/YYYY HH:mm:ss"
+      waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
+        "DD/MM/YYYY"
       ),
       tahanan: val.tahanan.nama,
       tahanan_id: {
@@ -249,12 +270,7 @@ const post = async (req, res) => {
 
   const antrian = await kunjungan.findAll({
     where: {
-      waktuKunjungan: {
-        [Op.between]: [
-          moment(waktuKunjungan).format("YYYY-MM-DD") + "T00:00:48.000Z",
-          moment(waktuKunjungan).format("YYYY-MM-DD") + "T23:59:59.000Z",
-        ],
-      },
+      waktuKunjungan: waktuKunjungan,
     },
   });
 

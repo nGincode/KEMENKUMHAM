@@ -17,6 +17,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      tanggal: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
       nama: {
         type: Sequelize.STRING,
         allowNull: false,

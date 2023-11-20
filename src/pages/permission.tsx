@@ -183,7 +183,7 @@ export default function Permission({ userData, setuserData }: any) {
 
                         {pagePermission.find((val: any) => val == "create") ?
                             <div className="col hp-flex-none w-auto">
-                                <Button type="button" className="w-100 px-5" variant="gradient" color="orange" data-bs-toggle="modal" data-bs-target="#addNew"><i className="ri-add-line remix-icon"></i> Add {Subject}</Button>
+                                <Button type="button" className="w-100 px-5" variant="gradient" color="blue" data-bs-toggle="modal" data-bs-target="#addNew"><i className="ri-add-line remix-icon"></i> Add {Subject}</Button>
                             </div> : null}
                         <div className="modal fade -mt-2 " id="addNew" tabIndex={-1} aria-labelledby="addNewLabel" aria-hidden="true">
                             <div className="modal-dialog modal-xl modal-dialog-centered">

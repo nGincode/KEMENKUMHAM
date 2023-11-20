@@ -98,6 +98,7 @@ const putId = async (req, res) => {
   const { uuid } = req.params;
   const { users_id, users_uuid } = req.user;
   const {
+    tanggal,
     nama,
     hubungan,
     NIK,
@@ -152,6 +153,7 @@ const putId = async (req, res) => {
     tahanan_id: tahanan_id,
     noHp: noHp,
     img: imgData,
+    tanggal: tanggal,
   };
 
   await Titipan.update(data);
@@ -184,24 +186,48 @@ const del = async (req, res) => {
   });
 };
 const get = async (req, res) => {
-  const { users_id, users_uuid, email, username, permission } = req.user;
-
-  const Titipan = await titipan.findAll({
-    order: [["id", "DESC"]],
-    include: [
-      {
-        model: tahanan,
-        as: "tahanan",
-        attributes: {
-          exclude: ["uuid", "createdAt", "updatedAt"],
+  const { tanggal_akhir, tanggal_mulai } = req.query;
+  let Titipan;
+  if (tanggal_mulai && tanggal_akhir) {
+    Titipan = await titipan.findAll({
+      where: {
+        createdAt: {
+          [Op.between]: [
+            moment(tanggal_mulai, "YYYY-MM-DD").format("YYYY-MM-DD"),
+            moment(tanggal_akhir, "YYYY-MM-DD").format("YYYY-MM-DD"),
+          ],
         },
       },
-    ],
-  });
+      order: [["id", "DESC"]],
+      include: [
+        {
+          model: tahanan,
+          as: "tahanan",
+          attributes: {
+            exclude: ["uuid", "createdAt", "updatedAt"],
+          },
+        },
+      ],
+    });
+  } else {
+    Titipan = await titipan.findAll({
+      order: [["id", "DESC"]],
+      include: [
+        {
+          model: tahanan,
+          as: "tahanan",
+          attributes: {
+            exclude: ["uuid", "createdAt", "updatedAt"],
+          },
+        },
+      ],
+    });
+  }
   const data = Titipan.map((val) => {
     return {
       img: val.img,
       uuid: val.uuid,
+      tanggal: moment(val.tanggal).format("DD/MM/YYYY"),
       tahanan: val.tahanan.nama,
       tahanan_id: {
         value: val.tahanan.id,
@@ -237,6 +263,7 @@ const post = async (req, res) => {
     img,
     noHp,
     ket,
+    tanggal,
   } = req.body;
   const { users_id, users_uuid } = req.user;
 
@@ -264,6 +291,7 @@ const post = async (req, res) => {
     keterangan: ket,
     tahanan_id: tahanan_id,
     noHp: noHp,
+    tanggal: tanggal,
     img: img ? "/upload/titipan/" + uuid + "." + type : null,
   };
 

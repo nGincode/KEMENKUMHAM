@@ -22,7 +22,7 @@ class Html5QrcodePlugin extends React.Component {
                     borderRadius: "30px",
                 }}
             >
-                Scan Kunjungan
+                Scanning Barcode
             </div><div className="bg-gray-300" id={qrcodeRegionId} /></>;
     }
 

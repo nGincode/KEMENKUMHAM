@@ -31,7 +31,7 @@
     </div>
     <div style="text-align: center; font-weight: bolder; font-size: larger">
       Terima Kasih <br />
-      Sudah Mendaftar Kunjungan Online Rutan <br />
+      Sudah Mendaftar Titipan Barang Rutan <br />
       Malabero Bengkulu
     </div>
     <br />
@@ -50,7 +50,8 @@
         >copy link</a
       >
       <br />
-      dan perlihatkan Barcode anda ke petugas loket rutan
+      dan perlihatkan Barcode anda ke petugas loket rutan untuk mencetak surat
+      izin
     </div>
   </body>
   <script>
@@ -75,15 +76,18 @@
       formData.append("uuid", GetURLParameter("uuid"));
       formData.append("barcode", true);
 
-      const dt = await fetch("api/suratKunjungan", {
+      const dt = await fetch("api/suratTitipan", {
         method: "POST",
         body: formData,
       });
-
       const res = await dt.json();
+
       if (res.data?.uuid) {
-        new QRCode(document.getElementById("barcode"), res.data.uuid);
-        document.getElementById("uuid").innerHTML = res.data.uuid;
+        new QRCode(
+          document.getElementById("barcode"),
+          res.data.uuid + "|titipan"
+        );
+        document.getElementById("uuid").innerHTML = res.data.uuid + "|titipan";
       } else {
         document.getElementById("body").innerHTML =
           "<div>Tidak ditemukan data</div>";

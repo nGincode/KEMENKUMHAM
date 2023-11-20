@@ -83,7 +83,7 @@ const convertCamelCase = (text: any) => {
     }
 }
 
-export default function ReactTable({ search, action, modalData, dataFatch, urlFatch, Subject, reload }: any) {
+export default function ReactTable({ search, action, modalData, dataFatch, urlFatch, Subject, reload, date }: any) {
     const [dataEdit, setdataEdit] = useState<any>();
     const [click, setclick] = useState<any>();
     const [data, setdata] = useState<any>([]);
@@ -101,6 +101,10 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
     useEffect(() => {
         handleApi('view');
     }, [reload]);
+
+    useEffect(() => {
+        handleApi('view');
+    }, [date]);
 
     const convertFileToBase64 = (file: any) => {
         return new Promise((resolve, reject) => {
@@ -488,10 +492,10 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                 if (action.edit && action.delete) {
                     return <>
                         {action.kunjungan ?
-                            <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                            <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                             : null}
                         {action.titipan ?
-                            <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                            <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                             : null}
                         <i onClick={() => { handleStatus('edit', action.edit, row.original) }} data-bs-toggle="modal" data-bs-target="#editUser" className="iconly-Curved-Edit hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80" style={{ fontSize: "24px" }} />
                         <i onClick={() => { handleStatus('delete', action.delete, row.original) }} className="ml-2 iconly-Light-Delete hp-cursor-pointer hp-transition hp-hover-text-color-danger-1 text-black-80" style={{ fontSize: "24px" }} />
@@ -500,19 +504,19 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                     if (action.edit) {
                         return <>
                             {action.titipan ?
-                                <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                                <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                                 : null}
                             {action.kunjungan ?
-                                <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                                <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                                 : null}<i onClick={() => { handleStatus('edit', action.edit, row.original) }} data-bs-toggle="modal" data-bs-target="#editUser" className="iconly-Curved-Edit hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80" style={{ fontSize: "24px" }} />
                         </>
                     } else if (action.delete) {
                         return <>
                             {action.titipan ?
-                                <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                                <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                                 : null}
                             {action.kunjungan ?
-                                <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                                <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                                 : null}<i onClick={() => { handleStatus('delete', action.delete, row.original) }} className="iconly-Light-Delete hp-cursor-pointer hp-transition hp-hover-text-color-danger-1 text-black-80" style={{ fontSize: "24px" }} />
                         </>
                     } else {
@@ -620,11 +624,15 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                 toast.error(error.response.data.massage);
             }
         } else if (type === 'view') {
+            let dateURL = '';
+            if (date) {
+                dateURL += 'tanggal_mulai=' + date[0] + '&tanggal_akhir=' + date[1];
+            }
             try {
                 await axios({
                     timeout: 5000,
                     method: "GET",
-                    url: urlFatch + (companyActive ? "?company_id=" + JSON.parse(localStorage.getItem('companyActive') as string)?.value : ""),
+                    url: urlFatch + (companyActive ? "?company_id=" + JSON.parse(localStorage.getItem('companyActive') as string)?.value + '&' + dateURL : '?' + dateURL),
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }

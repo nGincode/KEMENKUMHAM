@@ -16,6 +16,7 @@ import ReactSelect from "../components/reactSelect";
 export default function Titipan({ userData, setuserData }: any) {
     const [pagePermission, setpagePermission] = useState([]);
     const [dataTahanan, setdataTahanan] = useState<any>([]);
+    const [dateData, setdateData] = useState<any>([moment().format('YYYY-MM-DD'), moment().add(7, 'days').format('YYYY-MM-DD')]);
     const [dataCreate, setdataCreate] = useState();
     const [SearchValue, setSearchValue] = useState<any>();
     const [search, setsearch] = useState('');
@@ -237,6 +238,108 @@ export default function Titipan({ userData, setuserData }: any) {
         (document.getElementById(val.target.id) as HTMLInputElement).value = value;
     }
 
+
+    const laporan = async (tanggal_mulai: any, tanggal_akhir: any) => {
+        if (!tanggal_mulai) {
+            return alert('Tanggal Awal Belum Dipilih')
+        }
+
+        if (!tanggal_akhir) {
+            return alert('Tanggal Akhir Belum Dipilih')
+        }
+
+        if (moment(tanggal_mulai, 'YYYY-MM-DD') > moment(tanggal_akhir, 'YYYY-MM-DD')) {
+            return alert('Tanggal Awal Harus dibawah Tanggal Akhir')
+        }
+
+        const get = await axios({
+            method: "GET",
+            url: URLAPI + `?tanggal_mulai=${tanggal_mulai}&tanggal_akhir=${tanggal_akhir}`,
+            timeout: 5000,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+
+        let htmlData = '';
+        console.log(get);
+        get.data?.data.map((val: any, i: number) => {
+            if (i == 0) {
+                htmlData += `
+                <div style="width:100%;text-align: center;font-weight: bolder;font-size: larger;margin-bottom: 20px;">Laporan Titipan Barang</div>
+                <table>
+                <tr>
+                    <td>No</td>
+                    <td>Tanggal</td>
+                    <td>Nama Tahanan</td>
+                    <td>Perkara</td>
+                    <td>Nama</td>
+                    <td>NIK</td>
+                    <td>Jenis Kelamin</td>
+                    <td>No Hp</td>
+                    <td>Hubungan</td>
+                    <td>Keterangan</td>
+                </tr>`;
+            }
+            htmlData += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${val.tanggal}</td>
+                <td>${val.tahanan}</td>
+                <td>${val.perkara}</td>
+                <td>${val.nama}</td>
+                <td>${val.NIK}</td>
+                <td>${val.jenisKelamin}</td>
+                <td>${val.noHp}</td>
+                <td>${val.hubungan}</td>
+                <td>${val.keterangan}</td>
+            </tr>
+            `;
+
+            if (i == get.data?.data.length - 1) {
+                htmlData += `</table>`;
+            }
+        })
+        var mywindow: any = window.open('', 'Print', 'height=600,width=800');
+
+        mywindow.document.write('<html><head><title>Print</title>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(`<div
+            style="
+                text-align: center;
+                display: flex;
+                width: 100%;
+                background: #4f4326;
+                color: white;
+                padding: 10px;
+                align-items: center;
+                justify-content: center;
+                border: solid black 2px;
+                font-weight: bolder;
+                margin-bottom: 20px;
+            "
+            >
+            <img src="https://app.easyrubero.com/img/logo2.jpeg" style="height: 60px; margin-right: 110px" />
+            <div>
+                KEMENTRIAN HUKUM DAN HAM RI<br />
+                KANTOR WILAYAH BENGKULU<br />
+                RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
+            </div>
+            <img src="https://app.easyrubero.com/img/logo1.jpeg" style="height: 60px; margin-left: 110px" />
+            </div>
+            ${htmlData}`);
+        mywindow.document.write('<style>table {width:100%} table, th, td {border: 1px solid black;border-collapse: collapse;}</style></body></html>');
+
+        mywindow.document.close();
+        mywindow.focus()
+
+        setTimeout(() => {
+            mywindow.print();
+        }, 1000);
+        return true;
+
+    }
+
     return (
         <>
             <div className="row mb-32 gy-32">
@@ -263,7 +366,8 @@ export default function Titipan({ userData, setuserData }: any) {
 
                 <div className="col-12 mt-10">
                     <div className="row g-16 align-items-center justify-content-end">
-                        <div className="col-12 col-md-6 col-xl-4">
+
+                        <div className="col-6 col-md-3 col-xl-3">
                             <div className="input-group align-items-center">
                                 <DebouncedInput
                                     value={search ?? ''}
@@ -273,12 +377,29 @@ export default function Titipan({ userData, setuserData }: any) {
                                 />
                             </div>
                         </div>
+                        <div className="col-6 col-md-3 col-xl-3">
+                            <div className="input-group align-items-center">
+                                <Input type="date" id="tanggal_mulai" defaultValue={moment().format('YYYY-MM-DD')} onChange={(val: any) => { setdateData([val.target.value, (document.getElementById('tanggal_akhir') as any)?.value]) }} label="Tanggal Mulai" variant="standard" name="start" />
+                            </div>
+                        </div>
+                        <div className="col-6 col-md-3 col-xl-3">
+                            <div className="input-group align-items-center">
+                                <Input type="date" id="tanggal_akhir" defaultValue={moment().add(7, 'days').format('YYYY-MM-DD')} onChange={(val: any) => { setdateData([(document.getElementById('tanggal_mulai') as any)?.value, val.target.value]) }} label="Tanggal Akhir" variant="standard" name="end" />
+                            </div>
+                        </div>
+
+                        <div className="col hp-flex-none w-auto">
+                            <Button className="w-100 px-5" onClick={() => {
+                                laporan((document.getElementById('tanggal_mulai') as any).value, (document.getElementById('tanggal_akhir') as any).value);
+                            }}>Laporan</Button>
+                        </div>
 
                         {pagePermission.find((val: any) => val == "create") ?
                             <div className="col hp-flex-none w-auto">
-                                <Button type="button" className="w-100 px-5" variant="gradient" color="orange" data-bs-toggle="modal" data-bs-target="#addNewUser"><i className="ri-add-line remix-icon"></i> Tambah {Subject}</Button>
+                                <Button type="button" className="w-100 px-5" variant="gradient" color="blue" data-bs-toggle="modal" data-bs-target="#addNewUser"><i className="ri-add-line remix-icon"></i></Button>
                             </div>
                             : null}
+
 
                         <div className="modal fade -mt-2" id="addNewUser" tabIndex={-1} aria-labelledby="addNewUserLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
                             <div className="modal-dialog modal-xl  modal-dialog-centered">
@@ -399,9 +520,11 @@ export default function Titipan({ userData, setuserData }: any) {
                     <div className="card hp-contact-card mb-32 -mt-3 shadow-md">
                         <div className="card-body px-0">
                             <ReactTable
+                                date={dateData}
                                 search={search}
                                 action={{
                                     titipan: true,
+                                    userData: userData,
                                     delete: pagePermission.find((val: any) => val == "delete") ? URLAPI : null,
                                     edit: pagePermission.find((val: any) => val == "edit") ? URLAPI : null
                                 }}

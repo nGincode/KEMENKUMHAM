@@ -119,7 +119,7 @@ const putId = async (req, res) => {
       );
       imgData = "/upload/profile/" + uuid + "." + type;
     } else {
-      imgData = Stock.img;
+      imgData = User.img;
     }
   }
 

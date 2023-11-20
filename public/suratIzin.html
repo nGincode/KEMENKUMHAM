@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Surat Izin Kunjungan</title>
   </head>
-  <body
-    style="width: 210mm; text-align: center"
-    onload="window.print()"
-    id="body"
-  >
+  <body style="width: 210mm; text-align: center" id="body">
     <div
       style="
         display: flex;
@@ -81,7 +77,6 @@
       <div style="margin-bottom: 20px; margin-left: 10px" id="hari">
         HARI/TANGGAL : -
       </div>
-      <div style="margin-bottom: 30px; margin-left: 10px" id="jam">JAM : -</div>
       <div style="float: right; text-align: center">
         Petugas Loket
         <br />
@@ -89,7 +84,6 @@
         <br />
         <br />
         <div id="petugas">__________________________</div>
-        <br />
         <div id="petugas_nip">NIP:______________________</div>
       </div>
     </div>
@@ -106,56 +100,74 @@
       }
     }
 
-    const api = async () => {
+    const apiIzin = async () => {
       const formData = new FormData();
       formData.append("uuid", GetURLParameter("uuid"));
 
       const dt = await fetch("api/suratKunjungan", {
         method: "POST",
         body: formData,
-      })
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.data.nama) {
-            document.getElementById("nama").innerHTML =
-              "NAMA : " + data.data.nama;
-            document.getElementById("nik").innerHTML =
-              "NIK KTP : " + data.data.NIK;
-            document.getElementById("kelamin").innerHTML =
-              "JENIS KELAMIN : " + data.data.jenisKelamin;
-            document.getElementById("alamat").innerHTML =
-              "ALAMAT : " + data.data.alamat;
-            if (data.data.img) {
-              document.getElementById("foto_ktp").innerHTML =
-                "FOTO KTP : <img style='height:100px' src='" +
-                data.data.img +
-                "' />";
-            } else {
-              document.getElementById("foto_ktp").innerHTML =
-                "FOTO KTP : Tidak ditemukan";
-            }
-            document.getElementById("pengikutPria").innerHTML =
-              "" + data.data.pengikutPria;
-            document.getElementById("pengikutWanita").innerHTML =
-              "" + data.data.pengikutWanita;
+      });
 
-            document.getElementById("nama_tahanan").innerHTML =
-              "NAMA : " + data.data.tahanan.nama;
-            document.getElementById("status_tahanan").innerHTML =
-              "STATUS : " + data.data.tahanan.statusTahanan;
-            document.getElementById("antrian").innerHTML = data.data.antrian;
+      const data = await dt.json();
+      if (data.data?.nama) {
+        if (GetURLParameter("petugas") !== "null") {
+          document.getElementById("petugas").innerHTML =
+            GetURLParameter("petugas");
+        }
 
-            const d = new Date(data.data.waktuKunjungan);
-            document.getElementById("hari").innerHTML =
-              "HARI/TANGGAL : " + data.data.waktuKunjungan.slice(0, 10);
-            document.getElementById("jam").innerHTML =
-              "JAM : " + d.getUTCHours() + ":" + d.getUTCMinutes();
-          } else {
-            document.getElementById("body").innerHTML =
-              "<div>Tidak ditemukan data</div>";
-          }
-        });
+        if (GetURLParameter("NIP") !== "null") {
+          document.getElementById("petugas_nip").innerHTML =
+            "NIP : " + GetURLParameter("NIP");
+        }
+
+        document.getElementById("nama").innerHTML = "NAMA : " + data.data.nama;
+        document.getElementById("nik").innerHTML = "NIK KTP : " + data.data.NIK;
+        document.getElementById("kelamin").innerHTML =
+          "JENIS KELAMIN : " + data.data.jenisKelamin;
+        document.getElementById("alamat").innerHTML =
+          "ALAMAT : " + data.data.alamat;
+        if (data.data.img) {
+          document.getElementById("foto_ktp").innerHTML =
+            "FOTO KTP : <img style='height:100px' src='" +
+            data.data.img +
+            "' />";
+        } else {
+          document.getElementById("foto_ktp").innerHTML =
+            "FOTO KTP : Tidak ditemukan";
+        }
+        document.getElementById("pengikutPria").innerHTML =
+          "" + data.data.pengikutPria;
+        document.getElementById("pengikutWanita").innerHTML =
+          "" + data.data.pengikutWanita;
+
+        document.getElementById("nama_tahanan").innerHTML =
+          "NAMA : " + data.data.tahanan.nama;
+        document.getElementById("status_tahanan").innerHTML =
+          "STATUS : " + data.data.tahanan.statusTahanan;
+        document.getElementById("antrian").innerHTML = data.data.antrian;
+
+        const d = new Date(data.data.waktuKunjungan);
+        document.getElementById("hari").innerHTML =
+          "HARI/TANGGAL : " + data.data.waktuKunjungan.slice(0, 10);
+
+        function printDiv(divId) {
+          var printContents = document.getElementById(divId).innerHTML;
+          var originalContents = document.body.innerHTML;
+
+          document.body.innerHTML = printContents;
+
+          window.print();
+
+          document.body.innerHTML = originalContents;
+        }
+        printDiv("body");
+      } else {
+        document.getElementById("body").innerHTML =
+          "<div>Tidak ditemukan data</div>";
+      }
     };
-    api();
+
+    apiIzin();
   </script>
 </html>

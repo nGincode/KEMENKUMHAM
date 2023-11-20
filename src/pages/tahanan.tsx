@@ -14,7 +14,7 @@ import ReactSelect from "../components/reactSelect";
 
 export default function Tahanan({ userData, setuserData }: any) {
     const [pagePermission, setpagePermission] = useState([]);
-    const [dataPermission, setdataPermission] = useState([]);
+    const [dataTahanan, setDataTahanan] = useState([]);
     const [dataCreate, setdataCreate] = useState();
     const [search, setsearch] = useState('');
     const URLAPI = "/api/tahanan";
@@ -48,6 +48,31 @@ export default function Tahanan({ userData, setuserData }: any) {
                     ($('.btn-close') as any).trigger("click");
                     (document.getElementById('formCreate') as HTMLFormElement).reset();
                     (document.getElementById('closeImg') as HTMLInputElement)?.click();
+                }).catch(error => {
+                    if (error.code === 'ECONNABORTED') {
+                        toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
+                    } else {
+                        if (error?.response?.data?.massage) {
+                            toast.error(error.response.data.massage);
+                        } else {
+                            toast.error(error.message);
+                        }
+                    }
+                });
+            } catch (error: any) {
+                toast.error(error.response.data.massage);
+            }
+        } else if (url === 'view') {
+            try {
+                await axios({
+                    method: "GET",
+                    url: URLAPI,
+                    timeout: 5000,
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }).then((res: any) => {
+                    setDataTahanan(res.data.data)
                 }).catch(error => {
                     if (error.code === 'ECONNABORTED') {
                         toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
@@ -174,6 +199,89 @@ export default function Tahanan({ userData, setuserData }: any) {
         (document.getElementById(val.target.id) as HTMLInputElement).value = value;
     }
 
+    const laporan = async () => {
+
+        const get = await axios({
+            method: "GET",
+            url: URLAPI,
+            timeout: 5000,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+
+        let htmlData = '';
+        get.data?.data.map((val: any, i: number) => {
+            if (i == 0) {
+                htmlData += `
+                <div style="width:100%;text-align: center;font-weight: bolder;font-size: larger;margin-bottom: 20px;">Laporan Tahanan</div>
+                <table>
+                <tr>
+                    <td>No</td>
+                    <td>Nama</td>
+                    <td>BIN</td>
+                    <td>No Kamar</td>
+                    <td>Perkara</td>
+                    <td>Tanggal Masuk</td>
+                    <td>Status</td>
+                </tr>`;
+            }
+            htmlData += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${val.nama}</td>
+                <td>${val.BIN}</td>
+                <td>${val.kamar}</td>
+                <td>${val.perkara}</td>
+                <td>${val.tanggalMasuk}</td>
+                <td>${val.statusTahanan}</td>
+            </tr>
+            `;
+
+            if (i == get.data?.data.length - 1) {
+                htmlData += `</table>`;
+            }
+        })
+        var mywindow: any = window.open('', 'Print', 'height=600,width=800');
+
+        mywindow.document.write('<html><head><title>Print</title>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(`<div
+            style="
+                text-align: center;
+                display: flex;
+                width: 100%;
+                background: #4f4326;
+                color: white;
+                padding: 10px;
+                align-items: center;
+                justify-content: center;
+                border: solid black 2px;
+                font-weight: bolder;
+                margin-bottom: 20px;
+            "
+            >
+            <img src="https://app.easyrubero.com/img/logo2.jpeg" style="height: 60px; margin-right: 110px" />
+            <div>
+                KEMENTRIAN HUKUM DAN HAM RI<br />
+                KANTOR WILAYAH BENGKULU<br />
+                RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
+            </div>
+            <img src="https://app.easyrubero.com/img/logo1.jpeg" style="height: 60px; margin-left: 110px" />
+            </div>
+            ${htmlData}`);
+        mywindow.document.write('<style>table {width:100%} table, th, td {border: 1px solid black;border-collapse: collapse;}</style></body></html>');
+
+        mywindow.document.close();
+        mywindow.focus()
+
+        setTimeout(() => {
+            mywindow.print();
+        }, 1000);
+        return true;
+
+    }
+
     return (
         <>
             <div className="row mb-32 gy-32">
@@ -211,11 +319,19 @@ export default function Tahanan({ userData, setuserData }: any) {
                             </div>
                         </div>
 
+                        <div className="col hp-flex-none w-auto">
+                            <Button className="w-100 px-5" onClick={() => {
+                                laporan();
+                            }}>Laporan</Button>
+                        </div>
+
                         {pagePermission.find((val: any) => val == "create") ?
                             <div className="col hp-flex-none w-auto">
-                                <Button type="button" className="w-100 px-5" variant="gradient" color="orange" data-bs-toggle="modal" data-bs-target="#addNewUser"><i className="ri-add-line remix-icon"></i> Tambah {Subject}</Button>
+                                <Button type="button" className="w-100 px-5" variant="gradient" color="blue" data-bs-toggle="modal" data-bs-target="#addNewUser"><i className="ri-add-line remix-icon"></i> Tambah {Subject}</Button>
                             </div>
                             : null}
+
+
 
                         <div className="modal fade -mt-2" id="addNewUser" tabIndex={-1} aria-labelledby="addNewUserLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
                             <div className="modal-dialog modal-xl  modal-dialog-centered">
@@ -266,7 +382,7 @@ export default function Tahanan({ userData, setuserData }: any) {
                                                             id="perkara"
                                                             label='Perkara'
                                                             data={[
-                                                                { label: 'PiDum', value: 'PiDum' },
+                                                                { label: 'Pidum', value: 'Pidum' },
                                                                 { label: 'Narkoba', value: 'Narkoba' },
                                                                 { label: 'Tipikor', value: 'Tipikor' },
                                                             ]}
@@ -301,6 +417,7 @@ export default function Tahanan({ userData, setuserData }: any) {
                         </div>
                     </div>
                 </div>
+
                 <div className="col-12">
                     <div className="card hp-contact-card mb-32 -mt-3 shadow-md">
                         <div className="card-body px-0">

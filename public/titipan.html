@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Surat Izin Titipan Barang</title>
   </head>
-  <body
-    style="width: 210mm; text-align: center"
-    onload="window.print()"
-    id="body"
-  >
+  <body style="width: 210mm; text-align: center" id="body">
     <div
       style="
         display: flex;
@@ -43,6 +39,7 @@
         font-size: large;
       "
     >
+      <div style="margin-bottom: 20px" id="tanggal">Tanggal : -</div>
       <div style="margin-bottom: 20px" id="nama">Nama : -</div>
       <div style="margin-bottom: 20px" id="nik">NIK KTP : -</div>
       <div style="margin-bottom: 20px" id="kelamin">JENIS KELAMIN : -</div>
@@ -76,7 +73,6 @@
         <br />
         <br />
         <div id="petugas">__________________________</div>
-        <br />
         <div id="petugas_nip">NIP:______________________</div>
       </div>
     </div>
@@ -103,7 +99,19 @@
       })
         .then((r) => r.json())
         .then((data) => {
-          if (data.data.nama) {
+          if (data.data?.nama) {
+            if (GetURLParameter("petugas") !== null) {
+              document.getElementById("petugas").innerHTML =
+                GetURLParameter("petugas");
+            }
+
+            if (GetURLParameter("NIP") !== null) {
+              document.getElementById("petugas_nip").innerHTML =
+                "NIP : " + GetURLParameter("NIP");
+            }
+
+            document.getElementById("tanggal").innerHTML =
+              "TANGGAL : " + data.data.tanggal;
             document.getElementById("nama").innerHTML =
               "NAMA : " + data.data.nama;
             document.getElementById("nik").innerHTML =
@@ -134,6 +142,18 @@
               "NO KAMAR : " + data.data.tahanan.kamar;
             document.getElementById("perkara_tahanan").innerHTML =
               "PERKARA : " + data.data.tahanan.perkara;
+
+            function printDiv(divId) {
+              var printContents = document.getElementById(divId).innerHTML;
+              var originalContents = document.body.innerHTML;
+
+              document.body.innerHTML = printContents;
+
+              window.print();
+
+              document.body.innerHTML = originalContents;
+            }
+            printDiv("body");
           } else {
             document.getElementById("body").innerHTML =
               "<div>Tidak ditemukan data</div>";

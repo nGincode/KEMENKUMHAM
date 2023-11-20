@@ -37,16 +37,36 @@ export default function Index({ userData, setuserData }: any) {
 
     const scan = (val: any) => {
         (document.getElementById('html5-qrcode-button-camera-stop') as any).click();
-        window.open(
-            url + '/suratIzin.html?uuid=' + val,
-            '_blank'
-        );
+
+        let value = val.split('|');
+
+        if (value?.[1] == 'titipan') {
+            window.open(
+                url + '/titipan.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                '_blank'
+            );
+        } else {
+            window.open(
+                url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                '_blank'
+            );
+        }
     }
     const alatBarcode = (val: any) => {
-        window.open(
-            url + '/suratIzin.html?uuid=' + val.target.value,
-            '_blank'
-        );
+        let value = val.target.value.split('|');
+        console.log(value)
+
+        if (value?.[1] == 'titipan') {
+            window.open(
+                url + '/titipan.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                '_blank'
+            );
+        } else {
+            window.open(
+                url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                '_blank'
+            );
+        }
 
         (document.getElementById('barcode') as any).value = '';
 

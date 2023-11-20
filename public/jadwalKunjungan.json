@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Pidum",
+    "day": ["Monday", "Wednesday"]
+  },
+  {
+    "label": "Narkoba",
+    "day": ["Tuesday", "Thursday"]
+  },
+  {
+    "label": "Tipikor",
+    "day": ["Tuesday", "Thursday"]
+  }
+]

@@ -11,7 +11,7 @@ import Image from "next/image";
 
 export default function login({ submitLogin }: any) {
     if (typeof document !== "undefined") {
-        (document as any).title = 'KEMENKUMHAM BENGKULU';
+        (document as any).title = 'RUTAN BENGKULU';
     }
 
     return (
@@ -39,7 +39,7 @@ export default function login({ submitLogin }: any) {
                 <div className="row align-items-center justify-content-center h-100 mx-4 mx-sm-n32">
                     <div className="col-12 col-md-9 col-xl-7 col-xxxl-5 px-8 px-sm-0 pt-24 pb-48">
                         <div className="flex justify-center w-full mb-5 ">
-                            <Image src="/img/logo.jpeg" width={150} height={150} alt="logo" />
+                            <Image src="/img/logo.png" width={150} height={150} alt="logo" />
                         </div>
                         <form className=" mt-sm-32 mb-8" onSubmit={submitLogin}>
                             <div className="mb-18">

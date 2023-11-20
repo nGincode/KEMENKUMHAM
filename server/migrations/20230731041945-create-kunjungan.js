@@ -62,7 +62,7 @@ module.exports = {
         allowNull: true,
       },
       waktuKunjungan: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       createdAt: {

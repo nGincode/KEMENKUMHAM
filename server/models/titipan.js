@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      tanggal: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
       tahanan_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
