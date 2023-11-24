@@ -62,10 +62,10 @@ export default function Index({ userData, setuserData }: any) {
                 '_blank'
             );
         } else {
-            window.open(
-                url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
-                '_blank'
-            );
+            // window.open(
+            //     url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+            //     '_blank'
+            // );
         }
 
         (document.getElementById('barcode') as any).value = '';

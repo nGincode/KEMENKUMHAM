@@ -6,6 +6,7 @@ const Crypto = require("crypto");
 
 const user = require("./user");
 const kunjungan = require("./kunjungan");
+const pengajuan = require("./pengajuan");
 const titipan = require("./titipan");
 const tahanan = require("./tahanan");
 const auth = require("./auth");
@@ -28,6 +29,7 @@ router.use("/permission", verifToken, permission);
 router.use("/tahanan", verifToken, tahanan);
 router.use("/kunjungan", verifToken, kunjungan);
 router.use("/titipan", verifToken, titipan);
+router.use("/pengajuan", verifToken, pengajuan);
 router.use("/", auth);
 
 router.post("/suratKunjungan", async (req, res) => {
@@ -202,6 +204,99 @@ router.post("/kunjunganUsers", async (req, res) => {
   });
 });
 
+router.post("/pengajuanUsers", async (req, res) => {
+  const {
+    nama,
+    nik,
+    jenisKelamin,
+    alamat,
+    ktp,
+    hubungan,
+    noHp,
+    email,
+    files1,
+    files2,
+    files3,
+    files4,
+    files5,
+    files6,
+    files7,
+  } = req.body;
+
+  const uuid = Crypto.randomUUID();
+
+  const { pengajuan } = require("../models");
+
+  const fileUpload = (files, type, dirname) => {
+    if (files) {
+      let nameFile =
+        "/upload/" + dirname + "." + files.split(";")[0].split("/")[1];
+
+      if (type == "image") {
+        require("fs").writeFile(
+          __dirname + `/../../public${nameFile}`,
+          new Buffer.from(
+            files.replace(/^data:image\/\w+;base64,/, ""),
+            "base64"
+          ),
+          (err) => {
+            console.log(err);
+          }
+        );
+      } else if (type == "application") {
+        require("fs").writeFile(
+          __dirname + `/../../public${nameFile}`,
+          new Buffer.from(
+            files.replace(/^data:application\/\w+;base64,/, ""),
+            "base64"
+          ),
+          (err) => {
+            console.log(err);
+          }
+        );
+      }
+
+      return nameFile;
+    } else {
+      return null;
+    }
+  };
+
+  const data = {
+    uuid: uuid,
+    user_id: 0,
+    nama: nama,
+    NIK: nik,
+    alamat: alamat,
+    jenisKelamin: jenisKelamin,
+    noHp: noHp,
+    hubungan: hubungan,
+    email: email,
+    ktp: fileUpload(ktp, "image", `pengajuan/${uuid}_ktp`),
+    files1: fileUpload(files1, "application", `pengajuan/${uuid}_files1`),
+    files2: fileUpload(files2, "application", `pengajuan/${uuid}_files2`),
+    files3: fileUpload(files3, "application", `pengajuan/${uuid}_files3`),
+    files4: fileUpload(files4, "application", `pengajuan/${uuid}_files4`),
+    files5: fileUpload(files5, "application", `pengajuan/${uuid}_files5`),
+    files6: fileUpload(files6, "application", `pengajuan/${uuid}_files6`),
+    files7: fileUpload(files7, "application", `pengajuan/${uuid}_files7`),
+  };
+
+  if (!ktp && !files1) {
+    res.json({
+      status: 400,
+      massage: "KTP & File harus terisi",
+    });
+  } else {
+    await pengajuan.create(data);
+    res.json({
+      status: 200,
+      massage: "Berhasil dibuat",
+      data: data,
+    });
+  }
+});
+
 router.post("/titipanUsers", async (req, res) => {
   const {
     tanggal,
@@ -255,6 +350,40 @@ router.post("/titipanUsers", async (req, res) => {
     status: 200,
     massage: "Berhasil dibuat",
     data: data,
+  });
+});
+
+router.post("/notif", async (req, res) => {
+  const { pesan } = req.body;
+
+  const nodemailer = require("nodemailer");
+  const dotenv = require("dotenv").config();
+
+  var transporter = nodemailer.createTransport({
+    host: dotenv.parsed.MAIL_HOST,
+    port: dotenv.parsed.MAIL_PORT,
+    auth: {
+      user: dotenv.parsed.MAIL_USERNAME,
+      pass: dotenv.parsed.MAIL_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: true,
+    },
+  });
+
+  var mailOptions = {
+    from: "admin@easyrubero.com",
+    to: "fembinurilham@gmail.com",
+    subject: "SYSTEM PENGAJUAN",
+    text: pesan,
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      res.json(200);
+    } else {
+      res.json(500);
+    }
   });
 });
 

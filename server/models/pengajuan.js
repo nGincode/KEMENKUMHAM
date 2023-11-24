@@ -1,20 +1,15 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class kunjungan extends Model {
+  class pengajuan extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of DataTypes lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      this.belongsTo(models.tahanan, {
-        as: "tahanan",
-        foreignKey: "tahanan_id",
-      });
-    }
+    static associate(models) {}
   }
-  kunjungan.init(
+  pengajuan.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -34,17 +29,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      tahanan_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
       noHp: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      antrian: {
-        type: DataTypes.STRING,
-        allowNull: true,
       },
       NIK: {
         type: DataTypes.STRING,
@@ -58,27 +45,43 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      pengikutPria: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      pengikutWanita: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      img: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      suratIzin: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      waktuKunjungan: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       hubungan: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      ktp: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      files1: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      files2: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      files3: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      files4: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      files5: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      files6: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      files7: {
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -93,13 +96,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "kunjungan",
-      tableName: "kunjungan",
+      modelName: "pengajuan",
+      tableName: "pengajuan",
       // timestamps: true,
       freezeTableName: true,
       // createdAt: "created_at",
       // updatedAt: "updated_at",
     }
   );
-  return kunjungan;
+  return pengajuan;
 };

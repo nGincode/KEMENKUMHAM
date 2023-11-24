@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { hash, verify } = require("node-php-password");
-const { User, tahanan, kunjungan } = require("../models");
+const { User, tahanan, kunjungan, pengajuan } = require("../models");
 const { Op } = require("sequelize");
 const Crypto = require("crypto");
 const numeral = require("numeral");
@@ -170,83 +170,62 @@ const del = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const { uuid } = req.params;
 
-  const Kunjungan = await kunjungan.findOne({
+  const Pengajuan = await pengajuan.findOne({
     where: { uuid: uuid },
   });
 
-  if (!Kunjungan) {
+  if (!Pengajuan) {
     return res.status(500).json({
-      massage: "Kunjungan tidak ada",
+      massage: "Pengajuan tidak ada",
     });
   }
 
-  await Kunjungan.destroy();
+  await Pengajuan.destroy();
 
   res.json({
     massage: "Hapus Berhasil",
-    data: Kunjungan,
+    data: Pengajuan,
   });
 };
 const get = async (req, res) => {
   const { tanggal_akhir, tanggal_mulai } = req.query;
 
-  let Kunjungan;
+  let Pengajuan;
   if (tanggal_mulai && tanggal_akhir) {
-    Kunjungan = await kunjungan.findAll({
+    Pengajuan = await pengajuan.findAll({
       where: {
-        waktuKunjungan: {
+        createdAt: {
           [Op.between]: [tanggal_mulai, tanggal_akhir],
         },
       },
       order: [["id", "DESC"]],
-      include: [
-        {
-          model: tahanan,
-          as: "tahanan",
-          attributes: {
-            exclude: ["uuid", "createdAt", "updatedAt"],
-          },
-        },
-      ],
     });
   } else {
-    Kunjungan = await kunjungan.findAll({
+    Pengajuan = await pengajuan.findAll({
       order: [["id", "DESC"]],
-      include: [
-        {
-          model: tahanan,
-          as: "tahanan",
-          attributes: {
-            exclude: ["uuid", "createdAt", "updatedAt"],
-          },
-        },
-      ],
     });
   }
-  const data = Kunjungan.map((val) => {
+  const data = Pengajuan.map((val) => {
     return {
-      img: val.img,
+      img: val.ktp,
       uuid: val.uuid,
-      waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
-        "DD/MM/YYYY"
-      ),
-      tahanan: val.tahanan.nama,
-      tahanan_id: {
-        value: val.tahanan.id,
-        label: val.tahanan.nama,
-      },
-      kamar: val.tahanan.kamar,
-      perkara: val.tahanan.perkara,
+      tanggal: moment(val.createdAt, "YYYY-MM-DD").format("DD/MM/YYYY"),
       nama: val.nama,
       noHp: val.noHp,
       NIK: val.NIK,
       jenisKelamin: val.jenisKelamin,
       alamat: val.alamat,
-      pengikutPria: val.pengikutPria,
-      pengikutWanita: val.pengikutWanita,
-      antrian: val.antrian,
-      suratIzin: val.suratIzin,
+      email: val.email,
       hubungan: val.hubungan,
+      filesData: [
+        val.files1,
+        val.files2,
+        val.files3,
+        val.files4,
+        val.files5,
+        val.files6,
+        val.files7,
+      ],
     };
   });
 
@@ -259,80 +238,94 @@ const get = async (req, res) => {
 const post = async (req, res) => {
   const {
     nama,
-    waktuKunjungan,
-    NIK,
-    alamat,
+    nik,
     jenisKelamin,
-    pengikut,
-    tahanan_id,
-    img,
-    noHp,
-    suratIzin,
+    alamat,
+    ktp,
     hubungan,
+    noHp,
+    email,
+    files1,
+    files2,
+    files3,
+    files4,
+    files5,
+    files6,
+    files7,
   } = req.body;
-  const { users_id, users_uuid } = req.user;
-
-  const antrian = await kunjungan.findAll({
-    where: {
-      waktuKunjungan: waktuKunjungan,
-    },
-  });
 
   const uuid = Crypto.randomUUID();
-  let type = null;
-  if (img) {
-    type = img.split(";")[0].split("/")[1];
-    require("fs").writeFile(
-      __dirname + `/../../public/upload/kunjungan/${uuid}.${type}`,
-      new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
-      (err) => {
-        console.log(err);
-      }
-    );
-  }
 
-  let type2 = null;
-  if (suratIzin) {
-    type2 = suratIzin.split(";")[0].split("/")[1];
-    require("fs").writeFile(
-      __dirname + `/../../public/upload/kunjungan/${uuid}_suratIzin.${type2}`,
-      new Buffer.from(
-        suratIzin.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-      ),
-      (err) => {
-        console.log(err);
+  const { users_id, users_uuid } = req.user;
+
+  const fileUpload = (files, type, dirname) => {
+    if (files) {
+      let nameFile =
+        "/upload/" + dirname + "." + files.split(";")[0].split("/")[1];
+
+      if (type == "image") {
+        require("fs").writeFile(
+          __dirname + `/../../public${nameFile}`,
+          new Buffer.from(
+            files.replace(/^data:image\/\w+;base64,/, ""),
+            "base64"
+          ),
+          (err) => {
+            console.log(err);
+          }
+        );
+      } else if (type == "application") {
+        require("fs").writeFile(
+          __dirname + `/../../public${nameFile}`,
+          new Buffer.from(
+            files.replace(/^data:application\/\w+;base64,/, ""),
+            "base64"
+          ),
+          (err) => {
+            console.log(err);
+          }
+        );
       }
-    );
-  }
+
+      return nameFile;
+    } else {
+      return null;
+    }
+  };
 
   const data = {
     uuid: uuid,
-    waktuKunjungan: waktuKunjungan,
     user_id: users_id,
     nama: nama,
-    NIK: NIK,
+    NIK: nik,
     alamat: alamat,
     jenisKelamin: jenisKelamin,
-    pengikutPria: pengikut.pria,
-    pengikutWanita: pengikut.wanita,
-    tahanan_id: tahanan_id,
     noHp: noHp,
-    antrian: antrian.length + 1,
-    img: img ? "/upload/kunjungan/" + uuid + "." + type : null,
-    suratIzin: suratIzin
-      ? "/upload/kunjungan/" + uuid + "_suratIzin." + type2
-      : null,
     hubungan: hubungan,
+    email: email,
+    ktp: fileUpload(ktp, "image", `pengajuan/${uuid}_ktp`),
+    files1: fileUpload(files1, "application", `pengajuan/${uuid}_files1`),
+    files2: fileUpload(files2, "application", `pengajuan/${uuid}_files2`),
+    files3: fileUpload(files3, "application", `pengajuan/${uuid}_files3`),
+    files4: fileUpload(files4, "application", `pengajuan/${uuid}_files4`),
+    files5: fileUpload(files5, "application", `pengajuan/${uuid}_files5`),
+    files6: fileUpload(files6, "application", `pengajuan/${uuid}_files6`),
+    files7: fileUpload(files7, "application", `pengajuan/${uuid}_files7`),
   };
 
-  await kunjungan.create(data);
-
-  res.json({
-    status: 200,
-    massage: "Berhasil dibuat",
-    data: data,
-  });
+  if (!ktp && !files1) {
+    res.json({
+      status: 400,
+      massage: "KTP & File harus terisi",
+    });
+  } else {
+    await pengajuan.create(data);
+    res.json({
+      status: 200,
+      massage: "Berhasil dibuat",
+      data: data,
+    });
+  }
 };
 
 module.exports = {

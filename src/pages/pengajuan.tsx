@@ -13,15 +13,15 @@ import ReactTable from "../components/reactTable";
 import DebouncedInput from "../components/debouncedInput"
 import ReactSelect from "../components/reactSelect";
 
-export default function Kunjungan({ userData, setuserData }: any) {
+export default function Pengajuan({ userData, setuserData }: any) {
     const [pagePermission, setpagePermission] = useState([]);
     const [dataTahanan, setdataTahanan] = useState<any>([]);
     const [dateData, setdateData] = useState<any>([moment().format('YYYY-MM-DD'), moment().add(7, 'days').format('YYYY-MM-DD')]);
     const [dataCreate, setdataCreate] = useState();
     const [SearchValue, setSearchValue] = useState<any>();
     const [search, setsearch] = useState('');
-    const URLAPI = "/api/kunjungan";
-    const Subject = "Kunjungan";
+    const URLAPI = "/api/pengajuan";
+    const Subject = "Pengajuan";
 
     useEffect(() => {
         (document as any).title = Subject;
@@ -208,63 +208,163 @@ export default function Kunjungan({ userData, setuserData }: any) {
 
     const submitAdd = async (event: any) => {
         event.preventDefault();
-        let img = null;
-        let files = event.target.file?.files?.[0];
-        if (files) {
-            let extension = files.type;
-            let size = files.size;
-            if (extension === 'image/jpeg' || extension === 'image/png') {
+
+        const formData = new FormData(document.getElementById("formCreate") as any);
+
+        let files = event.target.ktp?.files;
+        if (files?.[0]) {
+            let extension = files[0].type;
+            let size = files[0].size;
+            if (extension === "image/jpeg" || extension === "image/png") {
                 if (size > 1000000) {
-                    return toast.error("Size img only < 1000kb");
+                    return alert("Ukuran img harus < 1000kb");
                 } else {
-                    img = await convertFileToBase64(files);
+                    let ktp: any = null;
+                    ktp = await convertFileToBase64(files[0]);
+                    formData.set("ktp", ktp);
                 }
             } else {
-                return toast.error("Extension img not valid, only jpeg/png");
+                return alert("Extension img KTP tidak valid, hanya jpeg/png");
             }
         }
 
-
-        let suratIzin = null;
-        let files2 = event.target.suratIzin?.files?.[0];
-        if (files2) {
-            let size2 = files2.size;
-            if (size2 > 5000000) {
-                return toast.error("Size img only < 5Mb");
+        let files1: any = event.target.files1?.files;
+        if (files1?.[0]) {
+            let extension1 = files1[0].type;
+            let size1 = files1[0].size;
+            if (extension1 === "application/pdf") {
+                if (size1 > 1000000) {
+                    return alert("Ukuran harus < 1000kb");
+                } else {
+                    let file1: any = null;
+                    file1 = await convertFileToBase64(files1[0]);
+                    formData.set("files1", file1);
+                }
             } else {
-                suratIzin = await convertFileToBase64(files2);
+                return alert("Extension tidak valid, hanya pdf");
             }
         }
 
-        if (!event.target.tahanan_id.value) {
-            return toast.error("Tahanan dikunjungi belum terisi");
+        let files2 = event.target.files2?.files;
+        if (files2?.[0]) {
+            let extension2 = files2[0].type;
+            let size2 = files2[0].size;
+            if (extension2 === "application/pdf") {
+                if (size2 > 1000000) {
+                    return alert("Ukuran harus < 1000kb");
+                } else {
+                    let file2: any = null;
+                    file2 = await convertFileToBase64(files2[0]);
+                    formData.set("files2", file2);
+                }
+            } else {
+                return alert("Extension tidak valid, hanya pdf");
+            }
+        } else {
+            formData.delete("files2");
         }
 
-        if (!event.target.kelamin_val.value) {
-            return toast.error("Jenis Kelamin belum terisi");
+        let files3 = event.target.files3?.files;
+        if (files3?.[0]) {
+            let extension3 = files3[0].type;
+            let size3 = files3[0].size;
+            if (extension3 === "application/pdf") {
+                if (size3 > 1000000) {
+                    return alert("Ukuran harus < 1000kb");
+                } else {
+                    let file3: any = null;
+                    file3 = await convertFileToBase64(files3[0]);
+                    formData.set("files3", file3);
+                }
+            } else {
+                return alert("Extension tidak valid, hanya pdf");
+            }
+        } else {
+            formData.delete("files3");
         }
 
-        if (!img) {
-            return toast.error("Foto KTP Wajib Terisi");
+        let files4 = event.target.files4?.files;
+        if (files4?.[0]) {
+            let extension4 = files4[0].type;
+            let size4 = files4[0].size;
+            if (extension4 === "application/pdf") {
+                if (size4 > 1000000) {
+                    return alert("Ukuran harus < 1000kb");
+                } else {
+                    let file4: any = null;
+                    file4 = await convertFileToBase64(files4[0]);
+                    formData.set("files4", file4);
+                }
+            } else {
+                return alert("Extension tidak valid, hanya pdf");
+            }
+        } else {
+            formData.delete("files4");
         }
 
-        let data = {
-            nama: event.target.nama.value,
-            waktuKunjungan: event.target.waktu.value,
-            NIK: event.target.nik_ktp.value,
-            alamat: event.target.alamat.value,
-            jenisKelamin: event.target.kelamin_val.value,
-            tahanan_id: event.target.tahanan_id.value,
-            noHp: event.target.noHp.value,
-            hubungan: event.target.hubungan.value,
-            pengikut: {
-                pria: event.target.pengikut_laki.value, wanita: event.target.pengikut_perempuan.value
-            },
-            img: img,
-            suratIzin: suratIzin
-        };
+        let files5 = event.target.files5?.files;
+        if (files5?.[0]) {
+            let extension5 = files5[0].type;
+            let size5 = files5[0].size;
+            if (extension5 === "application/pdf") {
+                if (size5 > 1000000) {
+                    return alert("Ukuran harus < 1000kb");
+                } else {
+                    let file5: any = null;
+                    file5 = await convertFileToBase64(files5[0]);
+                    formData.set("files5", file5);
+                }
+            } else {
+                return alert("Extension tidak valid, hanya pdf");
+            }
+        } else {
+            formData.delete("files5");
+        }
 
-        handleApi('create', data);
+        let files6 = event.target.files6?.files;
+        if (files6?.[0]) {
+            let extension6 = files6[0].type;
+            let size6 = files6[0].size;
+            if (extension6 === "application/pdf") {
+                if (size6 > 1000000) {
+                    return alert("Ukuran harus < 1000kb");
+                } else {
+                    let file6: any = null;
+                    file6 = await convertFileToBase64(files6[0]);
+                    formData.set("files6", file6);
+                }
+            } else {
+                return alert("Extension tidak valid, hanya pdf");
+            }
+        } else {
+            formData.delete("files6");
+        }
+
+        let files7 = event.target.files7?.files;
+        if (files7?.[0]) {
+            let extension7 = files7[0].type;
+            let size7 = files7[0].size;
+            if (extension7 === "application/pdf") {
+                if (size7 > 1000000) {
+                    return alert("Ukuran harus < 1000kb");
+                } else {
+                    let file7: any = null;
+                    file7 = await convertFileToBase64(files7[0]);
+                    formData.set("files7", file7);
+                }
+            } else {
+                return alert("Extension tidak valid, hanya pdf");
+            }
+        } else {
+            formData.delete("files7");
+        }
+
+        // var object: any = {};
+        // formData.forEach(function (value, key) {
+        //     object[key] = value;
+        // });
+
+        handleApi('create', formData);
     };
 
     const byNumeral = (val: any) => {
@@ -453,17 +553,9 @@ export default function Kunjungan({ userData, setuserData }: any) {
                                             <div className="modal-body">
                                                 <ImgUpload
                                                     label="Foto KTP"
-                                                    name="file"
-                                                    id="file" />
+                                                    name="ktp"
+                                                    id="ktp" />
                                                 <div className="row gx-8">
-
-                                                    <div className="col-12 col-md-6">
-                                                        <div className="mb-24">
-                                                            <Input type="date" required variant="standard" className="border-b-1" name="waktu" label="Waktu Kunjungan" id="waktu" />
-                                                        </div>
-                                                    </div>
-
-
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
                                                             <Input type="text" required variant="standard" className="border-b-1" name="nama" label="Nama" id="nama" />
@@ -471,13 +563,13 @@ export default function Kunjungan({ userData, setuserData }: any) {
                                                     </div>
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
-                                                            <Input type="number" required variant="standard" className="border-b-1" name="nik_ktp" label="NIK KTP" id="nik_ktp" />
+                                                            <Input type="number" required variant="standard" className="border-b-1" name="nik" label="NIK KTP" id="nik_ktp" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
                                                             <ReactSelect
-                                                                name='kelamin'
+                                                                name='jenisKelamin'
                                                                 label='Jenis Kelamin'
                                                                 data={[
                                                                     { label: 'Laki-Laki', value: 'Laki-Laki' },
@@ -499,55 +591,11 @@ export default function Kunjungan({ userData, setuserData }: any) {
                                                         </div>
                                                     </div>
 
-                                                    <div className="col-12 col-md-6 mb-5">
-                                                        <label htmlFor="pengikut" className="form-label">
-                                                            <span className="text-danger me-4">*</span>Pengunjung
-                                                        </label>
-                                                        <div className="input-group">
-                                                            <input type="number" required placeholder="Jumlah Laki-Laki" name="pengikut_laki" className="form-control" />
-                                                            <input type="number" required placeholder="Jumlah Perempuan" name="pengikut_perempuan" className="form-control" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-12 col-md-6">
+                                                    <div className="col-12  col-md-6">
                                                         <div className="mb-24">
-                                                            <ReactSelect
-                                                                name='tahanan_id'
-                                                                search={true}
-                                                                label='Tahanan yang dikunjungi'
-                                                                setSearchValue={setSearchValue}
-                                                                data={dataTahanan.map((val: any) => {
-                                                                    return { value: val.id, label: val.nama }
-                                                                })}
-                                                                required={true}
-                                                            />
+                                                            <Input type="email" required variant="standard" className="border-b-1" name="email" label="Email" id="email" />
                                                         </div>
                                                     </div>
-                                                    {dataTahanan.map((val: any, i: number) => {
-                                                        return <div className="row" key={i}>
-                                                            {val.id == SearchValue?.value ? <>
-                                                                <div className="col-12  col-md-6">
-                                                                    <div className="mb-24">
-                                                                        <Input readOnly label="Perkara" type="text" value={val.perkara} variant="standard" className="border-b-1" />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-12  col-md-6">
-                                                                    <div className="mb-24">
-                                                                        <Input readOnly label="No Kamar" type="text" value={val.kamar} variant="standard" className="border-b-1" />
-                                                                    </div>
-                                                                </div>
-                                                            </> : null}
-                                                            {val.statusTahanan == "Titipan" && val.id == SearchValue?.value ?
-                                                                <div className="col-12  col-md-6 ">
-                                                                    <label>Surat Izin</label>
-                                                                    <div className="mb-24">
-                                                                        <input type="file" required accept="image/*,application/pdf" name="suratIzin" id="suratIzin" />
-                                                                    </div>
-                                                                </div>
-                                                                : null}
-                                                        </div>
-
-                                                    })}
 
                                                     <div className="col-12 col-md-12">
                                                         <div className="mb-24">
@@ -555,6 +603,70 @@ export default function Kunjungan({ userData, setuserData }: any) {
                                                         </div>
                                                     </div>
 
+
+                                                    <div className="col-12  col-md-12">
+                                                        <div className="mb-24">
+                                                            <label className="form-label font-normal">
+                                                                File 1
+                                                                <span className="text-danger">*</span>
+                                                            </label>
+                                                            <input type="file" required className="input-group" name="files1" id="files1" accept=".pdf" />
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div className="col-12  col-md-12">
+                                                        <div className="mb-24">
+                                                            <label className="form-label font-normal">
+                                                                File 2
+                                                            </label>
+                                                            <input type="file" className="input-group" name="files2" id="files2" accept=".pdf" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-12  col-md-12">
+                                                        <div className="mb-24">
+                                                            <label className="form-label font-normal">
+                                                                File 3
+                                                            </label>
+                                                            <input type="file" className="input-group" name="files3" id="files3" accept=".pdf" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-12  col-md-12">
+                                                        <div className="mb-24">
+                                                            <label className="form-label font-normal">
+                                                                File 4
+                                                            </label>
+                                                            <input type="file" className="input-group" name="files4" id="files4" accept=".pdf" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-12  col-md-12">
+                                                        <div className="mb-24">
+                                                            <label className="form-label font-normal">
+                                                                File 5
+                                                            </label>
+                                                            <input type="file" className="input-group" name="files5" id="files5" accept=".pdf" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-12  col-md-12">
+                                                        <div className="mb-24">
+                                                            <label className="form-label font-normal">
+                                                                File 6
+                                                            </label>
+                                                            <input type="file" className="input-group" name="files6" id="files6" accept=".pdf" />
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-12  col-md-12">
+                                                        <div className="mb-24">
+                                                            <label className="form-label font-normal">
+                                                                File 7
+                                                            </label>
+                                                            <input type="file" className="input-group" name="files6" id="files7" accept=".pdf" />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -575,10 +687,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
                             <ReactTable
                                 search={search}
                                 action={{
-                                    userData: userData,
-                                    kunjungan: true,
-                                    delete: pagePermission.find((val: any) => val == "delete") ? URLAPI : null,
-                                    edit: pagePermission.find((val: any) => val == "edit") ? URLAPI : null
+                                    delete: pagePermission.find((val: any) => val == "delete") ? URLAPI : null
                                 }}
                                 date={dateData}
                                 urlFatch={URLAPI}

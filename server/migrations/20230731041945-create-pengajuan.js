@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("kunjungan", {
+    await queryInterface.createTable("pengajuan", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -17,10 +17,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      tahanan_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       nama: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -28,10 +24,6 @@ module.exports = {
       noHp: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      antrian: {
-        type: Sequelize.STRING,
-        allowNull: true,
       },
       NIK: {
         type: Sequelize.STRING,
@@ -45,27 +37,43 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      pengikutPria: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      pengikutWanita: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      img: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      suratIzin: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      waktuKunjungan: {
-        type: Sequelize.DATEONLY,
-        allowNull: false,
-      },
       hubungan: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      ktp: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      files1: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      files2: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      files3: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      files4: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      files5: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      files6: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      files7: {
         type: Sequelize.STRING,
         allowNull: true,
       },
@@ -80,6 +88,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("kunjungan");
+    await queryInterface.dropTable("pengajuan");
   },
 };

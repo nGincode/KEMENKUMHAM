@@ -470,6 +470,18 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                         },
                         footer: (props: any) => props.column.id,
                     })
+                } else if (val === 'filesData') {
+
+                    array.push({
+                        accessorKey: val,
+                        header: () => <div>File Data</div>,
+                        cell: (info: any) => {
+                            return <div className="text-xs">{info.getValue().map((v: any, ii: number) => {
+                                return v ? <a key={ii} target="_blank" href={v}>File {ii + 1} </a> : null;
+                            })}</div>
+                        },
+                        footer: (props: any) => props.column.id,
+                    })
                 } else {
                     array.push({
                         accessorKey: val,
