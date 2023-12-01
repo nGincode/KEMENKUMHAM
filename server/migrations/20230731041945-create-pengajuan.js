@@ -17,6 +17,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      pilihan: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       nama: {
         type: Sequelize.STRING,
         allowNull: false,

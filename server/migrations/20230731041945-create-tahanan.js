@@ -30,6 +30,10 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false,
       },
+      tanggalKeluar: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
       perkara: {
         type: Sequelize.STRING,
         allowNull: false,

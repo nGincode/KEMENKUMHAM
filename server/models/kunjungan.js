@@ -58,11 +58,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      pengikutPria: {
+      pengikutDewasa: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      pengikutWanita: {
+      pengikutAnak: {
         type: DataTypes.STRING,
         allowNull: false,
       },

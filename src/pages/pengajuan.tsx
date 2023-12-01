@@ -211,13 +211,23 @@ export default function Pengajuan({ userData, setuserData }: any) {
 
         const formData = new FormData(document.getElementById("formCreate") as any);
 
+        if (!event.target.pilihan_val.value) {
+            return alert("Pilihan Pengajuan Belum dipilih")
+        }
+
+
+
+        if (!event.target.jenisKelamin_val.value) {
+            return alert("Jenis Kelamin Belum dipilih")
+        }
+
         let files = event.target.ktp?.files;
         if (files?.[0]) {
             let extension = files[0].type;
             let size = files[0].size;
             if (extension === "image/jpeg" || extension === "image/png") {
-                if (size > 1000000) {
-                    return alert("Ukuran img harus < 1000kb");
+                if (size > 5000000) {
+                    return alert("Ukuran img harus < 5000kb");
                 } else {
                     let ktp: any = null;
                     ktp = await convertFileToBase64(files[0]);
@@ -233,8 +243,8 @@ export default function Pengajuan({ userData, setuserData }: any) {
             let extension1 = files1[0].type;
             let size1 = files1[0].size;
             if (extension1 === "application/pdf") {
-                if (size1 > 1000000) {
-                    return alert("Ukuran harus < 1000kb");
+                if (size1 > 5000000) {
+                    return alert("Ukuran harus < 5000kb");
                 } else {
                     let file1: any = null;
                     file1 = await convertFileToBase64(files1[0]);
@@ -250,8 +260,8 @@ export default function Pengajuan({ userData, setuserData }: any) {
             let extension2 = files2[0].type;
             let size2 = files2[0].size;
             if (extension2 === "application/pdf") {
-                if (size2 > 1000000) {
-                    return alert("Ukuran harus < 1000kb");
+                if (size2 > 5000000) {
+                    return alert("Ukuran harus < 5000kb");
                 } else {
                     let file2: any = null;
                     file2 = await convertFileToBase64(files2[0]);
@@ -269,8 +279,8 @@ export default function Pengajuan({ userData, setuserData }: any) {
             let extension3 = files3[0].type;
             let size3 = files3[0].size;
             if (extension3 === "application/pdf") {
-                if (size3 > 1000000) {
-                    return alert("Ukuran harus < 1000kb");
+                if (size3 > 5000000) {
+                    return alert("Ukuran harus < 5000kb");
                 } else {
                     let file3: any = null;
                     file3 = await convertFileToBase64(files3[0]);
@@ -283,86 +293,6 @@ export default function Pengajuan({ userData, setuserData }: any) {
             formData.delete("files3");
         }
 
-        let files4 = event.target.files4?.files;
-        if (files4?.[0]) {
-            let extension4 = files4[0].type;
-            let size4 = files4[0].size;
-            if (extension4 === "application/pdf") {
-                if (size4 > 1000000) {
-                    return alert("Ukuran harus < 1000kb");
-                } else {
-                    let file4: any = null;
-                    file4 = await convertFileToBase64(files4[0]);
-                    formData.set("files4", file4);
-                }
-            } else {
-                return alert("Extension tidak valid, hanya pdf");
-            }
-        } else {
-            formData.delete("files4");
-        }
-
-        let files5 = event.target.files5?.files;
-        if (files5?.[0]) {
-            let extension5 = files5[0].type;
-            let size5 = files5[0].size;
-            if (extension5 === "application/pdf") {
-                if (size5 > 1000000) {
-                    return alert("Ukuran harus < 1000kb");
-                } else {
-                    let file5: any = null;
-                    file5 = await convertFileToBase64(files5[0]);
-                    formData.set("files5", file5);
-                }
-            } else {
-                return alert("Extension tidak valid, hanya pdf");
-            }
-        } else {
-            formData.delete("files5");
-        }
-
-        let files6 = event.target.files6?.files;
-        if (files6?.[0]) {
-            let extension6 = files6[0].type;
-            let size6 = files6[0].size;
-            if (extension6 === "application/pdf") {
-                if (size6 > 1000000) {
-                    return alert("Ukuran harus < 1000kb");
-                } else {
-                    let file6: any = null;
-                    file6 = await convertFileToBase64(files6[0]);
-                    formData.set("files6", file6);
-                }
-            } else {
-                return alert("Extension tidak valid, hanya pdf");
-            }
-        } else {
-            formData.delete("files6");
-        }
-
-        let files7 = event.target.files7?.files;
-        if (files7?.[0]) {
-            let extension7 = files7[0].type;
-            let size7 = files7[0].size;
-            if (extension7 === "application/pdf") {
-                if (size7 > 1000000) {
-                    return alert("Ukuran harus < 1000kb");
-                } else {
-                    let file7: any = null;
-                    file7 = await convertFileToBase64(files7[0]);
-                    formData.set("files7", file7);
-                }
-            } else {
-                return alert("Extension tidak valid, hanya pdf");
-            }
-        } else {
-            formData.delete("files7");
-        }
-
-        // var object: any = {};
-        // formData.forEach(function (value, key) {
-        //     object[key] = value;
-        // });
 
         handleApi('create', formData);
     };
@@ -396,39 +326,38 @@ export default function Pengajuan({ userData, setuserData }: any) {
         })
 
         let htmlData = '';
-        console.log(get);
         get.data?.data.map((val: any, i: number) => {
             if (i == 0) {
                 htmlData += `
-                <div style="width:100%;text-align: center;font-weight: bolder;font-size: larger;margin-bottom: 20px;">Laporan Kunjungan</div>
+                <div style="width:100%;text-align: center;font-weight: bolder;font-size: larger;margin-bottom: 20px;">Laporan Pengajuan</div>
                 <table>
                 <tr>
                     <td>No</td>
-                    <td>Waktu Kunjungan</td>
+                    <td>Tanggal</td>
                     <td>Nama</td>
                     <td>NIK</td>
                     <td>Jenis Kelamin</td>
                     <td>No Hp</td>
                     <td>Alamat</td>
-                    <td>Pengunjung</td>
-                    <td>Nama Tahanan</td>
-                    <td>Perkara</td>
+                    <td>Email</td>
                     <td>Hubungan</td>
+                    <td>File</td>
                 </tr>`;
             }
             htmlData += `
             <tr>
                 <td>${i + 1}</td>
-                <td>${val.waktuKunjungan}</td>
+                <td>${moment(val.cretedAt).format('DD/MM/YYYY')}</td>
                 <td>${val.nama}</td>
                 <td>${val.NIK}</td>
                 <td>${val.jenisKelamin}</td>
                 <td>${val.noHp}</td>
                 <td>${val.alamat}</td>
-                <td>${val.pengikutPria} Pria & ${val.pengikutPria} Wanita</td>
-                <td>${val.tahanan}</td>
-                <td>${val.perkara}</td>
+                <td>${val.email}</td>
                 <td>${val.hubungan}</td>
+                <td>${val.filesData?.[0] ? "✅ KTP" : "❌ KTP"}<br/>
+                ${val.filesData?.[1] ? "✅ KK" : "❌ KTP"}<br/>
+                ${val.filesData?.[2] ? "✅ Pas Foto" : "❌ Pas Foto"}</td>
             </tr>
             `;
 
@@ -555,6 +484,21 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                                     label="Foto KTP"
                                                     name="ktp"
                                                     id="ktp" />
+
+                                                <div className="col-12 col-md-12">
+                                                    <div className="mb-24">
+                                                        <ReactSelect
+                                                            name='pilihan'
+                                                            label='Pilihan Pengajuan'
+                                                            data={[
+                                                                { label: 'Pengajuan', value: 'Pengajuan' },
+                                                                { label: 'Pembebasan Bersyarat', value: 'Pembebasan Bersyarat' },
+                                                                { label: 'Cuti Bersyarat', value: 'Cuti Bersyarat' },
+                                                            ]}
+                                                            required={true}
+                                                        />
+                                                    </div>
+                                                </div>
                                                 <div className="row gx-8">
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
@@ -607,7 +551,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                                     <div className="col-12  col-md-12">
                                                         <div className="mb-24">
                                                             <label className="form-label font-normal">
-                                                                File 1
+                                                                KTP Penjamin (Legalisir Dukcapil)
                                                                 <span className="text-danger">*</span>
                                                             </label>
                                                             <input type="file" required className="input-group" name="files1" id="files1" accept=".pdf" />
@@ -618,7 +562,8 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                                     <div className="col-12  col-md-12">
                                                         <div className="mb-24">
                                                             <label className="form-label font-normal">
-                                                                File 2
+                                                                KK Penjamin (Legalisir Dukcapil)
+                                                                <span className="text-danger">*</span>
                                                             </label>
                                                             <input type="file" className="input-group" name="files2" id="files2" accept=".pdf" />
                                                         </div>
@@ -627,46 +572,13 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                                     <div className="col-12  col-md-12">
                                                         <div className="mb-24">
                                                             <label className="form-label font-normal">
-                                                                File 3
+                                                                Pas Foto Penjamin
+                                                                <span className="text-danger">*</span>
                                                             </label>
-                                                            <input type="file" className="input-group" name="files3" id="files3" accept=".pdf" />
+                                                            <input type="file" required className="input-group" name="files3" id="files3" accept=".pdf" />
                                                         </div>
                                                     </div>
 
-                                                    <div className="col-12  col-md-12">
-                                                        <div className="mb-24">
-                                                            <label className="form-label font-normal">
-                                                                File 4
-                                                            </label>
-                                                            <input type="file" className="input-group" name="files4" id="files4" accept=".pdf" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-12  col-md-12">
-                                                        <div className="mb-24">
-                                                            <label className="form-label font-normal">
-                                                                File 5
-                                                            </label>
-                                                            <input type="file" className="input-group" name="files5" id="files5" accept=".pdf" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-12  col-md-12">
-                                                        <div className="mb-24">
-                                                            <label className="form-label font-normal">
-                                                                File 6
-                                                            </label>
-                                                            <input type="file" className="input-group" name="files6" id="files6" accept=".pdf" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12  col-md-12">
-                                                        <div className="mb-24">
-                                                            <label className="form-label font-normal">
-                                                                File 7
-                                                            </label>
-                                                            <input type="file" className="input-group" name="files6" id="files7" accept=".pdf" />
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
 

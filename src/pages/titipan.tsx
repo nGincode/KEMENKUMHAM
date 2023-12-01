@@ -194,8 +194,8 @@ export default function Titipan({ userData, setuserData }: any) {
             let extension = files.type;
             let size = files.size;
             if (extension === 'image/jpeg' || extension === 'image/png') {
-                if (size > 1000000) {
-                    return toast.error("Size img only < 1000kb");
+                if (size > 5000000) {
+                    return toast.error("Size img only < 5000kb");
                 } else {
                     img = await convertFileToBase64(files);
                 }

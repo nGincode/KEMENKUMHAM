@@ -163,16 +163,16 @@ export default function Kunjungan({ userData, setuserData }: any) {
                 id: 'pengikut',
                 group: [
                     {
-                        name: 'pengikutPria',
+                        name: 'pengikutDewasa',
                         type: 'number',
-                        id: 'pengikutPria',
-                        placeholder: 'Jumlah Laki-Laki'
+                        id: 'pengikutDewasa',
+                        placeholder: 'Jumlah Pengunjung Dewasa'
                     },
                     {
-                        name: 'pengikutWanita',
+                        name: 'pengikutAnak',
                         type: 'number',
-                        id: 'pengikutWanita',
-                        placeholder: 'Jumlah Perempuan'
+                        id: 'pengikutAnak',
+                        placeholder: 'Jumlah Anak-anak'
                     },
                 ]
             },
@@ -214,8 +214,8 @@ export default function Kunjungan({ userData, setuserData }: any) {
             let extension = files.type;
             let size = files.size;
             if (extension === 'image/jpeg' || extension === 'image/png') {
-                if (size > 1000000) {
-                    return toast.error("Size img only < 1000kb");
+                if (size > 5000000) {
+                    return toast.error("Size img only < 5000kb");
                 } else {
                     img = await convertFileToBase64(files);
                 }
@@ -258,7 +258,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
             noHp: event.target.noHp.value,
             hubungan: event.target.hubungan.value,
             pengikut: {
-                pria: event.target.pengikut_laki.value, wanita: event.target.pengikut_perempuan.value
+                dewasa: event.target.pengikut_dewasa.value, anak: event.target.pengikut_anak.value
             },
             img: img,
             suratIzin: suratIzin
@@ -325,7 +325,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
                 <td>${val.jenisKelamin}</td>
                 <td>${val.noHp}</td>
                 <td>${val.alamat}</td>
-                <td>${val.pengikutPria} Pria & ${val.pengikutPria} Wanita</td>
+                <td>${val.pengikutDewasa} Dewasa & ${val.pengikutAnak} Anak-Anak</td>
                 <td>${val.tahanan}</td>
                 <td>${val.perkara}</td>
                 <td>${val.hubungan}</td>
@@ -504,8 +504,8 @@ export default function Kunjungan({ userData, setuserData }: any) {
                                                             <span className="text-danger me-4">*</span>Pengunjung
                                                         </label>
                                                         <div className="input-group">
-                                                            <input type="number" required placeholder="Jumlah Laki-Laki" name="pengikut_laki" className="form-control" />
-                                                            <input type="number" required placeholder="Jumlah Perempuan" name="pengikut_perempuan" className="form-control" />
+                                                            <input type="number" required placeholder="Jumlah Org Dewasa" name="pengikut_dewasa" className="form-control" />
+                                                            <input type="number" required placeholder="Jumlah Org Anak-Anak" name="pengikut_anak" className="form-control" />
                                                         </div>
                                                     </div>
 

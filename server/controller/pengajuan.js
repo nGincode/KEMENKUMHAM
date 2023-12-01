@@ -210,6 +210,7 @@ const get = async (req, res) => {
       img: val.ktp,
       uuid: val.uuid,
       tanggal: moment(val.createdAt, "YYYY-MM-DD").format("DD/MM/YYYY"),
+      pilihan: val.pilihan,
       nama: val.nama,
       noHp: val.noHp,
       NIK: val.NIK,
@@ -237,9 +238,10 @@ const get = async (req, res) => {
 };
 const post = async (req, res) => {
   const {
+    pilihan_val,
     nama,
     nik,
-    jenisKelamin,
+    jenisKelamin_val,
     alamat,
     ktp,
     hubungan,
@@ -294,12 +296,13 @@ const post = async (req, res) => {
   };
 
   const data = {
+    pilihan: pilihan_val,
     uuid: uuid,
     user_id: users_id,
     nama: nama,
     NIK: nik,
     alamat: alamat,
-    jenisKelamin: jenisKelamin,
+    jenisKelamin: jenisKelamin_val,
     noHp: noHp,
     hubungan: hubungan,
     email: email,

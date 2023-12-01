@@ -120,8 +120,8 @@ router.post("/kunjunganUsers", async (req, res) => {
     NIK,
     alamat,
     jenisKelamin,
-    pengikutWanita,
-    pengikutPria,
+    pengikutAnak,
+    pengikutDewasa,
     tahanan,
     ktpData,
     noHp,
@@ -184,8 +184,8 @@ router.post("/kunjunganUsers", async (req, res) => {
     NIK: NIK,
     alamat: alamat,
     jenisKelamin: jenisKelamin,
-    pengikutPria: pengikutPria,
-    pengikutWanita: pengikutWanita,
+    pengikutDewasa: pengikutDewasa,
+    pengikutAnak: pengikutAnak,
     tahanan_id: tahanan,
     noHp: noHp,
     img: ktpData ? "/upload/kunjungan/" + uuid + "." + type : null,
@@ -206,6 +206,7 @@ router.post("/kunjunganUsers", async (req, res) => {
 
 router.post("/pengajuanUsers", async (req, res) => {
   const {
+    pilihan,
     nama,
     nik,
     jenisKelamin,
@@ -264,6 +265,7 @@ router.post("/pengajuanUsers", async (req, res) => {
 
   const data = {
     uuid: uuid,
+    pilihan: pilihan,
     user_id: 0,
     nama: nama,
     NIK: nik,
@@ -281,6 +283,46 @@ router.post("/pengajuanUsers", async (req, res) => {
     files6: fileUpload(files6, "application", `pengajuan/${uuid}_files6`),
     files7: fileUpload(files7, "application", `pengajuan/${uuid}_files7`),
   };
+
+  const nodemailer = require("nodemailer");
+  const dotenv = require("dotenv").config();
+
+  var transporter = nodemailer.createTransport({
+    host: dotenv.parsed.MAIL_HOST,
+    port: dotenv.parsed.MAIL_PORT,
+    auth: {
+      user: dotenv.parsed.MAIL_USERNAME,
+      pass: dotenv.parsed.MAIL_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: true,
+    },
+  });
+
+  var mailOptionsAdmin = {
+    from: "admin@easyrubero.com",
+    to: "humasrutanbkl@gmail.com",
+    subject: "SYSTEM PENGAJUAN -easyrubero.com",
+    text: `
+    Data Users Yang Membuat Pengajuan
+    nama: ${nama},
+    NIK: ${nik},
+    alamat: ${alamat},
+    jenisKelamin: ${jenisKelamin},
+    noHp: ${noHp},
+    hubungan: ${hubungan},
+    email: ${email}`,
+  };
+
+  var mailOptionsUser = {
+    from: "admin@easyrubero.com",
+    to: email,
+    subject: "SYSTEM PENGAJUAN -easyrubero.com",
+    text: `Selamat anda berhasil daftar pengajuan, Silahkan Tunggu informasi selanjutnya melalui WA/Email ini`,
+  };
+
+  transporter.sendMail(mailOptionsAdmin, function (error, info) {});
+  transporter.sendMail(mailOptionsUser, function (error, info) {});
 
   if (!ktp && !files1) {
     res.json({
@@ -329,6 +371,20 @@ router.post("/titipanUsers", async (req, res) => {
     );
   }
 
+  const totalTitipan = titipan.findAll({
+    where: {
+      tanggal: tanggal,
+    },
+  });
+
+  if (totalTitipan.length > 150) {
+    return res.json({
+      status: 400,
+      massage: "Maaf, Pentipan Melebihi Batas",
+      data: data,
+    });
+  }
+
   const data = {
     uuid: uuid,
     user_id: 0,
@@ -350,40 +406,6 @@ router.post("/titipanUsers", async (req, res) => {
     status: 200,
     massage: "Berhasil dibuat",
     data: data,
-  });
-});
-
-router.post("/notif", async (req, res) => {
-  const { pesan } = req.body;
-
-  const nodemailer = require("nodemailer");
-  const dotenv = require("dotenv").config();
-
-  var transporter = nodemailer.createTransport({
-    host: dotenv.parsed.MAIL_HOST,
-    port: dotenv.parsed.MAIL_PORT,
-    auth: {
-      user: dotenv.parsed.MAIL_USERNAME,
-      pass: dotenv.parsed.MAIL_PASSWORD,
-    },
-    tls: {
-      rejectUnauthorized: true,
-    },
-  });
-
-  var mailOptions = {
-    from: "admin@easyrubero.com",
-    to: "fembinurilham@gmail.com",
-    subject: "SYSTEM PENGAJUAN",
-    text: pesan,
-  };
-
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      res.json(200);
-    } else {
-      res.json(500);
-    }
   });
 });
 

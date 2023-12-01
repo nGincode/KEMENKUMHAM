@@ -45,11 +45,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      pengikutPria: {
+      pengikutDewasa: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      pengikutWanita: {
+      pengikutAnak: {
         type: Sequelize.STRING,
         allowNull: false,
       },

@@ -97,6 +97,7 @@ export default function Tahanan({ userData, setuserData }: any) {
                 name: 'img',
                 type: 'img',
                 id: 'img',
+                label: 'Foto',
                 full: true
             },
             {
@@ -104,6 +105,13 @@ export default function Tahanan({ userData, setuserData }: any) {
                 type: 'date',
                 id: 'tanggalMasuk',
                 label: "Tanggal Masuk",
+                required: true
+            },
+            {
+                name: 'tanggalKeluar',
+                type: 'date',
+                id: 'tanggalKeluar',
+                label: "Tanggal Keluar",
                 required: true
             },
             {
@@ -182,6 +190,7 @@ export default function Tahanan({ userData, setuserData }: any) {
         let data = {
             nama: event.target.nama.value,
             tanggal: event.target.tanggal.value,
+            tanggal_keluar: event.target.tanggal_keluar.value,
             BIN: event.target.BIN.value,
             kamar: event.target.kamar.value,
             status: event.target.status_val.value,
@@ -355,6 +364,11 @@ export default function Tahanan({ userData, setuserData }: any) {
                                                 <div className="col-12 col-md-6">
                                                     <div className="mb-24">
                                                         <Input type="date" required variant="standard" className="border-b-1" name="tanggal" label="Tanggal Masuk" id="tanggal" />
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-md-6">
+                                                    <div className="mb-24">
+                                                        <Input type="date" required variant="standard" className="border-b-1" name="tanggal_keluar" label="Tanggal Keluar" id="tanggal_keluar" />
                                                     </div>
                                                 </div>
 

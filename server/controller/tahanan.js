@@ -103,6 +103,7 @@ const putId = async (req, res) => {
   const {
     nama,
     tanggalMasuk,
+    tanggalKeluar,
     BIN,
     kamar,
     statusTahanan,
@@ -155,6 +156,7 @@ const putId = async (req, res) => {
   const data = {
     nama: nama,
     tanggalMasuk: tanggalMasuk,
+    tanggalKeluar: tanggalKeluar,
     nama: nama,
     BIN: BIN,
     kamar: kamar,
@@ -217,8 +219,41 @@ const get = async (req, res) => {
       BIN: val.BIN,
       kamar: val.kamar,
       tanggalMasuk: moment(val.tanggalMasuk, "YYYY-MM-DD").format("DD/MM/YYYY"),
+      tanggalKeluar: moment(val.tanggalKeluar, "YYYY-MM-DD").format(
+        "DD/MM/YYYY"
+      ),
       perkara: val.perkara,
       statusTahanan: val.statusTahanan,
+      masaTahan:
+        Math.abs(
+          Math.round(
+            moment(val.tanggalMasuk).diff(
+              moment(val.tanggalKeluar),
+              "months",
+              true
+            )
+          )
+        ) + " Bulan",
+      sisaTahan:
+        Math.abs(
+          Math.round(moment().diff(moment(val.tanggalKeluar), "months", true))
+        ) + " Bulan",
+      pengajuan:
+        Math.abs(
+          Math.round(
+            moment(val.tanggalMasuk).diff(
+              moment(val.tanggalKeluar),
+              "months",
+              true
+            )
+          )
+        ) *
+          (2 / 3) >
+        Math.abs(
+          Math.round(moment().diff(moment(val.tanggalKeluar), "months", true))
+        )
+          ? "Bisa Di Ajukan"
+          : "Belum Bisa",
     };
   });
 
@@ -229,7 +264,8 @@ const get = async (req, res) => {
   });
 };
 const post = async (req, res) => {
-  const { nama, tanggal, BIN, kamar, status, perkara, img } = req.body;
+  const { nama, tanggal, tanggal_keluar, BIN, kamar, status, perkara, img } =
+    req.body;
   const { users_id, users_uuid } = req.user;
 
   const cek = await tahanan.findOne({ where: { nama: nama } });
@@ -255,6 +291,7 @@ const post = async (req, res) => {
   const data = {
     uuid: uuid,
     tanggalMasuk: tanggal,
+    tanggalKeluar: tanggal_keluar,
     user_id: users_id,
     nama: nama,
     BIN: BIN,
