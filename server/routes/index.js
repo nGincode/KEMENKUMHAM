@@ -168,6 +168,22 @@ router.post("/kunjunganUsers", async (req, res) => {
     },
   });
 
+  const orangKunjungan = kunjungan.findAll({
+    where: {
+      tahanan_id: tahanan,
+      waktuKunjungan: waktuKunjungan,
+    },
+  });
+
+  if (orangKunjungan) {
+    return res.json({
+      status: 400,
+      massage:
+        "Maaf, Warga Binaan ini telah di kunjungi hari ini,\nKembali lagi besok",
+      data: data,
+    });
+  }
+
   if (totalWaktuKunj.length > 100) {
     return res.json({
       status: 400,
