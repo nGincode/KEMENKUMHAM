@@ -1,14 +1,16 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { Component, useEffect, useState, Suspense } from "react"
 import toast, { Toaster } from 'react-hot-toast';
 import Image from "next/image";
-const hostname = process.env.HOSTNAME;
-const port = process.env.PORT;
+import axios from "axios";
 const url = process.env.URL;
 
 import Html5QrcodePlugin from "./../components/html5QrcodePlugin"
+import { Button } from "@material-tailwind/react";
 
 export default function Index({ userData, setuserData }: any) {
     const [onNewScanResult, setonNewScanResult] = useState();
+    const [sliderData, setsliderData] = useState([]);
 
     useEffect(() => {
         (document as any).title = 'Dashboard';
@@ -33,6 +35,16 @@ export default function Index({ userData, setuserData }: any) {
         $("#html5-qrcode-button-camera-start")
             .addClass("btn btn-success")
             .addClass("mb-2");
+
+        const sliderJson = async () => {
+            axios.get('/slider.json')
+                .then((res: any) => {
+                    setsliderData(res.data)
+                })
+
+        }
+        sliderJson()
+
     }, []);
 
     const scan = (val: any) => {
@@ -71,6 +83,15 @@ export default function Index({ userData, setuserData }: any) {
         (document.getElementById('barcode') as any).value = '';
 
     }
+    const handleSubmit = (event: any) => {
+        event.preventDefault();
+        let value = [event.target.gambar0.value, event.target.gambar1.value, event.target.gambar2.value];
+        axios.post("/api/slider", { data: value }).then((res: any) => {
+            setsliderData(res.data)
+        })
+
+
+    }
     return (
         <div className="row mb-32 g-32">
 
@@ -82,6 +103,21 @@ export default function Index({ userData, setuserData }: any) {
                     qrCodeSuccessCallback={scan} />
 
                 <input onChange={alatBarcode} type="text" id="barcode" placeholder="Klik untuk gunakan alat barcode sampai berkedip" className="w-full border-none text-center focus:border-none" autoFocus />
+            </div>
+            <div className="w-full">
+                <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+                    <div className="text-lg font-bold text-center">Slider Home</div>
+                    {sliderData.map((val: any, i: number) => {
+                        return (<div key={i} className="mb-8">
+                            <center><img src={val} alt={'gambar' + i} width="100" height="100" /></center>
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={"gambar" + i}>
+                                Gambar {i + 1}
+                            </label>
+                            <input defaultValue={val} name={"gambar" + i} className=" appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={"gambar" + i} type="text" placeholder={"Gambar " + i + 1} />
+                        </div>)
+                    })}
+                    <center><Button type="submit">Simpan</Button></center>
+                </form>
             </div>
         </div>
     )

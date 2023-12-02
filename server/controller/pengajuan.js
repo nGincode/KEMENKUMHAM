@@ -199,16 +199,39 @@ const get = async (req, res) => {
         },
       },
       order: [["id", "DESC"]],
+      include: [
+        {
+          model: tahanan,
+          as: "tahanan",
+          attributes: {
+            exclude: ["uuid", "createdAt", "updatedAt"],
+          },
+        },
+      ],
     });
   } else {
     Pengajuan = await pengajuan.findAll({
       order: [["id", "DESC"]],
+      include: [
+        {
+          model: tahanan,
+          as: "tahanan",
+          attributes: {
+            exclude: ["uuid", "createdAt", "updatedAt"],
+          },
+        },
+      ],
     });
   }
   const data = Pengajuan.map((val) => {
     return {
       img: val.ktp,
       uuid: val.uuid,
+      tahanan: val.tahanan.nama,
+      tahanan_id: {
+        value: val.tahanan.id,
+        label: val.tahanan.nama,
+      },
       tanggal: moment(val.createdAt, "YYYY-MM-DD").format("DD/MM/YYYY"),
       pilihan: val.pilihan,
       nama: val.nama,
@@ -243,6 +266,7 @@ const post = async (req, res) => {
     nik,
     jenisKelamin_val,
     alamat,
+    tahanan_id,
     ktp,
     hubungan,
     noHp,
@@ -305,6 +329,7 @@ const post = async (req, res) => {
     jenisKelamin: jenisKelamin_val,
     noHp: noHp,
     hubungan: hubungan,
+    tahanan_id: tahanan_id,
     email: email,
     ktp: fileUpload(ktp, "image", `pengajuan/${uuid}_ktp`),
     files1: fileUpload(files1, "application", `pengajuan/${uuid}_files1`),

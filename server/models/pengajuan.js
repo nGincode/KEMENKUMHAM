@@ -7,7 +7,12 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of DataTypes lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {}
+    static associate(models) {
+      this.belongsTo(models.tahanan, {
+        as: "tahanan",
+        foreignKey: "tahanan_id",
+      });
+    }
   }
   pengajuan.init(
     {
@@ -22,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      tahanan_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

@@ -238,7 +238,7 @@ const get = async (req, res) => {
         Math.abs(
           Math.round(moment().diff(moment(val.tanggalKeluar), "months", true))
         ) + " Bulan",
-      pengajuan:
+      integrasi:
         Math.abs(
           Math.round(
             moment(val.tanggalMasuk).diff(

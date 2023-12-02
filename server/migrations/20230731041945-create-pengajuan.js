@@ -17,6 +17,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      tahanan_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       pilihan: {
         type: Sequelize.STRING,
         allowNull: false,

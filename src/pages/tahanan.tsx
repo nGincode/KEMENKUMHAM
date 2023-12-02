@@ -232,6 +232,9 @@ export default function Tahanan({ userData, setuserData }: any) {
                     <td>No Kamar</td>
                     <td>Perkara</td>
                     <td>Tanggal Masuk</td>
+                    <td>Tanggal Keluar</td>
+                    <td>Masa Tahan</td>
+                    <td>Sisa Tahan</td>
                     <td>Status</td>
                 </tr>`;
             }
@@ -243,6 +246,9 @@ export default function Tahanan({ userData, setuserData }: any) {
                 <td>${val.kamar}</td>
                 <td>${val.perkara}</td>
                 <td>${val.tanggalMasuk}</td>
+                <td>${val.tanggalKeluar}</td>
+                <td>${val.masaTahan}</td>
+                <td>${val.sisaTahan}</td>
                 <td>${val.statusTahanan}</td>
             </tr>
             `;

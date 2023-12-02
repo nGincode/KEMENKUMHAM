@@ -21,7 +21,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
     const [SearchValue, setSearchValue] = useState<any>();
     const [search, setsearch] = useState('');
     const URLAPI = "/api/pengajuan";
-    const Subject = "Pengajuan";
+    const Subject = "Integrasi";
 
     useEffect(() => {
         (document as any).title = Subject;
@@ -38,7 +38,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
             try {
                 await axios({
                     method: "GET",
-                    url: '/api/tahanan',
+                    url: '/api/narapidana?integrasi=1',
                     timeout: 5000,
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -294,6 +294,26 @@ export default function Pengajuan({ userData, setuserData }: any) {
         }
 
 
+        let files4 = event.target.files4?.files;
+        if (files4?.[0]) {
+            let extension4 = files4[0].type;
+            let size4 = files4[0].size;
+            if (extension4 === "application/pdf") {
+                if (size4 > 5000000) {
+                    return alert("Ukuran harus < 5000kb");
+                } else {
+                    let file4: any = null;
+                    file4 = await convertFileToBase64(files4[0]);
+                    formData.set("files4", file4);
+                }
+            } else {
+                return alert("Extension tidak valid, hanya pdf");
+            }
+        } else {
+            formData.delete("files4");
+        }
+
+
         handleApi('create', formData);
     };
 
@@ -491,18 +511,51 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                                             name='pilihan'
                                                             label='Pilihan Pengajuan'
                                                             data={[
-                                                                { label: 'Pengajuan', value: 'Pengajuan' },
                                                                 { label: 'Pembebasan Bersyarat', value: 'Pembebasan Bersyarat' },
                                                                 { label: 'Cuti Bersyarat', value: 'Cuti Bersyarat' },
+                                                                { label: 'CMB', value: 'CMB' },
+                                                                { label: 'CMK', value: 'CMK' },
                                                             ]}
                                                             required={true}
                                                         />
                                                     </div>
                                                 </div>
+
+                                                <div className="col-12">
+                                                    <div className="mb-24">
+                                                        <ReactSelect
+                                                            name='tahanan_id'
+                                                            search={true}
+                                                            label='Warga Binaan'
+                                                            setSearchValue={setSearchValue}
+                                                            data={dataTahanan.map((val: any) => {
+                                                                return { value: val.id, label: val.nama }
+                                                            })}
+                                                            required={true}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                {dataTahanan.map((val: any, i: number) => {
+                                                    return <div className="row" key={i}>
+                                                        {val.id == SearchValue?.value ? <>
+                                                            <div className="col-12  col-md-6">
+                                                                <div className="mb-24">
+                                                                    <Input readOnly label="Perkara" type="text" value={val.perkara} variant="standard" className="border-b-1" />
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12  col-md-6">
+                                                                <div className="mb-24">
+                                                                    <Input readOnly label="No Kamar" type="text" value={val.kamar} variant="standard" className="border-b-1" />
+                                                                </div>
+                                                            </div>
+                                                        </> : null}
+                                                    </div>
+
+                                                })}
                                                 <div className="row gx-8">
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
-                                                            <Input type="text" required variant="standard" className="border-b-1" name="nama" label="Nama" id="nama" />
+                                                            <Input type="text" required variant="standard" className="border-b-1" name="nama" label="Nama yg Mengajukan" id="nama" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-md-6">
@@ -551,7 +604,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                                     <div className="col-12  col-md-12">
                                                         <div className="mb-24">
                                                             <label className="form-label font-normal">
-                                                                KTP Penjamin (Legalisir Dukcapil)
+                                                                Form yg sudah di isi dan di TTD & cap
                                                                 <span className="text-danger">*</span>
                                                             </label>
                                                             <input type="file" required className="input-group" name="files1" id="files1" accept=".pdf" />
@@ -562,7 +615,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                                     <div className="col-12  col-md-12">
                                                         <div className="mb-24">
                                                             <label className="form-label font-normal">
-                                                                KK Penjamin (Legalisir Dukcapil)
+                                                                Foto KTP penjamin
                                                                 <span className="text-danger">*</span>
                                                             </label>
                                                             <input type="file" className="input-group" name="files2" id="files2" accept=".pdf" />
@@ -572,10 +625,20 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                                     <div className="col-12  col-md-12">
                                                         <div className="mb-24">
                                                             <label className="form-label font-normal">
-                                                                Pas Foto Penjamin
+                                                                Foto KK Penjamin
                                                                 <span className="text-danger">*</span>
                                                             </label>
                                                             <input type="file" required className="input-group" name="files3" id="files3" accept=".pdf" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-12  col-md-12">
+                                                        <div className="mb-24">
+                                                            <label className="form-label font-normal">
+                                                                Pas Foto Penjamin
+                                                                <span className="text-danger">*</span>
+                                                            </label>
+                                                            <input type="file" required className="input-group" name="files4" id="files4" accept=".pdf" />
                                                         </div>
                                                     </div>
 

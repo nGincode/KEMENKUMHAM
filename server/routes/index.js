@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const verifToken = require("../middleware/jwt");
 const Crypto = require("crypto");
+const moment = require("moment");
 
 const user = require("./user");
 const kunjungan = require("./kunjungan");
@@ -35,7 +36,7 @@ router.use("/", auth);
 router.post("/suratKunjungan", async (req, res) => {
   const { uuid, barcode } = req.body;
   const { tahanan, kunjungan } = require("../models");
-  const { Op } = require("sequelize");
+  const { Op, json } = require("sequelize");
   const moment = require("moment");
   let Kunjungan = await kunjungan.findOne({
     where: {
@@ -101,11 +102,41 @@ router.post("/suratTitipan", async (req, res) => {
 });
 
 router.get("/narapidana", async (req, res) => {
-  const { uuid } = req.body;
+  const { integrasi } = req.query;
   const { tahanan } = require("../models");
+
   const Tahanan = await tahanan.findAll({
     order: [["nama", "ASC"]],
   });
+
+  if (integrasi) {
+    const data = [];
+
+    Tahanan.map((val) => {
+      Math.abs(
+        Math.round(
+          moment(val.tanggalMasuk).diff(
+            moment(val.tanggalKeluar),
+            "months",
+            true
+          )
+        )
+      ) *
+        (2 / 3) >
+      Math.abs(
+        Math.round(moment().diff(moment(val.tanggalKeluar), "months", true))
+      )
+        ? data.push(val)
+        : null;
+    });
+
+    return res.json({
+      status: 200,
+      massage: "Get data successful",
+      data: data,
+    });
+  }
+
   return res.json({
     status: 200,
     massage: "Get data successful",
@@ -228,6 +259,7 @@ router.post("/pengajuanUsers", async (req, res) => {
     jenisKelamin,
     alamat,
     ktp,
+    tahanan_id,
     hubungan,
     noHp,
     email,
@@ -290,6 +322,7 @@ router.post("/pengajuanUsers", async (req, res) => {
     noHp: noHp,
     hubungan: hubungan,
     email: email,
+    tahanan_id: tahanan_id,
     ktp: fileUpload(ktp, "image", `pengajuan/${uuid}_ktp`),
     files1: fileUpload(files1, "application", `pengajuan/${uuid}_files1`),
     files2: fileUpload(files2, "application", `pengajuan/${uuid}_files2`),
@@ -318,9 +351,9 @@ router.post("/pengajuanUsers", async (req, res) => {
   var mailOptionsAdmin = {
     from: "admin@easyrubero.com",
     to: "humasrutanbkl@gmail.com",
-    subject: "SYSTEM PENGAJUAN -easyrubero.com",
+    subject: "SYSTEM INTEGRASI -easyrubero.com",
     text: `
-    Data Users Yang Membuat Pengajuan
+    Data Users Yang Membuat Integrasi
     nama: ${nama},
     NIK: ${nik},
     alamat: ${alamat},
@@ -333,12 +366,18 @@ router.post("/pengajuanUsers", async (req, res) => {
   var mailOptionsUser = {
     from: "admin@easyrubero.com",
     to: email,
-    subject: "SYSTEM PENGAJUAN -easyrubero.com",
-    text: `Selamat anda berhasil daftar pengajuan, Silahkan Tunggu informasi selanjutnya melalui WA/Email ini`,
+    subject: "SYSTEM INTEGRASI -easyrubero.com",
+    text: `Selamat anda berhasil daftar integrasi, Silahkan Tunggu informasi selanjutnya melalui WA/Email ini`,
   };
 
-  transporter.sendMail(mailOptionsAdmin, function (error, info) {});
-  transporter.sendMail(mailOptionsUser, function (error, info) {});
+  transporter.sendMail(mailOptionsAdmin, function (error, info) {
+    console.log(info);
+    console.log(error);
+  });
+  transporter.sendMail(mailOptionsUser, function (error, info) {
+    console.log(info);
+    console.log(error);
+  });
 
   if (!ktp && !files1) {
     res.json({
@@ -423,6 +462,23 @@ router.post("/titipanUsers", async (req, res) => {
     massage: "Berhasil dibuat",
     data: data,
   });
+});
+
+router.post("/slider", async (req, res) => {
+  const { data } = req.body;
+  require("fs").writeFileSync(
+    __dirname + `/../../public/slider.json`,
+    JSON.stringify(data)
+  );
+  res.json(data);
+});
+
+router.get("/slider", async (req, res) => {
+  const data = require("fs").readFileSync(
+    __dirname + `/../../public/slider.json`,
+    "utf8"
+  );
+  res.json(JSON.parse(data));
 });
 
 module.exports = router;
