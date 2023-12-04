@@ -186,6 +186,14 @@ export default function Tahanan({ userData, setuserData }: any) {
             }
         }
 
+        if (event.target.status_val.value) {
+            return toast.error("Status Tahanan Wajib Terisi");
+        }
+
+        if (event.target.perkara_val.value) {
+            return toast.error("Perkara Tahanan Wajib Terisi");
+        }
+
 
         let data = {
             nama: event.target.nama.value,
