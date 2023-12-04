@@ -85,10 +85,23 @@ export default function Index({ userData, setuserData }: any) {
     }
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        let value = [event.target.gambar0.value, event.target.gambar1.value, event.target.gambar2.value];
+        let value = [
+            event.target.gambar0.value,
+            event.target.gambar1.value,
+            event.target.gambar2.value,
+            event.target.gambar3.value,
+            event.target.gambar4.value,
+            event.target.gambar5.value,
+            event.target.gambar6.value,
+            event.target.gambar7.value,
+            event.target.gambar8.value,
+            event.target.gambar9.value,
+        ];
         axios.post("/api/slider", { data: value }).then((res: any) => {
             setsliderData(res.data)
+            return toast.success('Slider Berhasil disimpan');
         })
+
 
 
     }
@@ -109,11 +122,13 @@ export default function Index({ userData, setuserData }: any) {
                     <div className="text-lg font-bold text-center">Slider Home</div>
                     {sliderData.map((val: any, i: number) => {
                         return (<div key={i} className="mb-8">
-                            <center><img src={val} alt={'gambar' + i} width="100" height="100" /></center>
+                            <center>
+                                {val ? <img src={val} alt={'gambar' + i} width="100" height="100" /> : null}
+                            </center>
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={"gambar" + i}>
                                 Gambar {i + 1}
                             </label>
-                            <input defaultValue={val} name={"gambar" + i} className=" appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={"gambar" + i} type="text" placeholder={"Gambar " + i + 1} />
+                            <input defaultValue={val} name={"gambar" + i} className=" appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id={"gambar" + i} type="text" placeholder={`Gambar ${i + 1}`} />
                         </div>)
                     })}
                     <center><Button type="submit">Simpan</Button></center>

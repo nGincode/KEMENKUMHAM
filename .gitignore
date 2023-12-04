@@ -13,6 +13,7 @@
 
 # production
 /public/upload
+/public/slider.json
 
 # misc
 .DS_Store
