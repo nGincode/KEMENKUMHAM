@@ -186,11 +186,11 @@ export default function Tahanan({ userData, setuserData }: any) {
             }
         }
 
-        if (event.target.status_val.value) {
+        if (event.target.status.value) {
             return toast.error("Status Tahanan Wajib Terisi");
         }
 
-        if (event.target.perkara_val.value) {
+        if (event.target.perkara.value) {
             return toast.error("Perkara Tahanan Wajib Terisi");
         }
 
