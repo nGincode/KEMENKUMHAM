@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 const Crypto = require("crypto");
 const numeral = require("numeral");
 const moment = require("moment");
+const path = require("path");
 
 const getId = async (req, res) => {
   // const { users_id, users_uuid, email, username } = req.user;
@@ -267,67 +268,61 @@ const post = async (req, res) => {
     jenisKelamin_val,
     alamat,
     tahanan_id,
-    ktp,
     hubungan,
     noHp,
     email,
-    files1,
-    files2,
-    files3,
-    files4,
-    files5,
-    files6,
-    files7,
   } = req.body;
 
   const uuid = Crypto.randomUUID();
 
   const { users_id, users_uuid } = req.user;
-
-  const fileUpload = (files, type, dirname) => {
-    if (files) {
-      let nameFile =
-        "/upload/" + dirname + "." + files.split(";")[0].split("/")[1];
-
-      if (type == "image") {
-        require("fs").writeFile(
-          __dirname + `/../../public${nameFile}`,
-          new Buffer.from(
-            files.replace(/^data:image\/\w+;base64,/, ""),
-            "base64"
-          ),
-          (err) => {
-            console.log(err);
-          }
-        );
-      } else if (type == "application") {
-        require("fs").writeFile(
-          __dirname + `/../../public${nameFile}`,
-          new Buffer.from(
-            files.replace(/^data:application\/\w+;base64,/, ""),
-            "base64"
-          ),
-          (err) => {
-            console.log(err);
-          }
-        );
-      }
-
-      return nameFile;
-    } else {
-      return null;
-    }
-  };
+  const { ktp, files1, files2, files3, files4, files5, files6, files7 } =
+    req.files;
 
   // const fileUpload = (files, type, dirname) => {
   //   if (files) {
-  //     let nameFile = "/upload/" + dirname + "." + files.mimetype;
-  //     files.mv(nameFile);
+  //     let nameFile =
+  //       "/upload/" + dirname + "." + files.split(";")[0].split("/")[1];
+
+  //     if (type == "image") {
+  //       require("fs").writeFile(
+  //         __dirname + `/../../public${nameFile}`,
+  //         new Buffer.from(
+  //           files.replace(/^data:image\/\w+;base64,/, ""),
+  //           "base64"
+  //         ),
+  //         (err) => {
+  //           console.log(err);
+  //         }
+  //       );
+  //     } else if (type == "application") {
+  //       require("fs").writeFile(
+  //         __dirname + `/../../public${nameFile}`,
+  //         new Buffer.from(
+  //           files.replace(/^data:application\/\w+;base64,/, ""),
+  //           "base64"
+  //         ),
+  //         (err) => {
+  //           console.log(err);
+  //         }
+  //       );
+  //     }
+
   //     return nameFile;
   //   } else {
   //     return null;
   //   }
   // };
+
+  const fileUpload = (files, type, dirname) => {
+    if (files) {
+      let nameFile = "/upload" + dirname + files.name;
+      files.mv(path.join(__dirname, "../../public" + nameFile));
+      return nameFile;
+    } else {
+      return null;
+    }
+  };
 
   const data = {
     pilihan: pilihan_val,
@@ -341,18 +336,24 @@ const post = async (req, res) => {
     hubungan: hubungan,
     tahanan_id: tahanan_id,
     email: email,
-    ktp: fileUpload(ktp, "image", `pengajuan/${uuid}_ktp`),
-    files1: fileUpload(files1, "application", `pengajuan/${uuid}_files1`),
-    files2: fileUpload(files2, "application", `pengajuan/${uuid}_files2`),
-    files3: fileUpload(files3, "application", `pengajuan/${uuid}_files3`),
-    files4: fileUpload(files4, "application", `pengajuan/${uuid}_files4`),
-    files5: fileUpload(files5, "application", `pengajuan/${uuid}_files5`),
-    files6: fileUpload(files6, "application", `pengajuan/${uuid}_files6`),
-    files7: fileUpload(files7, "application", `pengajuan/${uuid}_files7`),
+    ktp: fileUpload(ktp, "image", `/pengajuan/${uuid}_ktp`),
+    files1: fileUpload(files1, "application", `/pengajuan/${uuid}_files1`),
+    files2: fileUpload(files2, "application", `/pengajuan/${uuid}_files2`),
+    files3: fileUpload(files3, "application", `/pengajuan/${uuid}_files3`),
+    files4: fileUpload(files4, "application", `/pengajuan/${uuid}_files4`),
+    files5: fileUpload(files5, "application", `/pengajuan/${uuid}_files5`),
+    files6: fileUpload(files6, "application", `/pengajuan/${uuid}_files6`),
+    files7: fileUpload(files7, "application", `/pengajuan/${uuid}_files7`),
   };
 
-  if (!ktp && !files1) {
-    res.status(500).json({
+  if (
+    !data.ktp &&
+    !data.files1 &&
+    !data.files2 &&
+    !data.files3 &&
+    !data.files4
+  ) {
+    res.status(400).json({
       status: 400,
       massage: "KTP & File harus terisi",
     });
