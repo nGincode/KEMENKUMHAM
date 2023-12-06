@@ -19,14 +19,14 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   server.use(bodyParser.json());
+  server.use(bodyParser.urlencoded({ extended: false }));
+  // server.use(express.json({ limit: "50mb" }));
+  // server.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-  app.use(bodyParser.urlencoded({ extended: false }));
   server.use(logger("dev"));
   server.use(cookieParser());
   server.use(cors({ origin: true }));
   server.use(express.static(path.join(__dirname, "../public")));
-  // server.use(express.json({ limit: "50mb" }));
-  // server.use(express.urlencoded({ limit: "50mb", extended: true }));
   server.use(fileUpload());
 
   server.use("/api", routes);

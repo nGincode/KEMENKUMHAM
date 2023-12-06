@@ -284,35 +284,45 @@ const post = async (req, res) => {
 
   const { users_id, users_uuid } = req.user;
 
+  // const fileUpload = (files, type, dirname) => {
+  //   if (files) {
+  //     let nameFile =
+  //       "/upload/" + dirname + "." + files.split(";")[0].split("/")[1];
+
+  //     if (type == "image") {
+  //       require("fs").writeFile(
+  //         __dirname + `/../../public${nameFile}`,
+  //         new Buffer.from(
+  //           files.replace(/^data:image\/\w+;base64,/, ""),
+  //           "base64"
+  //         ),
+  //         (err) => {
+  //           console.log(err);
+  //         }
+  //       );
+  //     } else if (type == "application") {
+  //       require("fs").writeFile(
+  //         __dirname + `/../../public${nameFile}`,
+  //         new Buffer.from(
+  //           files.replace(/^data:application\/\w+;base64,/, ""),
+  //           "base64"
+  //         ),
+  //         (err) => {
+  //           console.log(err);
+  //         }
+  //       );
+  //     }
+
+  //     return nameFile;
+  //   } else {
+  //     return null;
+  //   }
+  // };
+
   const fileUpload = (files, type, dirname) => {
     if (files) {
-      let nameFile =
-        "/upload/" + dirname + "." + files.split(";")[0].split("/")[1];
-
-      if (type == "image") {
-        require("fs").writeFile(
-          __dirname + `/../../public${nameFile}`,
-          new Buffer.from(
-            files.replace(/^data:image\/\w+;base64,/, ""),
-            "base64"
-          ),
-          (err) => {
-            console.log(err);
-          }
-        );
-      } else if (type == "application") {
-        require("fs").writeFile(
-          __dirname + `/../../public${nameFile}`,
-          new Buffer.from(
-            files.replace(/^data:application\/\w+;base64,/, ""),
-            "base64"
-          ),
-          (err) => {
-            console.log(err);
-          }
-        );
-      }
-
+      let nameFile = "/upload/" + dirname + "." + files.mimetype;
+      files.mv(nameFile);
       return nameFile;
     } else {
       return null;
