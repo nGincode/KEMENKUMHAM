@@ -228,9 +228,9 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 if (size > 5000000) {
                     return alert("Ukuran img harus < 5000kb");
                 } else {
-                    // let ktp: any = null;
-                    // ktp = await convertFileToBase64(files[0]);
-                    // formData.set("ktp", ktp);
+                    let ktp: any = null;
+                    ktp = await convertFileToBase64(files[0]);
+                    formData.set("ktp", ktp);
                 }
             } else {
                 return alert("Extension img KTP tidak valid, hanya jpeg/png");
@@ -245,9 +245,9 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 if (size1 > 5000000) {
                     return alert("Ukuran harus < 5000kb");
                 } else {
-                    // let file1: any = null;
-                    // file1 = await convertFileToBase64(files1[0]);
-                    // formData.set("files1", file1);
+                    let file1: any = null;
+                    file1 = await convertFileToBase64(files1[0]);
+                    formData.set("files1", file1);
                 }
             } else {
                 return alert("Extension tidak valid, hanya pdf");
@@ -262,9 +262,9 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 if (size2 > 5000000) {
                     return alert("Ukuran harus < 5000kb");
                 } else {
-                    // let file2: any = null;
-                    // file2 = await convertFileToBase64(files2[0]);
-                    // formData.set("files2", file2);
+                    let file2: any = null;
+                    file2 = await convertFileToBase64(files2[0]);
+                    formData.set("files2", file2);
                 }
             } else {
                 return alert("Extension tidak valid, hanya pdf");
@@ -281,9 +281,9 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 if (size3 > 5000000) {
                     return alert("Ukuran harus < 5000kb");
                 } else {
-                    // let file3: any = null;
-                    // file3 = await convertFileToBase64(files3[0]);
-                    // formData.set("files3", file3);
+                    let file3: any = null;
+                    file3 = await convertFileToBase64(files3[0]);
+                    formData.set("files3", file3);
                 }
             } else {
                 return alert("Extension tidak valid, hanya pdf");
@@ -301,9 +301,9 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 if (size4 > 5000000) {
                     return alert("Ukuran harus < 5000kb");
                 } else {
-                    // let file4: any = null;
-                    // file4 = await convertFileToBase64(files4[0]);
-                    // formData.set("files4", file4);
+                    let file4: any = null;
+                    file4 = await convertFileToBase64(files4[0]);
+                    formData.set("files4", file4);
                 }
             } else {
                 return alert("Extension tidak valid, hanya pdf");
