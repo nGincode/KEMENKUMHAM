@@ -18,10 +18,10 @@ const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-  server.use(bodyParser.json());
-  server.use(bodyParser.urlencoded({ extended: false }));
-  // server.use(express.json({ limit: "50mb" }));
-  // server.use(express.urlencoded({ limit: "50mb", extended: true }));
+  // server.use(bodyParser.json());
+  // server.use(bodyParser.urlencoded({ extended: false }));
+  server.use(express.json({ limit: "50mb" }));
+  server.use(express.urlencoded({ limit: "50mb", extended: true }));
 
   server.use(logger("dev"));
   server.use(cookieParser());
