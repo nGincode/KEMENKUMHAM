@@ -176,7 +176,7 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                             if (row.original.img) {
                                 return <a target="_blank" href={row.original.img}><div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle"><Image width={50} height={50} src={row.original.img} className=" object-cover rounded-full w-12 h-12" alt={row.original.nama ?? row.original.uuid} /></div></a>
                             } else {
-                                return <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">{(row.original.nama ?? row.original.uuid).substring(0, 2)}</div>
+                                return <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">{(row.original.nama ?? row.original.namaLengkap ?? row.original.username).substring(0, 2)}</div>
                             }
                         },
                         footer: (props: any) => props.column.id,

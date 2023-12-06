@@ -126,10 +126,10 @@ export default function Profile({ userData, setuserData }: any) {
         let data = {
             username: event.target.username.value,
             email: event.target.email.value,
-            fullName: event.target.fullName.value,
-            phone: event.target.phone.value,
-            address: event.target.address.value,
-            dateOfBirth: event.target.dateOfBirth.value,
+            namaLengkap: event.target.namaLengkap.value,
+            noHp: event.target.noHp.value,
+            alamat: event.target.alamat.value,
+            tanggalLahir: event.target.tanggalLahir.value,
         };
         handleApi('change_user', data);
 
@@ -168,14 +168,14 @@ export default function Profile({ userData, setuserData }: any) {
             let extension = files.type;
             let size = files.size;
             if (extension === 'image/jpeg' || extension === 'image/png') {
-                if (size > 100000) {
-                    toast.error("Size img only < 100kb");
+                if (size > 5000000) {
+                    toast.error("Ukuran img hanya < 5000kb");
                     (document.getElementById("file") as HTMLInputElement).value = "";
                 } else {
                     handleApi('avatar', event.target.files[0]);
                 }
             } else {
-                toast.error("Extension img not valid, only jpeg/png");
+                toast.error("Extension img tidak valid, hanya jpeg/png");
                 (document.getElementById("file") as HTMLInputElement).value = "";
             }
         } else {
@@ -226,7 +226,7 @@ export default function Profile({ userData, setuserData }: any) {
                                         <ul className="dropdown-menu" aria-labelledby="profile-menu-dropdown">
                                             <li>
                                                 <label htmlFor="file">
-                                                    <span className="dropdown-item" aria-hidden="true">Change Avatar</span>
+                                                    <span className="dropdown-item" aria-hidden="true">Ubah Avatar</span>
                                                     <input type="file" id="file" name="file" accept="image/*" style={{ display: "none" }} onChange={(val: any) => uploadAvatar(val)} />
                                                 </label>
                                             </li>
@@ -261,7 +261,7 @@ export default function Profile({ userData, setuserData }: any) {
                                             setTab(1)
                                         }} className={tab === 1 ? "cursor-pointer active position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center" : "position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center cursor-pointer "} >
                                             <i className="iconly-Curved-User me-16"></i>
-                                            <span>Personal Information</span>
+                                            <span>Data Personal</span>
                                             <span className="hp-menu-item-line position-absolute opacity-0 h-100 top-0 end-0 bg-primary hp-bg-dark-0" style={{ width: "2px" }}></span>
                                         </a>
                                     </li>
@@ -271,7 +271,7 @@ export default function Profile({ userData, setuserData }: any) {
                                             setTab(2)
                                         }} className={tab === 2 ? "cursor-pointer active position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center" : "position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center cursor-pointer "} >
                                             <i className="iconly-Curved-Password me-16"></i>
-                                            <span>Password Change</span>
+                                            <span>Ubah Password</span>
 
                                             <span className="hp-menu-item-line position-absolute opacity-0 h-100 top-0 end-0 bg-primary hp-bg-dark-0" style={{ width: "2px" }}></span>
                                         </a>
@@ -297,7 +297,7 @@ export default function Profile({ userData, setuserData }: any) {
                                     <ul className="dropdown-menu" aria-labelledby="profile-menu-dropdown">
                                         <li>
                                             <label htmlFor="file">
-                                                <span className="dropdown-item" aria-hidden="true">Change Avatar</span>
+                                                <span className="dropdown-item" aria-hidden="true">Ubah Avatar</span>
                                                 <input type="file" id="file" name="file" accept="image/*" style={{ display: "none" }} onChange={(val: any) => uploadAvatar(val)} />
                                             </label>
                                         </li>
@@ -360,7 +360,7 @@ export default function Profile({ userData, setuserData }: any) {
                                                     ($('#profileClose') as any).trigger("click");
                                                 }} className={tab === 1 ? "cursor-pointer active position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center" : "position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center cursor-pointer "} >
                                                     <i className="iconly-Curved-User me-16"></i>
-                                                    <span>Personal Information</span>
+                                                    <span>Data Personal</span>
                                                     <span className="hp-menu-item-line position-absolute opacity-0 h-100 top-0 end-0 bg-primary hp-bg-dark-0" style={{ width: "2px" }}></span>
                                                 </a>
                                             </li>
@@ -371,7 +371,7 @@ export default function Profile({ userData, setuserData }: any) {
                                                     ($('#profileClose') as any).trigger("click");
                                                 }} className={tab === 2 ? "cursor-pointer active position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center" : "position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center cursor-pointer "} >
                                                     <i className="iconly-Curved-Password me-16"></i>
-                                                    <span>Password Change</span>
+                                                    <span>Ubah Password</span>
 
                                                     <span className="hp-menu-item-line position-absolute opacity-0 h-100 top-0 end-0 bg-primary hp-bg-dark-0" style={{ width: "2px" }}></span>
                                                 </a>
@@ -391,8 +391,7 @@ export default function Profile({ userData, setuserData }: any) {
                             <div className="col ps-16 ps-sm-32 py-24 py-sm-32 overflow-hidden">
                                 <div className="row">
                                     <div className="col-12 col-md-8">
-                                        <h2 className="text-2xl font-bold">Personal Informations</h2>
-                                        <p className="hp-p1-body mb-0">Your data accounts</p>
+                                        <h2 className="text-2xl font-bold">Data Personal</h2>
                                     </div>
 
                                     <div className="divider border-black-40 hp-border-color-dark-80"></div>
@@ -400,7 +399,7 @@ export default function Profile({ userData, setuserData }: any) {
                                     <div className="col-12">
                                         <div className="row align-items-center justify-content-between">
                                             <div className="col-12 col-md-6">
-                                                <h3>Contact</h3>
+                                                <h3>Kontak</h3>
                                             </div>
 
                                             <div className="col-12 col-md-6 hp-profile-action-btn text-end">
@@ -410,8 +409,8 @@ export default function Profile({ userData, setuserData }: any) {
                                             <div className="col-12 hp-profile-content-list mt-8 pb-0 pb-sm-120">
                                                 <ul>
                                                     <li>
-                                                        <span className="hp-p1-body">Full Name</span>
-                                                        <span className="mt-0 mt-sm-4 hp-p1-body text-black-100 hp-text-color-dark-0">{userData.fullName ?? '-'}</span>
+                                                        <span className="hp-p1-body">Nama Lengkap</span>
+                                                        <span className="mt-0 mt-sm-4 hp-p1-body text-black-100 hp-text-color-dark-0">{userData.namaLengkap ?? '-'}</span>
                                                     </li>
                                                     <li className="mt-18">
                                                         <span className="hp-p1-body">Username</span>
@@ -423,15 +422,15 @@ export default function Profile({ userData, setuserData }: any) {
                                                     </li>
                                                     <li className="mt-18">
                                                         <span className="hp-p1-body">Phone</span>
-                                                        <a className="mt-0 mt-sm-4 hp-p1-body text-black-100 hp-text-color-dark-0" href={`tel:${userData.phone}`}>{userData.phone ?? '-'}</a>
+                                                        <a className="mt-0 mt-sm-4 hp-p1-body text-black-100 hp-text-color-dark-0" href={`tel:${userData.noHp}`}>{userData.noHp ?? '-'}</a>
                                                     </li>
                                                     <li className="mt-18">
-                                                        <span className="hp-p1-body">Date of Birth</span>
-                                                        <span className="mt-0 mt-sm-4 hp-p1-body text-black-100 hp-text-color-dark-0">{userData.dateOfBirth ? moment(userData.dateOfBirth).format('DD/MM/YYYY') : '-'}</span>
+                                                        <span className="hp-p1-body">Tanggal Lahir</span>
+                                                        <span className="mt-0 mt-sm-4 hp-p1-body text-black-100 hp-text-color-dark-0">{userData.tanggalLahir ? moment(userData.tanggalLahir).format('DD/MM/YYYY') : '-'}</span>
                                                     </li>
                                                     <li className="mt-18">
-                                                        <span className="hp-p1-body">Address</span>
-                                                        <span className="mt-0 mt-sm-4 hp-p1-body text-black-100 hp-text-color-dark-0">{userData.address ?? '-'}</span>
+                                                        <span className="hp-p1-body">Alamat</span>
+                                                        <span className="mt-0 mt-sm-4 hp-p1-body text-black-100 hp-text-color-dark-0">{userData.alamat ?? '-'}</span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -443,8 +442,7 @@ export default function Profile({ userData, setuserData }: any) {
                                 <div className="col ps-16 ps-sm-32 py-24 py-sm-32 overflow-hidden">
                                     <div className="row">
                                         <div className="col-12">
-                                            <h2 className="text-2xl font-bold">Change Password</h2>
-                                            <p className="hp-p1-body mb-0">Set a unique password to protect your account.</p>
+                                            <h2 className="text-2xl font-bold">Ubah Password</h2>
                                         </div>
 
                                         <div className="divider border-black-40 hp-border-color-dark-80"></div>
@@ -454,18 +452,18 @@ export default function Profile({ userData, setuserData }: any) {
                                                 <div className="col-12 col-sm-8 col-md-7 col-xl-5 col-xxxl-3">
                                                     <form onSubmit={submitPassword} id="submitPassword">
                                                         <div className="mb-24">
-                                                            <Input label="Old Password" variant="standard" required type="password" className="border-b-1" id="profileOldPassword" name="old_password" />
+                                                            <Input label="Password Lama" variant="standard" required type="password" className="border-b-1" id="profileOldPassword" name="old_password" />
                                                         </div>
 
                                                         <div className="mb-24">
-                                                            <Input label="New Password" variant="standard" required type="password" className="border-b-1" id="profileNewPassword" name="password" />
+                                                            <Input label="Password Baru" variant="standard" required type="password" className="border-b-1" id="profileNewPassword" name="password" />
                                                         </div>
 
                                                         <div className="mb-24">
-                                                            <Input label="Confirm New Password" variant="standard" required type="password" className="border-b-1" id="profileConfirmPassword" name="confirm_password" />
+                                                            <Input label="Ulangi Password Baru" variant="standard" required type="password" className="border-b-1" id="profileConfirmPassword" name="confirm_password" />
                                                         </div>
 
-                                                        <Button color="red" type="submit" className="w-100">Change Password</Button>
+                                                        <Button color="red" type="submit" className="w-100">Ubah Password</Button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -493,7 +491,7 @@ export default function Profile({ userData, setuserData }: any) {
                             <form onSubmit={submitProfile}>
                                 <div className="row g-24">
                                     <div className="col-12 -mt-2">
-                                        <Input label="Full Name" variant="standard" required type="text" className="border-b-1" name="fullName" id="fullName" defaultValue={userData.fullName} />
+                                        <Input label="Nama Lengkap" variant="standard" required type="text" className="border-b-1" name="namaLengkap" id="fullName" defaultValue={userData.namaLengkap} />
                                     </div>
 
                                     <div className="col-12">
@@ -505,15 +503,15 @@ export default function Profile({ userData, setuserData }: any) {
                                     </div>
 
                                     <div className="col-12">
-                                        <Input label="Date of Birth" variant="standard" required type="date" className="border-b-1" name="dateOfBirth" id="dateOfBirth" defaultValue={userData.dateOfBirth} />
+                                        <Input label="Tanggal Lahir" variant="standard" required type="date" className="border-b-1" name="tanggalLahir" id="dateOfBirth" defaultValue={userData.tanggalLahir} />
                                     </div>
 
                                     <div className="col-12">
-                                        <Input label="Phone" variant="standard" required type="number" className="border-b-1" name="phone" id="nophone" defaultValue={userData.phone} />
+                                        <Input label="No Hp" variant="standard" required type="number" className="border-b-1" name="noHp" id="noHp" defaultValue={userData.noHp} />
                                     </div>
 
                                     <div className="col-12">
-                                        <Textarea label="Address" variant="standard" required name="address" id="address" className="border-b-1" defaultValue={userData.address}></Textarea>
+                                        <Textarea label="Alamat" variant="standard" required name="alamat" id="address" className="border-b-1" defaultValue={userData.alamat}></Textarea>
                                     </div>
 
                                     <div className="col-6">
@@ -521,7 +519,7 @@ export default function Profile({ userData, setuserData }: any) {
                                     </div>
 
                                     <div className="col-6">
-                                        <div className="btn w-100" data-bs-dismiss="modal">Cancel</div>
+                                        <div className="btn w-100" data-bs-dismiss="modal">Kembali</div>
                                     </div>
                                 </div>
                             </form>
