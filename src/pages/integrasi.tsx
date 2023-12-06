@@ -74,8 +74,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
                     url: URLAPI,
                     data: data,
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                        "Content-Type": "multipart/form-data"
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
                 }).then((res: any) => {
                     setdataCreate(res.data.data)
