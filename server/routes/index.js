@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const verifToken = require("../middleware/jwt");
 const Crypto = require("crypto");
 const moment = require("moment");
+const path = require("path");
 
 const user = require("./user");
 const kunjungan = require("./kunjungan");
@@ -253,53 +254,57 @@ router.post("/pengajuanUsers", async (req, res) => {
     nik,
     jenisKelamin,
     alamat,
-    ktp,
     tahanan_id,
     hubungan,
     noHp,
     email,
-    files1,
-    files2,
-    files3,
-    files4,
-    files5,
-    files6,
-    files7,
   } = req.body;
+  const { ktp, files1, files2, files3, files4, files5, files6, files7 } =
+    req.files;
 
   const uuid = Crypto.randomUUID();
 
   const { pengajuan } = require("../models");
 
+  // const fileUpload = (files, type, dirname) => {
+  //   if (files) {
+  //     let nameFile =
+  //       "/upload/" + dirname + "." + files.split(";")[0].split("/")[1];
+
+  //     if (type == "image") {
+  //       require("fs").writeFile(
+  //         __dirname + `/../../public${nameFile}`,
+  //         new Buffer.from(
+  //           files.replace(/^data:image\/\w+;base64,/, ""),
+  //           "base64"
+  //         ),
+  //         (err) => {
+  //           console.log(err);
+  //         }
+  //       );
+  //     } else if (type == "application") {
+  //       require("fs").writeFile(
+  //         __dirname + `/../../public${nameFile}`,
+  //         new Buffer.from(
+  //           files.replace(/^data:application\/\w+;base64,/, ""),
+  //           "base64"
+  //         ),
+  //         (err) => {
+  //           console.log(err);
+  //         }
+  //       );
+  //     }
+
+  //     return nameFile;
+  //   } else {
+  //     return null;
+  //   }
+  // };
+
   const fileUpload = (files, type, dirname) => {
     if (files) {
-      let nameFile =
-        "/upload/" + dirname + "." + files.split(";")[0].split("/")[1];
-
-      if (type == "image") {
-        require("fs").writeFile(
-          __dirname + `/../../public${nameFile}`,
-          new Buffer.from(
-            files.replace(/^data:image\/\w+;base64,/, ""),
-            "base64"
-          ),
-          (err) => {
-            console.log(err);
-          }
-        );
-      } else if (type == "application") {
-        require("fs").writeFile(
-          __dirname + `/../../public${nameFile}`,
-          new Buffer.from(
-            files.replace(/^data:application\/\w+;base64,/, ""),
-            "base64"
-          ),
-          (err) => {
-            console.log(err);
-          }
-        );
-      }
-
+      let nameFile = "/upload" + dirname + files.name;
+      files.mv(path.join(__dirname, "../../public" + nameFile));
       return nameFile;
     } else {
       return null;
@@ -374,7 +379,13 @@ router.post("/pengajuanUsers", async (req, res) => {
     console.log(error);
   });
 
-  if (!ktp && !files1) {
+  if (
+    !data.ktp &&
+    !data.files1 &&
+    !data.files2 &&
+    !data.files3 &&
+    !data.files4
+  ) {
     res.json({
       status: 400,
       massage: "KTP & File harus terisi",
