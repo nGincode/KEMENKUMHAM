@@ -352,7 +352,7 @@ const post = async (req, res) => {
   };
 
   if (!ktp && !files1) {
-    res.json({
+    res.status(500).json({
       status: 400,
       massage: "KTP & File harus terisi",
     });
