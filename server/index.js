@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const path = require("path");
 const dotenv = require("dotenv").config();
+const bodyParser = require("body-parser");
 
 const dev = !process.env.DEV ? false : true;
 const hostname = dotenv.parsed.HOSTNAME;
@@ -17,12 +18,15 @@ const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
+  server.use(bodyParser.json());
+
+  app.use(bodyParser.urlencoded({ extended: false }));
   server.use(logger("dev"));
   server.use(cookieParser());
   server.use(cors({ origin: true }));
   server.use(express.static(path.join(__dirname, "../public")));
-  server.use(express.json({ limit: "50mb" }));
-  server.use(express.urlencoded({ limit: "50mb", extended: true }));
+  // server.use(express.json({ limit: "50mb" }));
+  // server.use(express.urlencoded({ limit: "50mb", extended: true }));
   server.use(fileUpload());
 
   server.use("/api", routes);
