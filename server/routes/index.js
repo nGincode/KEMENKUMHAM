@@ -113,20 +113,18 @@ router.get("/narapidana", async (req, res) => {
     const data = [];
 
     Tahanan.map((val) => {
-      Math.abs(
-        Math.round(
-          moment(val.tanggalMasuk).diff(
-            moment(val.tanggalKeluar),
-            "months",
-            true
-          )
-        )
-      ) *
-        (2 / 3) >
-      Math.abs(
-        Math.round(moment().diff(moment(val.tanggalKeluar), "months", true))
-      )
-        ? data.push(val)
+      val.statusTahanan !== "Tahanan"
+        ? Math.round(
+            moment(val.tanggalKeluar).diff(
+              moment(val.tanggalMasuk),
+              "months",
+              true
+            )
+          ) *
+            (2 / 3) >
+          Math.round(moment(val.tanggalKeluar).diff(moment(), "months", true))
+          ? data.push(val)
+          : null
         : null;
     });
 
@@ -147,7 +145,6 @@ router.get("/narapidana", async (req, res) => {
 router.post("/kunjunganUsers", async (req, res) => {
   const {
     nama,
-    waktuKunjungan,
     NIK,
     alamat,
     jenisKelamin,
@@ -195,23 +192,22 @@ router.post("/kunjunganUsers", async (req, res) => {
 
   const totalWaktuKunj = kunjungan.findAll({
     where: {
-      waktuKunjungan: waktuKunjungan,
+      waktuKunjungan: moment().format("YYYY-MM-DD"),
     },
   });
 
   const orangKunjungan = kunjungan.findAll({
     where: {
       tahanan_id: tahanan,
-      waktuKunjungan: waktuKunjungan,
+      waktuKunjungan: moment().format("YYYY-MM-DD"),
     },
   });
 
-  if (orangKunjungan) {
+  if (orangKunjungan.length) {
     return res.json({
       status: 400,
       massage:
         "Maaf, Warga Binaan ini telah di kunjungi hari ini,\nKembali lagi besok",
-      data: data,
     });
   }
 
@@ -219,13 +215,12 @@ router.post("/kunjunganUsers", async (req, res) => {
     return res.json({
       status: 400,
       massage: "Maaf, Waktu Kunjungan Melebihi Batas",
-      data: data,
     });
   }
 
   const data = {
     uuid: uuid,
-    waktuKunjungan: waktuKunjungan,
+    waktuKunjungan: moment().format("YYYY-MM-DD"),
     user_id: 0,
     nama: nama,
     NIK: NIK,

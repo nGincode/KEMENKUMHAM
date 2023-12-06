@@ -49,7 +49,7 @@ export default function AccessData(perm = 'permission') {
                         checklist: ['view', 'edit', 'delete', 'create']
                     },
                     {
-                        label: 'Titipan',
+                        label: 'Titipan Barang',
                         link: '/titipan',
                         name: 'titipan[]',
                         checklist: ['view', 'edit', 'delete', 'create']
@@ -123,7 +123,7 @@ export default function AccessData(perm = 'permission') {
                     </svg>
                     ,
                     link: '/titipan',
-                    label: 'Titipan',
+                    label: 'Titipan Barang',
                 },
                 {
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

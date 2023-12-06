@@ -225,35 +225,39 @@ const get = async (req, res) => {
       perkara: val.perkara,
       statusTahanan: val.statusTahanan,
       masaTahan:
-        Math.abs(
-          Math.round(
-            moment(val.tanggalMasuk).diff(
-              moment(val.tanggalKeluar),
-              "months",
-              true
-            )
-          )
-        ) + " Bulan",
+        val.tanggalKeluar > val.tanggalMasuk
+          ? Math.round(
+              moment(val.tanggalKeluar).diff(
+                moment(val.tanggalMasuk),
+                "months",
+                true
+              )
+            ) + " Bulan"
+          : "-",
       sisaTahan:
-        Math.abs(
-          Math.round(moment().diff(moment(val.tanggalKeluar), "months", true))
-        ) + " Bulan",
+        val.tanggalKeluar > val.tanggalMasuk
+          ? Math.round(
+              moment(val.tanggalKeluar).diff(moment(), "months", true)
+            ) + " Bulan"
+          : "-",
       integrasi:
-        Math.abs(
-          Math.round(
-            moment(val.tanggalMasuk).diff(
-              moment(val.tanggalKeluar),
-              "months",
-              true
-            )
-          )
-        ) *
-          (2 / 3) >
-        Math.abs(
-          Math.round(moment().diff(moment(val.tanggalKeluar), "months", true))
-        )
-          ? "Bisa Di Ajukan"
-          : "Belum Bisa",
+        val.statusTahanan !== "Tahanan"
+          ? val.tanggalKeluar > val.tanggalMasuk
+            ? Math.round(
+                moment(val.tanggalKeluar).diff(
+                  moment(val.tanggalMasuk),
+                  "months",
+                  true
+                )
+              ) *
+                (2 / 3) >
+              Math.round(
+                moment(val.tanggalKeluar).diff(moment(), "months", true)
+              )
+              ? "Bisa Di Ajukan"
+              : "Belum Bisa"
+            : "Tanggal Tidak Valid"
+          : "-",
     };
   });
 

@@ -21,7 +21,7 @@ export default function Titipan({ userData, setuserData }: any) {
     const [SearchValue, setSearchValue] = useState<any>();
     const [search, setsearch] = useState('');
     const URLAPI = "/api/titipan";
-    const Subject = "Titipan";
+    const Subject = "Titipan Barang";
 
     useEffect(() => {
         (document as any).title = Subject;

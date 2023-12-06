@@ -142,7 +142,7 @@ export default function Tahanan({ userData, setuserData }: any) {
                 label: "Perkara",
                 required: true,
                 select: [
-                    { label: 'PiDum', value: 'PiDum' },
+                    { label: 'Pidum', value: 'Pidum' },
                     { label: 'Narkoba', value: 'Narkoba' },
                     { label: 'Tipikor', value: 'Tipikor' }
                 ]
@@ -154,8 +154,8 @@ export default function Tahanan({ userData, setuserData }: any) {
                 label: "Status Tahanan",
                 required: true,
                 select: [
-                    { label: 'Tetap', value: 'Tetap' },
-                    { label: 'Titipan', value: 'Titipan' }
+                    { label: 'Narapidana', value: 'Narapidana' },
+                    { label: 'Tahanan', value: 'Tahanan' }
                 ]
             },
         ]
@@ -425,8 +425,8 @@ export default function Tahanan({ userData, setuserData }: any) {
                                                             id="status"
                                                             label='Status'
                                                             data={[
-                                                                { label: 'Tetap', value: 'Tetap' },
-                                                                { label: 'Titipan', value: 'Titipan' }
+                                                                { label: 'Narapidana', value: 'Narapidana' },
+                                                                { label: 'Tahanan', value: 'Tahanan' }
                                                             ]}
                                                             required={true}
                                                         />
