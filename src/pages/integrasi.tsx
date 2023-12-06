@@ -73,7 +73,6 @@ export default function Pengajuan({ userData, setuserData }: any) {
                     method: "POST",
                     url: URLAPI,
                     data: data,
-                    timeout: 5000,
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
                         "Content-Type": "multipart/form-data"
