@@ -333,51 +333,51 @@ router.post("/pengajuanUsers", async (req, res) => {
     files7: fileUpload(files7, "application", `/pengajuan/${uuid}_files7`),
   };
 
-  const nodemailer = require("nodemailer");
-  const dotenv = require("dotenv").config();
+  // const nodemailer = require("nodemailer");
+  // const dotenv = require("dotenv").config();
 
-  var transporter = nodemailer.createTransport({
-    host: dotenv.parsed.MAIL_HOST,
-    port: dotenv.parsed.MAIL_PORT,
-    auth: {
-      user: dotenv.parsed.MAIL_USERNAME,
-      pass: dotenv.parsed.MAIL_PASSWORD,
-    },
-    tls: {
-      rejectUnauthorized: true,
-    },
-  });
+  // var transporter = nodemailer.createTransport({
+  //   host: dotenv.parsed.MAIL_HOST,
+  //   port: dotenv.parsed.MAIL_PORT,
+  //   auth: {
+  //     user: dotenv.parsed.MAIL_USERNAME,
+  //     pass: dotenv.parsed.MAIL_PASSWORD,
+  //   },
+  //   tls: {
+  //     rejectUnauthorized: true,
+  //   },
+  // });
 
-  var mailOptionsAdmin = {
-    from: "admin@easyrubero.com",
-    to: "humasrutanbkl@gmail.com",
-    subject: "SYSTEM INTEGRASI -easyrubero.com",
-    text: `
-    Data Users Yang Membuat Integrasi
-    nama: ${nama},
-    NIK: ${nik},
-    alamat: ${alamat},
-    jenisKelamin: ${jenisKelamin},
-    noHp: ${noHp},
-    hubungan: ${hubungan},
-    email: ${email}`,
-  };
+  // var mailOptionsAdmin = {
+  //   from: "admin@easyrubero.com",
+  //   to: "humasrutanbkl@gmail.com",
+  //   subject: "SYSTEM INTEGRASI -easyrubero.com",
+  //   text: `
+  //   Data Users Yang Membuat Integrasi
+  //   nama: ${nama},
+  //   NIK: ${nik},
+  //   alamat: ${alamat},
+  //   jenisKelamin: ${jenisKelamin},
+  //   noHp: ${noHp},
+  //   hubungan: ${hubungan},
+  //   email: ${email}`,
+  // };
 
-  var mailOptionsUser = {
-    from: "admin@easyrubero.com",
-    to: email,
-    subject: "SYSTEM INTEGRASI -easyrubero.com",
-    text: `Selamat anda berhasil daftar integrasi, Silahkan Tunggu informasi selanjutnya melalui WA/Email ini`,
-  };
+  // var mailOptionsUser = {
+  //   from: "admin@easyrubero.com",
+  //   to: email,
+  //   subject: "SYSTEM INTEGRASI -easyrubero.com",
+  //   text: `Selamat anda berhasil daftar integrasi, Silahkan Tunggu informasi selanjutnya melalui WA/Email ini`,
+  // };
 
-  transporter.sendMail(mailOptionsAdmin, function (error, info) {
-    console.log(info);
-    console.log(error);
-  });
-  transporter.sendMail(mailOptionsUser, function (error, info) {
-    console.log(info);
-    console.log(error);
-  });
+  // transporter.sendMail(mailOptionsAdmin, function (error, info) {
+  //   console.log(info);
+  //   console.log(error);
+  // });
+  // transporter.sendMail(mailOptionsUser, function (error, info) {
+  //   console.log(info);
+  //   console.log(error);
+  // });
 
   if (
     !data.ktp &&
