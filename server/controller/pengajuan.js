@@ -336,14 +336,46 @@ const post = async (req, res) => {
     hubungan: hubungan,
     tahanan_id: tahanan_id,
     email: email,
-    ktp: fileUpload(ktp, "image", `/pengajuan/${uuid}_ktp`),
-    files1: fileUpload(files1, "application", `/pengajuan/${uuid}_files1`),
-    files2: fileUpload(files2, "application", `/pengajuan/${uuid}_files2`),
-    files3: fileUpload(files3, "application", `/pengajuan/${uuid}_files3`),
-    files4: fileUpload(files4, "application", `/pengajuan/${uuid}_files4`),
-    files5: fileUpload(files5, "application", `/pengajuan/${uuid}_files5`),
-    files6: fileUpload(files6, "application", `/pengajuan/${uuid}_files6`),
-    files7: fileUpload(files7, "application", `/pengajuan/${uuid}_files7`),
+    ktp: fileUpload(
+      ktp,
+      "image",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+    ),
+    files1: fileUpload(
+      files1,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files1`
+    ),
+    files2: fileUpload(
+      files2,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files2`
+    ),
+    files3: fileUpload(
+      files3,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files3`
+    ),
+    files4: fileUpload(
+      files4,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files4`
+    ),
+    files5: fileUpload(
+      files5,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files5`
+    ),
+    files6: fileUpload(
+      files6,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files6`
+    ),
+    files7: fileUpload(
+      files7,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files7`
+    ),
   };
 
   if (

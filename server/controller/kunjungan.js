@@ -129,7 +129,10 @@ const putId = async (req, res) => {
     if (image) {
       type = image.split(";")[0].split("/")[1];
       require("fs").writeFile(
-        __dirname + `/../../public/upload/kunjungan/${uuid}.${type}`,
+        __dirname +
+          `/../../public/upload/kunjungan/${moment().format(
+            "YYYY-MM-DD"
+          )}_${uuid}.${type}`,
         new Buffer.from(
           image.replace(/^data:image\/\w+;base64,/, ""),
           "base64"
@@ -138,7 +141,13 @@ const putId = async (req, res) => {
           console.log(err);
         }
       );
-      imgData = "/upload/kunjungan/" + uuid + "." + type;
+      imgData =
+        "/upload/kunjungan/" +
+        moment().format("YYYY-MM-DD") +
+        "_" +
+        uuid +
+        "." +
+        type;
     } else {
       imgData = Kunjungan.img;
     }
@@ -283,7 +292,10 @@ const post = async (req, res) => {
   if (img) {
     type = img.split(";")[0].split("/")[1];
     require("fs").writeFile(
-      __dirname + `/../../public/upload/kunjungan/${uuid}.${type}`,
+      __dirname +
+        `/../../public/upload/kunjungan/${moment().format(
+          "YYYY-MM-DD"
+        )}_${uuid}.${type}`,
       new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
       (err) => {
         console.log(err);
@@ -295,7 +307,10 @@ const post = async (req, res) => {
   if (suratIzin) {
     type2 = suratIzin.split(";")[0].split("/")[1];
     require("fs").writeFile(
-      __dirname + `/../../public/upload/kunjungan/${uuid}_suratIzin.${type2}`,
+      __dirname +
+        `/../../public/upload/kunjungan/${moment().format(
+          "YYYY-MM-DD"
+        )}_${uuid}_suratIzin.${type2}`,
       new Buffer.from(
         suratIzin.replace(/^data:image\/\w+;base64,/, ""),
         "base64"
@@ -319,9 +334,21 @@ const post = async (req, res) => {
     tahanan_id: tahanan_id,
     noHp: noHp,
     antrian: antrian.length + 1,
-    img: img ? "/upload/kunjungan/" + uuid + "." + type : null,
+    img: img
+      ? "/upload/kunjungan/" +
+        moment().format("YYYY-MM-DD") +
+        "_" +
+        uuid +
+        "." +
+        type
+      : null,
     suratIzin: suratIzin
-      ? "/upload/kunjungan/" + uuid + "_suratIzin." + type2
+      ? "/upload/kunjungan/" +
+        moment().format("YYYY-MM-DD") +
+        +"_" +
+        uuid +
+        "_suratIzin." +
+        type2
       : null,
     hubungan: hubungan,
   };

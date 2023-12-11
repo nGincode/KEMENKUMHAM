@@ -455,7 +455,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 <div className="col-12 mt-15">
                     <div className="row g-16 align-items-center justify-content-end">
 
-                        <div className="col-4 col-md-3 col-xl-3">
+                        <div className="col-12 col-md-3 col-xl-3">
                             <div className="input-group align-items-center">
                                 <DebouncedInput
                                     value={search ?? ''}
@@ -465,12 +465,12 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                 />
                             </div>
                         </div>
-                        <div className="col-6 col-md-3 col-xl-3">
+                        <div className="col-12 col-md-3">
                             <div className="input-group align-items-center">
                                 <Input type="date" id="tanggal_mulai" defaultValue={moment().format('YYYY-MM-DD')} onChange={(val: any) => { setdateData([val.target.value, (document.getElementById('tanggal_akhir') as any)?.value]) }} label="Tanggal Mulai" variant="standard" name="start" />
                             </div>
                         </div>
-                        <div className="col-6 col-md-3 col-xl-3">
+                        <div className="col-12 col-md-3">
                             <div className="input-group align-items-center">
                                 <Input type="date" id="tanggal_akhir" defaultValue={moment().add(7, 'days').format('YYYY-MM-DD')} onChange={(val: any) => { setdateData([(document.getElementById('tanggal_mulai') as any)?.value, val.target.value]) }} label="Tanggal Akhir" variant="standard" name="end" />
                             </div>

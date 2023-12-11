@@ -165,7 +165,10 @@ router.post("/kunjunganUsers", async (req, res) => {
   if (ktpData) {
     type = ktpData.split(";")[0].split("/")[1];
     require("fs").writeFile(
-      __dirname + `/../../public/upload/kunjungan/${uuid}.${type}`,
+      __dirname +
+        `/../../public/upload/kunjungan/${moment().format(
+          "YYYY-MM-DD"
+        )}_${uuid}.${type}`,
       new Buffer.from(
         ktpData.replace(/^data:image\/\w+;base64,/, ""),
         "base64"
@@ -180,7 +183,10 @@ router.post("/kunjunganUsers", async (req, res) => {
   if (suratIzinData && status == "Titipan") {
     type2 = suratIzinData.split(";")[0].split("/")[1];
     require("fs").writeFile(
-      __dirname + `/../../public/upload/kunjungan/${uuid}_suratIzin.${type2}`,
+      __dirname +
+        `/../../public/upload/kunjungan/${moment().format(
+          "YYYY-MM-DD"
+        )}_${uuid}_suratIzin.${type2}`,
       new Buffer.from(
         suratIzinData.replace(/^data:image\/\w+;base64,/, ""),
         "base64"
@@ -231,10 +237,22 @@ router.post("/kunjunganUsers", async (req, res) => {
     pengikutAnak: pengikutAnak,
     tahanan_id: tahanan,
     noHp: noHp,
-    img: ktpData ? "/upload/kunjungan/" + uuid + "." + type : null,
+    img: ktpData
+      ? "/upload/kunjungan/" +
+        moment().format("YYYY-MM-DD") +
+        "_" +
+        uuid +
+        "." +
+        type
+      : null,
     suratIzin:
       suratIzinData && status == "Titipan"
-        ? "/upload/kunjungan/" + uuid + "_suratIzin." + type2
+        ? "/upload/kunjungan/" +
+          moment().format("YYYY-MM-DD") +
+          "_" +
+          uuid +
+          "_suratIzin." +
+          type2
         : null,
   };
 
@@ -323,14 +341,46 @@ router.post("/pengajuanUsers", async (req, res) => {
     hubungan: hubungan,
     email: email,
     tahanan_id: tahanan_id,
-    ktp: fileUpload(ktp, "image", `/pengajuan/${uuid}_ktp`),
-    files1: fileUpload(files1, "application", `/pengajuan/${uuid}_files1`),
-    files2: fileUpload(files2, "application", `/pengajuan/${uuid}_files2`),
-    files3: fileUpload(files3, "application", `/pengajuan/${uuid}_files3`),
-    files4: fileUpload(files4, "application", `/pengajuan/${uuid}_files4`),
-    files5: fileUpload(files5, "application", `/pengajuan/${uuid}_files5`),
-    files6: fileUpload(files6, "application", `/pengajuan/${uuid}_files6`),
-    files7: fileUpload(files7, "application", `/pengajuan/${uuid}_files7`),
+    ktp: fileUpload(
+      ktp,
+      "image",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+    ),
+    files1: fileUpload(
+      files1,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files1`
+    ),
+    files2: fileUpload(
+      files2,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files2`
+    ),
+    files3: fileUpload(
+      files3,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files3`
+    ),
+    files4: fileUpload(
+      files4,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files4`
+    ),
+    files5: fileUpload(
+      files5,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files5`
+    ),
+    files6: fileUpload(
+      files6,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files6`
+    ),
+    files7: fileUpload(
+      files7,
+      "application",
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files7`
+    ),
   };
 
   // const nodemailer = require("nodemailer");
@@ -402,7 +452,6 @@ router.post("/pengajuanUsers", async (req, res) => {
 
 router.post("/titipanUsers", async (req, res) => {
   const {
-    tanggal,
     nama,
     NIK,
     alamat,
@@ -421,7 +470,10 @@ router.post("/titipanUsers", async (req, res) => {
   if (ktpData) {
     type = ktpData.split(";")[0].split("/")[1];
     require("fs").writeFile(
-      __dirname + `/../../public/upload/titipan/${uuid}.${type}`,
+      __dirname +
+        `/../../public/upload/titipan/${moment().format(
+          "YYYY-MM-DD"
+        )}_${uuid}.${type}`,
       new Buffer.from(
         ktpData.replace(/^data:image\/\w+;base64,/, ""),
         "base64"
@@ -434,14 +486,14 @@ router.post("/titipanUsers", async (req, res) => {
 
   const totalTitipan = titipan.findAll({
     where: {
-      tanggal: tanggal,
+      tanggal: moment().format("YYYY-MM-DD"),
     },
   });
 
   if (totalTitipan.length > 150) {
     return res.json({
       status: 400,
-      massage: "Maaf, Pentipan Melebihi Batas",
+      massage: "Maaf, Penitipan Melebihi Batas",
       data: data,
     });
   }
@@ -457,8 +509,15 @@ router.post("/titipanUsers", async (req, res) => {
     keterangan: ket,
     tahanan_id: tahanan,
     noHp: noHp,
-    tanggal: tanggal,
-    img: ktpData ? "/upload/titipan/" + uuid + "." + type : null,
+    tanggal: moment().format("YYYY-MM-DD"),
+    img: ktpData
+      ? "/upload/titipan/" +
+        moment().format("YYYY-MM-DD") +
+        "_" +
+        uuid +
+        "." +
+        type
+      : null,
   };
 
   await titipan.create(data);

@@ -128,7 +128,10 @@ const putId = async (req, res) => {
     if (image) {
       type = image.split(";")[0].split("/")[1];
       require("fs").writeFile(
-        __dirname + `/../../public/upload/titipan/${uuid}.${type}`,
+        __dirname +
+          `/../../public/upload/titipan/${moment().format(
+            "YYYY-MM-DD"
+          )}_${uuid}.${type}`,
         new Buffer.from(
           image.replace(/^data:image\/\w+;base64,/, ""),
           "base64"
@@ -137,7 +140,13 @@ const putId = async (req, res) => {
           console.log(err);
         }
       );
-      imgData = "/upload/titipan/" + uuid + "." + type;
+      imgData =
+        "/upload/titipan/" +
+        moment().format("YYYY-MM-DD") +
+        "_" +
+        uuid +
+        "." +
+        type;
     } else {
       imgData = Titipan.img;
     }
@@ -272,7 +281,10 @@ const post = async (req, res) => {
   if (img) {
     type = img.split(";")[0].split("/")[1];
     require("fs").writeFile(
-      __dirname + `/../../public/upload/titipan/${uuid}.${type}`,
+      __dirname +
+        `/../../public/upload/titipan/${moment().format(
+          "YYYY-MM-DD"
+        )}_${uuid}.${type}`,
       new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
       (err) => {
         console.log(err);
@@ -292,7 +304,14 @@ const post = async (req, res) => {
     tahanan_id: tahanan_id,
     noHp: noHp,
     tanggal: tanggal,
-    img: img ? "/upload/titipan/" + uuid + "." + type : null,
+    img: img
+      ? "/upload/titipan/" +
+        moment().format("YYYY-MM-DD") +
+        "_" +
+        uuid +
+        "." +
+        type
+      : null,
   };
 
   await titipan.create(data);

@@ -112,6 +112,13 @@ export default function Titipan({ userData, setuserData }: any) {
             },
             {
                 require: true,
+                name: 'tanggal',
+                type: 'date',
+                id: 'tanggal',
+                Label: 'Tanggal'
+            },
+            {
+                require: true,
                 name: 'nama',
                 type: 'text',
                 id: 'nama',
@@ -158,13 +165,13 @@ export default function Titipan({ userData, setuserData }: any) {
             },
             {
                 require: true,
-                full: true,
                 name: 'keterangan',
                 type: 'text',
                 id: 'keterangan',
                 Label: 'Uraian Titipan Barang',
             },
             {
+                full: true,
                 require: true,
                 name: 'tahanan_id',
                 type: 'reactSelect',
@@ -225,6 +232,7 @@ export default function Titipan({ userData, setuserData }: any) {
             jenisKelamin: event.target.kelamin_val.value,
             tahanan_id: event.target.tahanan_id.value,
             noHp: event.target.noHp.value,
+            tanggal: event.target.tanggal.value,
             ket: event.target.ket.value,
             hubungan: event.target.hub.value,
             img: img
@@ -367,7 +375,7 @@ export default function Titipan({ userData, setuserData }: any) {
                 <div className="col-12 mt-10">
                     <div className="row g-16 align-items-center justify-content-end">
 
-                        <div className="col-6 col-md-3 col-xl-3">
+                        <div className="col-12 col-md-3 col-xl-3">
                             <div className="input-group align-items-center">
                                 <DebouncedInput
                                     value={search ?? ''}
@@ -377,12 +385,12 @@ export default function Titipan({ userData, setuserData }: any) {
                                 />
                             </div>
                         </div>
-                        <div className="col-6 col-md-3 col-xl-3">
+                        <div className="col-12 col-md-3">
                             <div className="input-group align-items-center">
                                 <Input type="date" id="tanggal_mulai" defaultValue={moment().format('YYYY-MM-DD')} onChange={(val: any) => { setdateData([val.target.value, (document.getElementById('tanggal_akhir') as any)?.value]) }} label="Tanggal Mulai" variant="standard" name="start" />
                             </div>
                         </div>
-                        <div className="col-6 col-md-3 col-xl-3">
+                        <div className="col-12 col-md-3">
                             <div className="input-group align-items-center">
                                 <Input type="date" id="tanggal_akhir" defaultValue={moment().add(7, 'days').format('YYYY-MM-DD')} onChange={(val: any) => { setdateData([(document.getElementById('tanggal_mulai') as any)?.value, val.target.value]) }} label="Tanggal Akhir" variant="standard" name="end" />
                             </div>
@@ -429,6 +437,11 @@ export default function Titipan({ userData, setuserData }: any) {
                                                     </div>
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
+                                                            <Input type="date" required variant="standard" className="border-b-1" name="tanggal" label="Tanggal" id="tanggal" />
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-12 col-md-6">
+                                                        <div className="mb-24">
                                                             <Input type="number" required variant="standard" className="border-b-1" name="nik_ktp" label="NIK KTP" id="nik_ktp" />
                                                         </div>
                                                     </div>
@@ -464,7 +477,7 @@ export default function Titipan({ userData, setuserData }: any) {
                                                     </div>
 
 
-                                                    <div className="col-12">
+                                                    <div className="col-6">
                                                         <div className="mb-24">
                                                             <Input type="text" required variant="standard" className="border-b-1" name="ket" label="Uraian Titipan Barang" id="ket" />
                                                         </div>
