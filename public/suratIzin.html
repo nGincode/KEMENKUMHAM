@@ -59,8 +59,8 @@
       <div style="margin-bottom: 20px" id="alamat">ALAMAT : -</div>
       <div style="margin-bottom: 20px" id="foto_ktp">FOTO KTP : -</div>
       <div style="margin-bottom: 25px" id="pengikut_kunjungan">
-        PENGIKUT KUNJUNGAN : <span id="pengikutPria">-</span> Orang Laki-Laki &
-        <span id="pengikutWanita">-</span> Orang Perempuan
+        PENGIKUT KUNJUNGAN : <span id="pengikutDewasa">-</span> Orang Dewasa &
+        <span id="pengikutAnak">-</span> Orang Anak-Anak
       </div>
       <div style="margin-bottom: 20px; font-weight: bolder">
         TAHANAN/NARAPIDANA YANG DIKUNJUNGI
@@ -68,8 +68,14 @@
       <div style="margin-bottom: 20px; margin-left: 10px" id="nama_tahanan">
         NAMA : -
       </div>
+      <div style="margin-bottom: 25px; margin-left: 10px" id="perkara_tahanan">
+        STATUS TAHANAN : -
+      </div>
       <div style="margin-bottom: 25px; margin-left: 10px" id="status_tahanan">
         STATUS TAHANAN : -
+      </div>
+      <div style="margin-bottom: 25px; margin-left: 10px" id="kamar_tahanan">
+        KAMAR TAHANAN : -
       </div>
       <div style="margin-bottom: 20px; font-weight: bolder">
         WAKTU BERKUNJUNG PADA
@@ -112,8 +118,9 @@
       const data = await dt.json();
       if (data.data?.nama) {
         if (GetURLParameter("petugas") !== "null") {
-          document.getElementById("petugas").innerHTML =
-            GetURLParameter("petugas");
+          document.getElementById("petugas").innerHTML = GetURLParameter(
+            "petugas"
+          ).replace("%20", " ");
         }
 
         if (GetURLParameter("NIP") !== "null") {
@@ -136,16 +143,20 @@
           document.getElementById("foto_ktp").innerHTML =
             "FOTO KTP : Tidak ditemukan";
         }
-        document.getElementById("pengikutPria").innerHTML =
-          "" + data.data.pengikutPria;
-        document.getElementById("pengikutWanita").innerHTML =
-          "" + data.data.pengikutWanita;
+        document.getElementById("pengikutDewasa").innerHTML =
+          "" + data.data.pengikutDewasa;
+        document.getElementById("pengikutAnak").innerHTML =
+          "" + data.data.pengikutAnak;
 
         document.getElementById("nama_tahanan").innerHTML =
           "NAMA : " + data.data.tahanan.nama;
         document.getElementById("status_tahanan").innerHTML =
           "STATUS : " + data.data.tahanan.statusTahanan;
         document.getElementById("antrian").innerHTML = data.data.antrian;
+        document.getElementById("perkara_tahanan").innerHTML =
+          "PERKARA : " + data.data.tahanan.perkara;
+        document.getElementById("kamar_tahanan").innerHTML =
+          "KAMAR : " + data.data.tahanan.kamar;
 
         const d = new Date(data.data.waktuKunjungan);
         document.getElementById("hari").innerHTML =

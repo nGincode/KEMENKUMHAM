@@ -101,8 +101,9 @@
         .then((data) => {
           if (data.data?.nama) {
             if (GetURLParameter("petugas") !== null) {
-              document.getElementById("petugas").innerHTML =
-                GetURLParameter("petugas");
+              document.getElementById("petugas").innerHTML = GetURLParameter(
+                "petugas"
+              ).replace("%20", " ");
             }
 
             if (GetURLParameter("NIP") !== null) {
