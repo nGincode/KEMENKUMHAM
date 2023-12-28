@@ -509,6 +509,16 @@ router.post("/titipanUsers", async (req, res) => {
     });
   }
 
+  const fileUpload = (files, type, dirname) => {
+    if (files) {
+      let nameFile = "/upload" + dirname + files.name;
+      files.mv(path.join(__dirname, "../../public" + nameFile));
+      return nameFile;
+    } else {
+      return null;
+    }
+  };
+
   const data = {
     uuid: uuid,
     user_id: 0,
