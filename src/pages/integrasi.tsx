@@ -40,7 +40,6 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 await axios({
                     method: "GET",
                     url: '/api/narapidana?integrasi=1',
-                    timeout: 5000,
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -377,7 +376,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 <td>${val.noHp}</td>
                 <td>${val.alamat}</td>
                 <td>${val.email}</td>
-                <td>${val.hubungan}</td>
+                <td>${val.hubungan ?? '-'}</td>
                 <td>${val.filesData?.[0] ? "✅ KTP" : "❌ KTP"}<br/>
                 ${val.filesData?.[1] ? "✅ KK" : "❌ KTP"}<br/>
                 ${val.filesData?.[2] ? "✅ Pas Foto" : "❌ Pas Foto"}</td>

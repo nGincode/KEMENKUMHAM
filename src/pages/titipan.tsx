@@ -39,7 +39,6 @@ export default function Titipan({ userData, setuserData }: any) {
                 await axios({
                     method: "GET",
                     url: '/api/tahanan',
-                    timeout: 5000,
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -73,7 +72,6 @@ export default function Titipan({ userData, setuserData }: any) {
                     method: "POST",
                     url: URLAPI,
                     data: data,
-                    timeout: 5000,
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -204,7 +202,8 @@ export default function Titipan({ userData, setuserData }: any) {
                 if (size > 5000000) {
                     return toast.error("Size img only < 5000kb");
                 } else {
-                    img = await convertFileToBase64(files);
+                    // img = await convertFileToBase64(files);
+                    img = files
                 }
             } else {
                 return toast.error("Extension img not valid, only jpeg/png");
@@ -238,7 +237,8 @@ export default function Titipan({ userData, setuserData }: any) {
             img: img
         };
 
-        handleApi('create', data);
+        const formData = new FormData(document.getElementById("formCreate") as any);
+        handleApi('create', formData);
     };
 
     const byNumeral = (val: any) => {
@@ -263,7 +263,6 @@ export default function Titipan({ userData, setuserData }: any) {
         const get = await axios({
             method: "GET",
             url: URLAPI + `?tanggal_mulai=${tanggal_mulai}&tanggal_akhir=${tanggal_akhir}`,
-            timeout: 5000,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
@@ -299,7 +298,7 @@ export default function Titipan({ userData, setuserData }: any) {
                 <td>${val.NIK}</td>
                 <td>${val.jenisKelamin}</td>
                 <td>${val.noHp}</td>
-                <td>${val.hubungan}</td>
+                <td>${val.hubungan ?? '-'}</td>
                 <td>${val.keterangan}</td>
             </tr>
             `;
@@ -308,7 +307,7 @@ export default function Titipan({ userData, setuserData }: any) {
                 htmlData += `</table>`;
             }
         })
-        var mywindow: any = window.open('', 'Print', 'height=600,width=800');
+        var mywindow: any = window.open('', 'Print', 'height=600');
 
         mywindow.document.write('<html><head><title>Print</title>');
         mywindow.document.write('</head><body >');

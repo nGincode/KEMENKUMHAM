@@ -25,7 +25,6 @@ export default function Permission({ userData, setuserData }: any) {
                     method: "POST",
                     url: URLAPI,
                     data: data,
-                    timeout: 5000,
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }

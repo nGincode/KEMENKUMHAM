@@ -268,89 +268,110 @@ const get = async (req, res) => {
 const post = async (req, res) => {
   const {
     nama,
-    waktuKunjungan,
-    NIK,
     alamat,
-    jenisKelamin,
-    pengikut,
     tahanan_id,
-    img,
     noHp,
     suratIzin,
     hubungan,
+    pengikut_dewasa,
+    pengikut_anak,
+    kelamin_val,
+    nik_ktp,
+    waktu,
   } = req.body;
+  const { file } = req.files;
   const { users_id, users_uuid } = req.user;
 
   const antrian = await kunjungan.findAll({
     where: {
-      waktuKunjungan: waktuKunjungan,
+      waktuKunjungan: waktu,
     },
   });
 
   const uuid = Crypto.randomUUID();
-  let type = null;
-  if (img) {
-    type = img.split(";")[0].split("/")[1];
-    require("fs").writeFile(
-      __dirname +
-        `/../../public/upload/kunjungan/${moment().format(
-          "YYYY-MM-DD"
-        )}_${uuid}.${type}`,
-      new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
-      (err) => {
-        console.log(err);
-      }
-    );
-  }
+  // let type = null;
+  // if (img) {
+  //   type = img.split(";")[0].split("/")[1];
+  //   require("fs").writeFile(
+  //     __dirname +
+  //       `/../../public/upload/kunjungan/${moment().format(
+  //         "YYYY-MM-DD"
+  //       )}_${uuid}.${type}`,
+  //     new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   );
+  // }
 
-  let type2 = null;
-  if (suratIzin) {
-    type2 = suratIzin.split(";")[0].split("/")[1];
-    require("fs").writeFile(
-      __dirname +
-        `/../../public/upload/kunjungan/${moment().format(
-          "YYYY-MM-DD"
-        )}_${uuid}_suratIzin.${type2}`,
-      new Buffer.from(
-        suratIzin.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-      ),
-      (err) => {
-        console.log(err);
-      }
-    );
-  }
+  // let type2 = null;
+  // if (suratIzin) {
+  //   type2 = suratIzin.split(";")[0].split("/")[1];
+  //   require("fs").writeFile(
+  //     __dirname +
+  //       `/../../public/upload/kunjungan/${moment().format(
+  //         "YYYY-MM-DD"
+  //       )}_${uuid}_suratIzin.${type2}`,
+  //     new Buffer.from(
+  //       suratIzin.replace(/^data:image\/\w+;base64,/, ""),
+  //       "base64"
+  //     ),
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   );
+  // }
+
+  const fileUpload = (files, type, dirname) => {
+    if (files) {
+      let nameFile = "/upload" + dirname + files.name;
+      files.mv(require("path").join(__dirname, "../../public" + nameFile));
+      return nameFile;
+    } else {
+      return null;
+    }
+  };
 
   const data = {
     uuid: uuid,
-    waktuKunjungan: waktuKunjungan,
+    waktuKunjungan: waktu,
     user_id: users_id,
     nama: nama,
-    NIK: NIK,
+    NIK: nik_ktp,
     alamat: alamat,
-    jenisKelamin: jenisKelamin,
-    pengikutDewasa: pengikut.dewasa,
-    pengikutAnak: pengikut.anak,
+    jenisKelamin: kelamin_val,
+    pengikutDewasa: pengikut_dewasa,
+    pengikutAnak: pengikut_anak,
     tahanan_id: tahanan_id,
     noHp: noHp,
     antrian: antrian.length + 1,
-    img: img
-      ? "/upload/kunjungan/" +
-        moment().format("YYYY-MM-DD") +
-        "_" +
-        uuid +
-        "." +
-        type
-      : null,
-    suratIzin: suratIzin
-      ? "/upload/kunjungan/" +
-        moment().format("YYYY-MM-DD") +
-        +"_" +
-        uuid +
-        "_suratIzin." +
-        type2
-      : null,
+    img: fileUpload(
+      file,
+      "image",
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+    ),
+    suratIzin: fileUpload(
+      suratIzin,
+      "image",
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`
+    ),
     hubungan: hubungan,
+    // img: img
+    //   ? "/upload/kunjungan/" +
+    //     moment().format("YYYY-MM-DD") +
+    //     "_" +
+    //     uuid +
+    //     "." +
+    //     type
+    //   : null,
+    // suratIzin: suratIzin
+    //   ? "/upload/kunjungan/" +
+    //     moment().format("YYYY-MM-DD") +
+    //     +"_" +
+    //     uuid +
+    //     "_suratIzin." +
+    //     type2
+    //   : null,
   };
 
   await kunjungan.create(data);

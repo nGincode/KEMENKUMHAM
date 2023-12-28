@@ -152,50 +152,49 @@ router.post("/kunjunganUsers", async (req, res) => {
     pengikutAnak,
     pengikutDewasa,
     tahanan,
-    ktpData,
     noHp,
-    suratIzinData,
     status,
   } = req.body;
+  const { ktp, suratIzin } = req.files;
 
   const uuid = Crypto.randomUUID();
 
   const { kunjungan } = require("../models");
-  let type = null;
-  if (ktpData) {
-    type = ktpData.split(";")[0].split("/")[1];
-    require("fs").writeFile(
-      __dirname +
-        `/../../public/upload/kunjungan/${moment().format(
-          "YYYY-MM-DD"
-        )}_${uuid}.${type}`,
-      new Buffer.from(
-        ktpData.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-      ),
-      (err) => {
-        console.log(err);
-      }
-    );
-  }
+  // let type = null;
+  // if (ktpData) {
+  //   type = ktpData.split(";")[0].split("/")[1];
+  //   require("fs").writeFile(
+  //     __dirname +
+  //       `/../../public/upload/kunjungan/${moment().format(
+  //         "YYYY-MM-DD"
+  //       )}_${uuid}.${type}`,
+  //     new Buffer.from(
+  //       ktpData.replace(/^data:image\/\w+;base64,/, ""),
+  //       "base64"
+  //     ),
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   );
+  // }
 
-  let type2 = null;
-  if (suratIzinData && status == "Titipan") {
-    type2 = suratIzinData.split(";")[0].split("/")[1];
-    require("fs").writeFile(
-      __dirname +
-        `/../../public/upload/kunjungan/${moment().format(
-          "YYYY-MM-DD"
-        )}_${uuid}_suratIzin.${type2}`,
-      new Buffer.from(
-        suratIzinData.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-      ),
-      (err) => {
-        console.log(err);
-      }
-    );
-  }
+  // let type2 = null;
+  // if (suratIzinData && status == "Titipan") {
+  //   type2 = suratIzinData.split(";")[0].split("/")[1];
+  //   require("fs").writeFile(
+  //     __dirname +
+  //       `/../../public/upload/kunjungan/${moment().format(
+  //         "YYYY-MM-DD"
+  //       )}_${uuid}_suratIzin.${type2}`,
+  //     new Buffer.from(
+  //       suratIzinData.replace(/^data:image\/\w+;base64,/, ""),
+  //       "base64"
+  //     ),
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   );
+  // }
 
   const totalWaktuKunj = kunjungan.findAll({
     where: {
@@ -225,6 +224,16 @@ router.post("/kunjunganUsers", async (req, res) => {
     });
   }
 
+  const fileUpload = (files, type, dirname) => {
+    if (files) {
+      let nameFile = "/upload" + dirname + files.name;
+      files.mv(require("path").join(__dirname, "../../public" + nameFile));
+      return nameFile;
+    } else {
+      return null;
+    }
+  };
+
   const data = {
     uuid: uuid,
     waktuKunjungan: moment().format("YYYY-MM-DD"),
@@ -237,23 +246,33 @@ router.post("/kunjunganUsers", async (req, res) => {
     pengikutAnak: pengikutAnak,
     tahanan_id: tahanan,
     noHp: noHp,
-    img: ktpData
-      ? "/upload/kunjungan/" +
-        moment().format("YYYY-MM-DD") +
-        "_" +
-        uuid +
-        "." +
-        type
-      : null,
-    suratIzin:
-      suratIzinData && status == "Titipan"
-        ? "/upload/kunjungan/" +
-          moment().format("YYYY-MM-DD") +
-          "_" +
-          uuid +
-          "_suratIzin." +
-          type2
-        : null,
+    img: fileUpload(
+      ktp,
+      "image",
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+    ),
+    suratIzin: fileUpload(
+      suratIzin,
+      "image",
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`
+    ),
+    // img: ktpData
+    //   ? "/upload/kunjungan/" +
+    //     moment().format("YYYY-MM-DD") +
+    //     "_" +
+    //     uuid +
+    //     "." +
+    //     type
+    //   : null,
+    // suratIzin:
+    //   suratIzinData && status == "Titipan"
+    //     ? "/upload/kunjungan/" +
+    //       moment().format("YYYY-MM-DD") +
+    //       "_" +
+    //       uuid +
+    //       "_suratIzin." +
+    //       type2
+    //     : null,
   };
 
   await kunjungan.create(data);
@@ -451,38 +470,30 @@ router.post("/pengajuanUsers", async (req, res) => {
 });
 
 router.post("/titipanUsers", async (req, res) => {
-  const {
-    nama,
-    NIK,
-    alamat,
-    jenisKelamin,
-    hubungan,
-    ket,
-    tahanan,
-    ktpData,
-    noHp,
-  } = req.body;
+  const { nama, NIK, alamat, jenisKelamin, hubungan, ket, tahanan, noHp } =
+    req.body;
+  const { ktp } = req.files;
 
   const uuid = Crypto.randomUUID();
 
   const { titipan } = require("../models");
-  let type = null;
-  if (ktpData) {
-    type = ktpData.split(";")[0].split("/")[1];
-    require("fs").writeFile(
-      __dirname +
-        `/../../public/upload/titipan/${moment().format(
-          "YYYY-MM-DD"
-        )}_${uuid}.${type}`,
-      new Buffer.from(
-        ktpData.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-      ),
-      (err) => {
-        console.log(err);
-      }
-    );
-  }
+  // let type = null;
+  // if (ktpData) {
+  //   type = ktpData.split(";")[0].split("/")[1];
+  //   require("fs").writeFile(
+  //     __dirname +
+  //       `/../../public/upload/titipan/${moment().format(
+  //         "YYYY-MM-DD"
+  //       )}_${uuid}.${type}`,
+  //     new Buffer.from(
+  //       ktpData.replace(/^data:image\/\w+;base64,/, ""),
+  //       "base64"
+  //     ),
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   );
+  // }
 
   const totalTitipan = titipan.findAll({
     where: {
@@ -510,14 +521,19 @@ router.post("/titipanUsers", async (req, res) => {
     tahanan_id: tahanan,
     noHp: noHp,
     tanggal: moment().format("YYYY-MM-DD"),
-    img: ktpData
-      ? "/upload/titipan/" +
-        moment().format("YYYY-MM-DD") +
-        "_" +
-        uuid +
-        "." +
-        type
-      : null,
+    img: fileUpload(
+      ktp,
+      "image",
+      `/titipan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+    ),
+    // img: ktp
+    //   ? "/upload/titipan/" +
+    //     moment().format("YYYY-MM-DD") +
+    //     "_" +
+    //     uuid +
+    //     "." +
+    //     type
+    //   : null,
   };
 
   await titipan.create(data);

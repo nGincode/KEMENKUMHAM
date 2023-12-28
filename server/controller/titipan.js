@@ -264,54 +264,69 @@ const get = async (req, res) => {
 const post = async (req, res) => {
   const {
     nama,
-    hubungan,
-    NIK,
+    hub,
     alamat,
-    jenisKelamin,
     tahanan_id,
-    img,
     noHp,
     ket,
     tanggal,
+    kelamin_val,
+    nik_ktp,
   } = req.body;
   const { users_id, users_uuid } = req.user;
+  const { file } = req.files;
 
   const uuid = Crypto.randomUUID();
   let type = null;
-  if (img) {
-    type = img.split(";")[0].split("/")[1];
-    require("fs").writeFile(
-      __dirname +
-        `/../../public/upload/titipan/${moment().format(
-          "YYYY-MM-DD"
-        )}_${uuid}.${type}`,
-      new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
-      (err) => {
-        console.log(err);
-      }
-    );
-  }
+  // if (img) {
+  //   type = img.split(";")[0].split("/")[1];
+  //   require("fs").writeFile(
+  //     __dirname +
+  //       `/../../public/upload/titipan/${moment().format(
+  //         "YYYY-MM-DD"
+  //       )}_${uuid}.${type}`,
+  //     new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   );
+  // }
+
+  const fileUpload = (files, type, dirname) => {
+    if (files) {
+      let nameFile = "/upload" + dirname + files.name;
+      files.mv(require("path").join(__dirname, "../../public" + nameFile));
+      return nameFile;
+    } else {
+      return null;
+    }
+  };
 
   const data = {
     uuid: uuid,
-    hubungan: hubungan,
+    hubungan: hub,
     user_id: users_id,
     nama: nama,
-    NIK: NIK,
+    NIK: nik_ktp,
     alamat: alamat,
-    jenisKelamin: jenisKelamin,
+    jenisKelamin: kelamin_val,
     keterangan: ket,
     tahanan_id: tahanan_id,
     noHp: noHp,
     tanggal: tanggal,
-    img: img
-      ? "/upload/titipan/" +
-        moment().format("YYYY-MM-DD") +
-        "_" +
-        uuid +
-        "." +
-        type
-      : null,
+    img: fileUpload(
+      file,
+      "image",
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+    ),
+    // img: img
+    //   ? "/upload/titipan/" +
+    //     moment().format("YYYY-MM-DD") +
+    //     "_" +
+    //     uuid +
+    //     "." +
+    //     type
+    //   : null,
   };
 
   await titipan.create(data);

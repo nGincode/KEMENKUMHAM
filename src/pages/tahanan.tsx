@@ -38,7 +38,6 @@ export default function Tahanan({ userData, setuserData }: any) {
                     method: "POST",
                     url: URLAPI,
                     data: data,
-                    timeout: 5000,
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -67,7 +66,6 @@ export default function Tahanan({ userData, setuserData }: any) {
                 await axios({
                     method: "GET",
                     url: URLAPI,
-                    timeout: 5000,
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
