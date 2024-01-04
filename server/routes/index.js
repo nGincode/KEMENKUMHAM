@@ -196,13 +196,13 @@ router.post("/kunjunganUsers", async (req, res) => {
   //   );
   // }
 
-  const totalWaktuKunj = kunjungan.findAll({
+  const totalWaktuKunj = await kunjungan.findAll({
     where: {
       waktuKunjungan: moment().format("YYYY-MM-DD"),
     },
   });
 
-  const orangKunjungan = kunjungan.findAll({
+  const orangKunjungan = await kunjungan.findAll({
     where: {
       tahanan_id: tahanan,
       waktuKunjungan: moment().format("YYYY-MM-DD"),
@@ -495,7 +495,7 @@ router.post("/titipanUsers", async (req, res) => {
   //   );
   // }
 
-  const totalTitipan = titipan.findAll({
+  const totalTitipan = await titipan.findAll({
     where: {
       tanggal: moment().format("YYYY-MM-DD"),
     },

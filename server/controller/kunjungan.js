@@ -288,6 +288,21 @@ const post = async (req, res) => {
     },
   });
 
+  const orangKunjungan = await kunjungan.findAll({
+    where: {
+      tahanan_id: tahanan_id,
+      waktuKunjungan: waktu,
+    },
+  });
+
+  if (orangKunjungan.length) {
+    return res.json({
+      status: 400,
+      massage:
+        "Maaf, Warga Binaan ini telah di kunjungi hari ini,\nKembali lagi besok",
+    });
+  }
+
   const uuid = Crypto.randomUUID();
   // let type = null;
   // if (img) {
