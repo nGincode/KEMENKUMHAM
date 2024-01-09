@@ -238,7 +238,11 @@ const get = async (req, res) => {
         val.tanggalKeluar > val.tanggalMasuk
           ? Math.round(
               moment(val.tanggalKeluar).diff(moment(), "months", true)
-            ) + " Bulan"
+            ) < 0
+            ? "Bebas"
+            : Math.round(
+                moment(val.tanggalKeluar).diff(moment(), "months", true)
+              ) + " Bulan"
           : "-",
       integrasi:
         val.statusTahanan !== "Tahanan"
