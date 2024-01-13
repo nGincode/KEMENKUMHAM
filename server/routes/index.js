@@ -154,9 +154,8 @@ router.post("/kunjunganUsers", async (req, res) => {
     tahanan,
     noHp,
     hubungan,
-    selfi,
   } = req.body;
-  const { ktp, suratIzin } = req.files;
+  const { ktp, suratIzin, selfi } = req.files;
 
   const uuid = Crypto.randomUUID();
 
@@ -197,27 +196,27 @@ router.post("/kunjunganUsers", async (req, res) => {
   //   );
   // }
 
-  let type = null;
-  let urlSelfi = null;
-  if (selfi) {
-    type = selfi.split(";")[0].split("/")[1];
-    require("fs").writeFile(
-      __dirname +
-        `/../../public/upload/kunjungan/${moment().format(
-          "YYYY-MM-DD"
-        )}_${uuid}_selfi.${type}`,
-      new Buffer.from(
-        ktpData.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-      ),
-      (err) => {
-        console.log(err);
-      }
-    );
-    urlSelfi = `/upload/kunjungan/${moment().format(
-      "YYYY-MM-DD"
-    )}_${uuid}_selfi.${type}`;
-  }
+  // let type = null;
+  // let urlSelfi = null;
+  // if (selfi) {
+  //   type = selfi.split(";")[0].split("/")[1];
+  //   require("fs").writeFile(
+  //     __dirname +
+  //       `/../../public/upload/kunjungan/${moment().format(
+  //         "YYYY-MM-DD"
+  //       )}_${uuid}_selfi.${type}`,
+  //     new Buffer.from(
+  //       ktpData.replace(/^data:image\/\w+;base64,/, ""),
+  //       "base64"
+  //     ),
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   );
+  //   urlSelfi = `/upload/kunjungan/${moment().format(
+  //     "YYYY-MM-DD"
+  //   )}_${uuid}_selfi.${type}`;
+  // }
 
   const totalWaktuKunj = await kunjungan.findAll({
     where: {
@@ -275,7 +274,11 @@ router.post("/kunjunganUsers", async (req, res) => {
       "image",
       `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
     ),
-    selfi: urlSelfi,
+    selfi: fileUpload(
+      selfi,
+      "image",
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`
+    ),
     suratIzin: fileUpload(
       suratIzin,
       "image",
