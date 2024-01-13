@@ -208,7 +208,10 @@ const get = async (req, res) => {
   const { users_id, users_uuid, email, username, permission } = req.user;
 
   const tahananDb = await tahanan.findAll({
-    order: [["id", "DESC"]],
+    order: [
+      ["id", "DESC"],
+      ["statusTahanan", "DESC"],
+    ],
   });
   const data = tahananDb.map((val) => {
     return {

@@ -57,6 +57,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      selfi: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       suratIzin: {
         type: Sequelize.STRING,
         allowNull: true,

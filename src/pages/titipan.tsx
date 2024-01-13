@@ -246,6 +246,9 @@ export default function Titipan({ userData, setuserData }: any) {
         (document.getElementById(val.target.id) as HTMLInputElement).value = value;
     }
 
+    const resizeExternalImage = (ImgtoBeResized: any) => {
+        return `https://images.weserv.nl/?url=${ImgtoBeResized}&q=60`
+    }
 
     const laporan = async (tanggal_mulai: any, tanggal_akhir: any) => {
         if (!tanggal_mulai) {
@@ -277,6 +280,7 @@ export default function Titipan({ userData, setuserData }: any) {
                 <table>
                 <tr>
                     <td>No</td>
+                    <td>KTP</td>
                     <td>Tanggal</td>
                     <td>Nama Tahanan</td>
                     <td>Perkara</td>
@@ -291,6 +295,7 @@ export default function Titipan({ userData, setuserData }: any) {
             htmlData += `
             <tr>
                 <td>${i + 1}</td>
+                <td><img src='${resizeExternalImage(val.img)}' height='50' /></td>
                 <td>${val.tanggal}</td>
                 <td>${val.tahanan}</td>
                 <td>${val.perkara}</td>

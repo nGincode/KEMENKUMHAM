@@ -6,24 +6,6 @@ const Crypto = require("crypto");
 const numeral = require("numeral");
 const moment = require("moment");
 
-const getId = async (req, res) => {
-  // const { users_id, users_uuid, email, username } = req.user;
-  // const { uuid } = req.params;
-  // const Npwp = await stock.findOne({
-  //   where: { uuid: uuid },
-  //   attributes: ["uuid", "stock", "name", "phone", "address"],
-  // });
-  // if (!Npwp) {
-  //   return res.json({
-  //     message: "STOCK not found",
-  //   });
-  // }
-  // res.json({
-  //   status: 200,
-  //   massage: "Get data successful",
-  //   data: Npwp,
-  // });
-};
 const put = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const {
@@ -335,6 +317,22 @@ const post = async (req, res) => {
     status: 200,
     massage: "Berhasil dibuat",
     data: data,
+  });
+};
+const getId = async (req, res) => {
+  const { uuid } = req.params;
+  const Titipan = await titipan.findOne({
+    where: { uuid: uuid },
+  });
+  if (!Titipan) {
+    return res.json({
+      message: "Titipan not found",
+    });
+  }
+  res.json({
+    status: 200,
+    massage: "Get data successful",
+    data: Titipan,
   });
 };
 

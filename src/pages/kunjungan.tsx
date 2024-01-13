@@ -233,6 +233,19 @@ export default function Kunjungan({ userData, setuserData }: any) {
             }
         }
 
+
+        let selfi = null;
+        let files3 = event.target.selfi?.files?.[0];
+        if (files3) {
+            let size3 = files3.size;
+            if (size3 > 5000000) {
+                return toast.error("Size img only < 5Mb");
+            } else {
+                // suratIzin = await convertFileToBase64(files2);
+                selfi = files3;
+            }
+        }
+
         if (!event.target.tahanan_id.value) {
             return toast.error("Tahanan dikunjungi belum terisi");
         }
@@ -245,6 +258,9 @@ export default function Kunjungan({ userData, setuserData }: any) {
             return toast.error("Foto KTP Wajib Terisi");
         }
 
+        if (!selfi) {
+            return toast.error("Selfi Wajib Terisi");
+        }
         let data = {
             nama: event.target.nama.value,
             waktuKunjungan: event.target.waktu.value,
@@ -272,6 +288,9 @@ export default function Kunjungan({ userData, setuserData }: any) {
         (document.getElementById(val.target.id) as HTMLInputElement).value = value;
     }
 
+    const resizeExternalImage = (ImgtoBeResized: any) => {
+        return `https://images.weserv.nl/?url=${ImgtoBeResized}&q=60`
+    }
 
     const laporan = async (tanggal_mulai: any, tanggal_akhir: any) => {
         if (!tanggal_mulai) {
@@ -295,7 +314,6 @@ export default function Kunjungan({ userData, setuserData }: any) {
         })
 
         let htmlData = '';
-        console.log(get);
         get.data?.data.map((val: any, i: number) => {
             if (i == 0) {
                 htmlData += `
@@ -303,6 +321,8 @@ export default function Kunjungan({ userData, setuserData }: any) {
                 <table>
                 <tr>
                     <td>No</td>
+                    <td>KTP</td>
+                    <td>Selfi</td>
                     <td>Waktu Kunjungan</td>
                     <td>Nama</td>
                     <td>NIK</td>
@@ -318,13 +338,15 @@ export default function Kunjungan({ userData, setuserData }: any) {
             htmlData += `
             <tr>
                 <td>${i + 1}</td>
+                <td><img src='${resizeExternalImage(val.img)}' height='50' /></td>
+                <td><img src='${resizeExternalImage(val.selfi)}' height='50' /></td>
                 <td>${val.waktuKunjungan}</td>
                 <td>${val.nama}</td>
                 <td>${val.NIK}</td>
                 <td>${val.jenisKelamin}</td>
                 <td>${val.noHp}</td>
                 <td>${val.alamat}</td>
-                <td>${val.pengikutDewasa} Dewasa & ${val.pengikutAnak} Anak-Anak</td>
+                <td>${val.pengikutDewasa ? val.pengikutDewasa + ' Dewasa' : ''} ${val.pengikutAnak ? '& ' + val.pengikutAnak + ' Anak-Anak' : ''} </td>
                 <td>${val.tahanan}</td>
                 <td>${val.perkara}</td>
                 <td>${val.hubungan ?? '-'}</td>
@@ -450,10 +472,20 @@ export default function Kunjungan({ userData, setuserData }: any) {
                                     {dataTahanan.length ?
                                         <form onSubmit={submitAdd} id="formCreate">
                                             <div className="modal-body">
-                                                <ImgUpload
-                                                    label="Foto KTP"
-                                                    name="file"
-                                                    id="file" />
+                                                <div className="flex justify-center">
+                                                    <div>
+                                                        <ImgUpload
+                                                            label="Foto KTP"
+                                                            name="file"
+                                                            id="file" />
+                                                    </div>
+                                                    <div className="ml-5">
+                                                        <ImgUpload
+                                                            label="Selfi"
+                                                            name="selfi"
+                                                            id="selfi" />
+                                                    </div>
+                                                </div>
                                                 <div className="row gx-8">
 
                                                     <div className="col-12 col-md-6">

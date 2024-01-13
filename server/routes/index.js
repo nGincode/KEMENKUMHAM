@@ -153,9 +153,9 @@ router.post("/kunjunganUsers", async (req, res) => {
     pengikutDewasa,
     tahanan,
     noHp,
-    status,
+    hubungan,
   } = req.body;
-  const { ktp, suratIzin } = req.files;
+  const { ktp, suratIzin, selfi } = req.files;
 
   const uuid = Crypto.randomUUID();
 
@@ -245,11 +245,17 @@ router.post("/kunjunganUsers", async (req, res) => {
     pengikutDewasa: pengikutDewasa,
     pengikutAnak: pengikutAnak,
     tahanan_id: tahanan,
+    hubungan: hubungan,
     noHp: noHp,
     img: fileUpload(
       ktp,
       "image",
       `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+    ),
+    selfi: fileUpload(
+      selfi,
+      "image",
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`
     ),
     suratIzin: fileUpload(
       suratIzin,

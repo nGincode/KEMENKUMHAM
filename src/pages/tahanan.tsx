@@ -214,6 +214,9 @@ export default function Tahanan({ userData, setuserData }: any) {
         (document.getElementById(val.target.id) as HTMLInputElement).value = value;
     }
 
+    const resizeExternalImage = (ImgtoBeResized: any) => {
+        return `https://images.weserv.nl/?url=${ImgtoBeResized}&q=60`
+    }
     const laporan = async () => {
 
         const get = await axios({
@@ -233,6 +236,7 @@ export default function Tahanan({ userData, setuserData }: any) {
                 <table>
                 <tr>
                     <td>No</td>
+                    <td>KTP</td>
                     <td>Nama</td>
                     <td>BIN</td>
                     <td>No Kamar</td>
@@ -247,6 +251,7 @@ export default function Tahanan({ userData, setuserData }: any) {
             htmlData += `
             <tr>
                 <td>${i + 1}</td>
+                <td><img src='${resizeExternalImage(val.img)}' height='50' /></td>
                 <td>${val.nama}</td>
                 <td>${val.BIN}</td>
                 <td>${val.kamar}</td>

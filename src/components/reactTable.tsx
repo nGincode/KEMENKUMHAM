@@ -181,6 +181,19 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                         },
                         footer: (props: any) => props.column.id,
                     })
+                } else if (val === 'selfi') {
+                    array.push({
+                        id: 'img',
+                        header: () => 'Selfi',
+                        cell: ({ row }: any) => {
+                            if (row.original.selfi) {
+                                return <a target="_blank" href={row.original.selfi}><div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle"><Image width={50} height={50} src={row.original.selfi} className=" object-cover rounded-full w-12 h-12" alt={row.original.nama ?? row.original.uuid} /></div></a>
+                            } else {
+                                return <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">{(row.original.nama ?? row.original.namaLengkap ?? row.original.username).substring(0, 2)}</div>
+                            }
+                        },
+                        footer: (props: any) => props.column.id,
+                    })
                 } else if (val === 'suratIzin') {
                     array.push({
                         id: 'suratIzin',
@@ -861,168 +874,180 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                                                                             dataEdit?.[val.name]
                                                                                 ? false
                                                                                 : dataEdit?.[val.name]
-                                                                        } /></div>
-                                                                : val.type === 'group' ?
-                                                                    <div className="mb-24">
-                                                                        {val.label || val.name ?
-                                                                            <label htmlFor={val.id} className="form-label">
-                                                                                <span className="text-danger me-4">*</span>
-                                                                                {convertCamelCase(val.label ?? val.name)}
-                                                                            </label>
-                                                                            : null}
-                                                                        <div className="input-group">
-                                                                            {val.group.map((vall: any, ii: number) => {
-                                                                                return (<input key={ii} type={vall.type} required={val.required} defaultValue={dataEdit?.address ? dataEdit?.addressJson[vall.name] : dataEdit?.[vall.name]} readOnly={vall.readOnly} placeholder={vall.placeholder} name={vall.name} className="form-control" />)
-                                                                            })}
-                                                                        </div>
+                                                                        } />
+                                                                </div>
+                                                                : val.type === 'selfi' ?
+                                                                    <div className="mb-5" >
+                                                                        <ImgUpload name={val.name} id={val.id + "Edit"}
+                                                                            label={val.label}
+                                                                            src={dataEdit?.[val.name]}
+                                                                            empty={
+                                                                                dataEdit?.[val.name]
+                                                                                    ? false
+                                                                                    : dataEdit?.[val.name]
+                                                                            } />
                                                                     </div>
-                                                                    : val.type === 'textarea' ?
+                                                                    : val.type === 'group' ?
                                                                         <div className="mb-24">
-                                                                            <Textarea required={val.required} label={convertCamelCase(val.name)} variant="standard" className="border-b-1" defaultValue={dataEdit?.[val.name] ? dataEdit?.[val.name] : ''} name={val.name} id={`${val.id}Edit`} />
-                                                                        </div>
-                                                                        : val.type === 'reactSelect' ?
-                                                                            <div className="mb-24">
-                                                                                <Select
-                                                                                    id={`${val.id}Edit`}
-                                                                                    name={val.name}
-                                                                                    data={val.select}
-                                                                                    search={val.search}
-                                                                                    required={val.required}
-                                                                                    label={convertCamelCase(val.label ?? val.name)}
-                                                                                    defaultValue={dataEdit?.[val.name] ? dataEdit?.[val.name]?.value ? dataEdit?.[val.name] : { label: convertCamelCase(dataEdit?.[val.name]), value: dataEdit?.[val.name] } : ''}
-                                                                                />
+                                                                            {val.label || val.name ?
+                                                                                <label htmlFor={val.id} className="form-label">
+                                                                                    <span className="text-danger me-4">*</span>
+                                                                                    {convertCamelCase(val.label ?? val.name)}
+                                                                                </label>
+                                                                                : null}
+                                                                            <div className="input-group">
+                                                                                {val.group.map((vall: any, ii: number) => {
+                                                                                    return (<input key={ii} type={vall.type} required={val.required} defaultValue={dataEdit?.address ? dataEdit?.addressJson[vall.name] : dataEdit?.[vall.name]} readOnly={vall.readOnly} placeholder={vall.placeholder} name={vall.name} className="form-control" />)
+                                                                                })}
                                                                             </div>
-                                                                            : val.type === 'address' ?
-                                                                                <div className="w-full">
-                                                                                    <div className="mb-3">
-                                                                                        <div className="border-1 border-gray-500 p-2 rounded-lg shadow-sm">
-                                                                                            <label className="-mt-5 absolute bg-white px-1 text-gray-500">Address</label>
-                                                                                            <div className="xl:flex">
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.jalan} required name='jalan' className="border-b-1" type="text" variant="standard" label="Jalan" /></div>
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.block} required name='block' className="border-b-1" type="text" variant="standard" label="Block" /></div>
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.no} required name='no' className="border-b-1" type="number" variant="standard" label="No" /></div>
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.rt} required name='rt' className="border-b-1" type="number" variant="standard" label="RT" /></div>
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.rw} required name='rw' className="border-b-1" type="number" variant="standard" label="RW" /></div>
-                                                                                            </div>
-                                                                                            <div className="xl:flex">
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.kec} required name='kec' className="border-b-1" type="text" variant="standard" label="Kecamatan" /></div>
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.kel} required name='kel' className="border-b-1" type="text" variant="standard" label="Keluarahan" /></div>
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.prov} required name='prov' className="border-b-1" type="text" variant="standard" label="Provinsi" /></div>
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.kabkot} required name='kabkot' className="border-b-1" type="text" variant="standard" label="Kabupaten/Kota" /></div>
-                                                                                                <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.kodepos} required name='kodepos' className="border-b-1" type="number" variant="standard" label="Kode POS" /></div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
+                                                                        </div>
+                                                                        : val.type === 'textarea' ?
+                                                                            <div className="mb-24">
+                                                                                <Textarea required={val.required} label={convertCamelCase(val.name)} variant="standard" className="border-b-1" defaultValue={dataEdit?.[val.name] ? dataEdit?.[val.name] : ''} name={val.name} id={`${val.id}Edit`} />
+                                                                            </div>
+                                                                            : val.type === 'reactSelect' ?
+                                                                                <div className="mb-24">
+                                                                                    <Select
+                                                                                        id={`${val.id}Edit`}
+                                                                                        name={val.name}
+                                                                                        data={val.select}
+                                                                                        search={val.search}
+                                                                                        required={val.required}
+                                                                                        label={convertCamelCase(val.label ?? val.name)}
+                                                                                        defaultValue={dataEdit?.[val.name] ? dataEdit?.[val.name]?.value ? dataEdit?.[val.name] : { label: convertCamelCase(dataEdit?.[val.name]), value: dataEdit?.[val.name] } : ''}
+                                                                                    />
                                                                                 </div>
-                                                                                : val.type === 'permission' ? <div>
-                                                                                    <input type="hidden" value={JSON.stringify(val.data)} name="format" />
-
-                                                                                    <div className="flex mb-3">
-                                                                                        <div className="w-1/2"></div>
-                                                                                        <div className="w-1/6 justify-center flex">
-                                                                                            <IconButton size="sm"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                                                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                                            </svg>
-                                                                                            </IconButton>
-                                                                                        </div>
-                                                                                        <div className="w-1/6 justify-center flex">
-
-                                                                                            <IconButton color="blue" size="sm">
-                                                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                                                                                                    <path fillRule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
-                                                                                                </svg>
-                                                                                            </IconButton>
-                                                                                        </div>
-                                                                                        <div className="w-1/6  justify-center flex">
-                                                                                            <IconButton color="green" size="sm">
-                                                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                                                                                                    <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
-                                                                                                    <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
-                                                                                                </svg>
-                                                                                            </IconButton>
-                                                                                        </div>
-                                                                                        <div className="w-1/6  justify-center flex">
-                                                                                            <IconButton color="red" size="sm">
-                                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                                                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                                                                </svg>
-                                                                                            </IconButton>
+                                                                                : val.type === 'address' ?
+                                                                                    <div className="w-full">
+                                                                                        <div className="mb-3">
+                                                                                            <div className="border-1 border-gray-500 p-2 rounded-lg shadow-sm">
+                                                                                                <label className="-mt-5 absolute bg-white px-1 text-gray-500">Address</label>
+                                                                                                <div className="xl:flex">
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.jalan} required name='jalan' className="border-b-1" type="text" variant="standard" label="Jalan" /></div>
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.block} required name='block' className="border-b-1" type="text" variant="standard" label="Block" /></div>
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.no} required name='no' className="border-b-1" type="number" variant="standard" label="No" /></div>
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.rt} required name='rt' className="border-b-1" type="number" variant="standard" label="RT" /></div>
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.rw} required name='rw' className="border-b-1" type="number" variant="standard" label="RW" /></div>
+                                                                                                </div>
+                                                                                                <div className="xl:flex">
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.kec} required name='kec' className="border-b-1" type="text" variant="standard" label="Kecamatan" /></div>
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.kel} required name='kel' className="border-b-1" type="text" variant="standard" label="Keluarahan" /></div>
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.prov} required name='prov' className="border-b-1" type="text" variant="standard" label="Provinsi" /></div>
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.kabkot} required name='kabkot' className="border-b-1" type="text" variant="standard" label="Kabupaten/Kota" /></div>
+                                                                                                    <div className="mt-3 w-full"><Input defaultValue={dataEdit?.addressJson?.kodepos} required name='kodepos' className="border-b-1" type="number" variant="standard" label="Kode POS" /></div>
+                                                                                                </div>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    {val.data.map((val: any, i: number) => {
-                                                                                        return (<div key={i}>
-                                                                                            <div className="flex mt-3 font-bold">
-                                                                                                <div className="w-1/2">{val.label}</div>
-                                                                                            </div>
-                                                                                            {val.data.map((vall: any, ii: number) => {
-                                                                                                let perm = dataEdit?.permission.find((fill: any) => fill.label === val.label)?.data?.find((fil: any) => fil.name === vall.name);
-                                                                                                if (perm?.checklist) {
-                                                                                                    return (
-                                                                                                        <div key={ii} className="flex mt-1 ml-2">
-                                                                                                            <div className="w-1/2 ml-2 m-auto"> {vall.label}</div>
-                                                                                                            <div className="w-1/6 justify-center flex">
-                                                                                                                <Cekbox name={vall.name} id={dataEdit?.name + val.label + vall.name + ii + 1} checked={perm?.checklist.find((fil: any) => fil === 'view') ? true : false} />
-                                                                                                            </div>
-                                                                                                            <div className="w-1/6 justify-center flex">
-                                                                                                                <Cekbox color="blue" name={vall.name} id={dataEdit?.name + val.label + vall.name + ii + 2} checked={perm?.checklist.find((fil: any) => fil === 'create') ? true : false} />
-                                                                                                            </div>
-                                                                                                            <div className="w-1/6  justify-center flex">
-                                                                                                                <Cekbox color="green" name={vall.name} id={dataEdit?.name + val.label + vall.name + ii + 3} checked={perm?.checklist.find((fil: any) => fil === 'edit') ? true : false} />
-                                                                                                            </div>
-                                                                                                            <div className="w-1/6  justify-center flex">
-                                                                                                                <Cekbox color="red" name={vall.name} id={dataEdit?.name + val.label + vall.name + ii + 4} checked={perm?.checklist.find((fil: any) => fil === 'delete') ? true : false} />
-                                                                                                            </div>
-                                                                                                        </div>)
-                                                                                                } else {
+                                                                                    : val.type === 'permission' ? <div>
+                                                                                        <input type="hidden" value={JSON.stringify(val.data)} name="format" />
 
-                                                                                                    return (
-                                                                                                        <div key={ii} className="ml-2" >
-                                                                                                            <div className="flex my-2 font-semibold">
-                                                                                                                <div className="w-1/2">{perm?.label}</div>
-                                                                                                            </div>
-                                                                                                            {perm?.data.map((valll: any, iii: number) => {
-                                                                                                                let perm = dataEdit?.permission.find((fill: any) => fill.label === val.label)?.data?.find((fil: any) => fil.name === vall.name)?.data?.find((fil: any) => fil.name === valll.name);
-                                                                                                                return (
-                                                                                                                    <div key={iii} className="flex mt-1 ml-2">
-                                                                                                                        <div className="w-1/2 ml-2 m-auto"> {valll.label}</div>
-                                                                                                                        <div className="w-1/6 justify-center flex">
-                                                                                                                            <Cekbox name={valll.name} id={dataEdit?.name + vall.label + valll.name + iii + 1} checked={perm?.checklist.find((fil: any) => fil === 'view') ? true : false} />
-                                                                                                                        </div>
-                                                                                                                        <div className="w-1/6 justify-center flex">
-                                                                                                                            <Cekbox color="blue" name={valll.name} id={dataEdit?.name + vall.label + valll.name + iii + 2} checked={perm?.checklist.find((fil: any) => fil === 'create') ? true : false} />
-                                                                                                                        </div>
-                                                                                                                        <div className="w-1/6  justify-center flex">
-                                                                                                                            <Cekbox color="green" name={valll.name} id={dataEdit?.name + vall.label + valll.name + iii + 3} checked={perm?.checklist.find((fil: any) => fil === 'edit') ? true : false} />
-                                                                                                                        </div>
-                                                                                                                        <div className="w-1/6  justify-center flex">
-                                                                                                                            <Cekbox color="red" name={valll.name} id={dataEdit?.name + vall.label + valll.name + iii + 4} checked={perm?.checklist.find((fil: any) => fil === 'delete') ? true : false} />
-                                                                                                                        </div>
-                                                                                                                    </div>)
-                                                                                                            })}
-                                                                                                        </div>
-                                                                                                    )
-                                                                                                }
-                                                                                            })}
-                                                                                        </div>)
-                                                                                    })}
-                                                                                </div> :
-                                                                                    val.type === 'selectMulti' ?
-                                                                                        <div className="mb-24">
-                                                                                            <label className="form-label font-normal">
-                                                                                                {convertCamelCase(val.label ?? val.name)}
-                                                                                                <span className="text-danger">*</span>
-                                                                                            </label>
-                                                                                            <Select
-                                                                                                multi={true}
-                                                                                                mergeDataValue={true}
-                                                                                                name={val.name}
-                                                                                                data={val.select}
-                                                                                                required={val.required}
-                                                                                                defaultValue={userCompany}
-                                                                                            />
+                                                                                        <div className="flex mb-3">
+                                                                                            <div className="w-1/2"></div>
+                                                                                            <div className="w-1/6 justify-center flex">
+                                                                                                <IconButton size="sm"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                                                </svg>
+                                                                                                </IconButton>
+                                                                                            </div>
+                                                                                            <div className="w-1/6 justify-center flex">
+
+                                                                                                <IconButton color="blue" size="sm">
+                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                                                                                        <path fillRule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
+                                                                                                    </svg>
+                                                                                                </IconButton>
+                                                                                            </div>
+                                                                                            <div className="w-1/6  justify-center flex">
+                                                                                                <IconButton color="green" size="sm">
+                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                                                                                        <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
+                                                                                                        <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
+                                                                                                    </svg>
+                                                                                                </IconButton>
+                                                                                            </div>
+                                                                                            <div className="w-1/6  justify-center flex">
+                                                                                                <IconButton color="red" size="sm">
+                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                                                                    </svg>
+                                                                                                </IconButton>
+                                                                                            </div>
                                                                                         </div>
-                                                                                        : null
+                                                                                        {val.data.map((val: any, i: number) => {
+                                                                                            return (<div key={i}>
+                                                                                                <div className="flex mt-3 font-bold">
+                                                                                                    <div className="w-1/2">{val.label}</div>
+                                                                                                </div>
+                                                                                                {val.data.map((vall: any, ii: number) => {
+                                                                                                    let perm = dataEdit?.permission.find((fill: any) => fill.label === val.label)?.data?.find((fil: any) => fil.name === vall.name);
+                                                                                                    if (perm?.checklist) {
+                                                                                                        return (
+                                                                                                            <div key={ii} className="flex mt-1 ml-2">
+                                                                                                                <div className="w-1/2 ml-2 m-auto"> {vall.label}</div>
+                                                                                                                <div className="w-1/6 justify-center flex">
+                                                                                                                    <Cekbox name={vall.name} id={dataEdit?.name + val.label + vall.name + ii + 1} checked={perm?.checklist.find((fil: any) => fil === 'view') ? true : false} />
+                                                                                                                </div>
+                                                                                                                <div className="w-1/6 justify-center flex">
+                                                                                                                    <Cekbox color="blue" name={vall.name} id={dataEdit?.name + val.label + vall.name + ii + 2} checked={perm?.checklist.find((fil: any) => fil === 'create') ? true : false} />
+                                                                                                                </div>
+                                                                                                                <div className="w-1/6  justify-center flex">
+                                                                                                                    <Cekbox color="green" name={vall.name} id={dataEdit?.name + val.label + vall.name + ii + 3} checked={perm?.checklist.find((fil: any) => fil === 'edit') ? true : false} />
+                                                                                                                </div>
+                                                                                                                <div className="w-1/6  justify-center flex">
+                                                                                                                    <Cekbox color="red" name={vall.name} id={dataEdit?.name + val.label + vall.name + ii + 4} checked={perm?.checklist.find((fil: any) => fil === 'delete') ? true : false} />
+                                                                                                                </div>
+                                                                                                            </div>)
+                                                                                                    } else {
+
+                                                                                                        return (
+                                                                                                            <div key={ii} className="ml-2" >
+                                                                                                                <div className="flex my-2 font-semibold">
+                                                                                                                    <div className="w-1/2">{perm?.label}</div>
+                                                                                                                </div>
+                                                                                                                {perm?.data.map((valll: any, iii: number) => {
+                                                                                                                    let perm = dataEdit?.permission.find((fill: any) => fill.label === val.label)?.data?.find((fil: any) => fil.name === vall.name)?.data?.find((fil: any) => fil.name === valll.name);
+                                                                                                                    return (
+                                                                                                                        <div key={iii} className="flex mt-1 ml-2">
+                                                                                                                            <div className="w-1/2 ml-2 m-auto"> {valll.label}</div>
+                                                                                                                            <div className="w-1/6 justify-center flex">
+                                                                                                                                <Cekbox name={valll.name} id={dataEdit?.name + vall.label + valll.name + iii + 1} checked={perm?.checklist.find((fil: any) => fil === 'view') ? true : false} />
+                                                                                                                            </div>
+                                                                                                                            <div className="w-1/6 justify-center flex">
+                                                                                                                                <Cekbox color="blue" name={valll.name} id={dataEdit?.name + vall.label + valll.name + iii + 2} checked={perm?.checklist.find((fil: any) => fil === 'create') ? true : false} />
+                                                                                                                            </div>
+                                                                                                                            <div className="w-1/6  justify-center flex">
+                                                                                                                                <Cekbox color="green" name={valll.name} id={dataEdit?.name + vall.label + valll.name + iii + 3} checked={perm?.checklist.find((fil: any) => fil === 'edit') ? true : false} />
+                                                                                                                            </div>
+                                                                                                                            <div className="w-1/6  justify-center flex">
+                                                                                                                                <Cekbox color="red" name={valll.name} id={dataEdit?.name + vall.label + valll.name + iii + 4} checked={perm?.checklist.find((fil: any) => fil === 'delete') ? true : false} />
+                                                                                                                            </div>
+                                                                                                                        </div>)
+                                                                                                                })}
+                                                                                                            </div>
+                                                                                                        )
+                                                                                                    }
+                                                                                                })}
+                                                                                            </div>)
+                                                                                        })}
+                                                                                    </div> :
+                                                                                        val.type === 'selectMulti' ?
+                                                                                            <div className="mb-24">
+                                                                                                <label className="form-label font-normal">
+                                                                                                    {convertCamelCase(val.label ?? val.name)}
+                                                                                                    <span className="text-danger">*</span>
+                                                                                                </label>
+                                                                                                <Select
+                                                                                                    multi={true}
+                                                                                                    mergeDataValue={true}
+                                                                                                    name={val.name}
+                                                                                                    data={val.select}
+                                                                                                    required={val.required}
+                                                                                                    defaultValue={userCompany}
+                                                                                                />
+                                                                                            </div>
+                                                                                            : null
                                                     }</div>
                                             })}
 

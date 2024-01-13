@@ -47,37 +47,115 @@ export default function Index({ userData, setuserData }: any) {
 
     }, []);
 
-    const scan = (val: any) => {
+    const scan = async (val: any) => {
         (document.getElementById('html5-qrcode-button-camera-stop') as any).click();
 
         let value = val.split('|');
-
         if (value?.[1] == 'titipan') {
-            window.open(
-                url + '/titipan.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
-                '_blank'
-            );
+            try {
+                await axios({
+                    method: "GET",
+                    url: '/api/titipan/' + value[0],
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }).then((res: any) => {
+                    if (res.data.data) {
+                        window.open(
+                            url + '/titipan.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                            '_blank'
+                        );
+                    } else {
+                        return toast.error('Kode Barcode Tidak Sesuai');
+                    }
+                }).catch(error => {
+                    return toast.error('Kode Barcode Tidak Sesuai');
+                });
+            } catch (error: any) {
+                toast.error(error.response.data.massage);
+            }
         } else {
-            window.open(
-                url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
-                '_blank'
-            );
+            if (value[0]) {
+                try {
+                    await axios({
+                        method: "GET",
+                        url: '/api/kunjungan/' + value[0],
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }).then((res: any) => {
+                        if (res.data.data) {
+                            window.open(
+                                url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                                '_blank'
+                            );
+                        } else {
+                            return toast.error('Kode Barcode Tidak Sesuai');
+                        }
+                    }).catch(error => {
+                        return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
+                    });
+                } catch (error: any) {
+                    toast.error(error.response.data.massage);
+                }
+            } else {
+                return toast.error('Kode Barcode Tidak Sesuai');
+            }
         }
     }
-    const alatBarcode = (val: any) => {
+    const alatBarcode = async (val: any) => {
         let value = val.target.value.split('|');
-        console.log(value)
 
         if (value?.[1] == 'titipan') {
-            window.open(
-                url + '/titipan.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
-                '_blank'
-            );
+            try {
+                await axios({
+                    method: "GET",
+                    url: '/api/titipan/' + value[0],
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }).then((res: any) => {
+                    if (res.data.data) {
+                        window.open(
+                            url + '/titipan.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                            '_blank'
+                        );
+                    } else {
+                        return toast.error('Kode Barcode Tidak Sesuai');
+                    }
+                }).catch(error => {
+                    return toast.error('Kode Barcode Tidak Sesuai');
+                });
+            } catch (error: any) {
+                toast.error(error.response.data.massage);
+            }
         } else {
-            // window.open(
-            //     url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
-            //     '_blank'
-            // );
+            if (value[0]) {
+                try {
+                    await axios({
+                        method: "GET",
+                        url: '/api/kunjungan/' + value[0],
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }).then((res: any) => {
+                        if (res.data.data) {
+                            window.open(
+                                url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                                '_blank'
+                            );
+                        } else {
+                            return toast.error('Kode Barcode Tidak Sesuai');
+                        }
+                    }).catch(error => {
+                        return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
+                    });
+                } catch (error: any) {
+                    toast.error(error.response.data.massage);
+                }
+            } else {
+                return toast.error('Kode Barcode Tidak Sesuai');
+            }
         }
 
         (document.getElementById('barcode') as any).value = '';

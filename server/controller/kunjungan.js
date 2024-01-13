@@ -6,24 +6,6 @@ const Crypto = require("crypto");
 const numeral = require("numeral");
 const moment = require("moment");
 
-const getId = async (req, res) => {
-  // const { users_id, users_uuid, email, username } = req.user;
-  // const { uuid } = req.params;
-  // const Npwp = await stock.findOne({
-  //   where: { uuid: uuid },
-  //   attributes: ["uuid", "stock", "name", "phone", "address"],
-  // });
-  // if (!Npwp) {
-  //   return res.json({
-  //     message: "STOCK not found",
-  //   });
-  // }
-  // res.json({
-  //   status: 200,
-  //   massage: "Get data successful",
-  //   data: Npwp,
-  // });
-};
 const put = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const {
@@ -256,6 +238,7 @@ const get = async (req, res) => {
       antrian: val.antrian,
       suratIzin: val.suratIzin,
       hubungan: val.hubungan,
+      selfi: val.selfi,
     };
   });
 
@@ -271,7 +254,6 @@ const post = async (req, res) => {
     alamat,
     tahanan_id,
     noHp,
-    suratIzin,
     hubungan,
     pengikut_dewasa,
     pengikut_anak,
@@ -279,7 +261,7 @@ const post = async (req, res) => {
     nik_ktp,
     waktu,
   } = req.body;
-  const { file } = req.files;
+  const { file, suratIzin, selfi } = req.files;
   const { users_id, users_uuid } = req.user;
 
   const antrian = await kunjungan.findAll({
@@ -296,7 +278,7 @@ const post = async (req, res) => {
   });
 
   if (orangKunjungan.length) {
-    return res.json({
+    return res.status(400).json({
       status: 400,
       massage:
         "Maaf, Warga Binaan ini telah di kunjungi hari ini,\nKembali lagi besok",
@@ -365,6 +347,11 @@ const post = async (req, res) => {
       "image",
       `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
     ),
+    selfi: fileUpload(
+      selfi,
+      "image",
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`
+    ),
     suratIzin: fileUpload(
       suratIzin,
       "image",
@@ -395,6 +382,22 @@ const post = async (req, res) => {
     status: 200,
     massage: "Berhasil dibuat",
     data: data,
+  });
+};
+const getId = async (req, res) => {
+  const { uuid } = req.params;
+  const Kunjungan = await kunjungan.findOne({
+    where: { uuid: uuid },
+  });
+  if (!Kunjungan) {
+    return res.json({
+      message: "Kunjungan not found",
+    });
+  }
+  res.json({
+    status: 200,
+    massage: "Get data successful",
+    data: Kunjungan,
   });
 };
 

@@ -58,6 +58,10 @@
       <div style="margin-bottom: 20px" id="kelamin">JENIS KELAMIN : -</div>
       <div style="margin-bottom: 20px" id="alamat">ALAMAT : -</div>
       <div style="margin-bottom: 20px" id="foto_ktp">FOTO KTP : -</div>
+      <div style="margin-bottom: 20px" id="selfi">FOTO SELFI : -</div>
+      <div style="margin-bottom: 20px" id="hubungan">
+        HUBUNGAN DENGAN WBP : -
+      </div>
       <div style="margin-bottom: 25px" id="pengikut_kunjungan">
         PENGIKUT KUNJUNGAN : <span id="pengikutDewasa">-</span> Orang Dewasa &
         <span id="pengikutAnak">-</span> Orang Anak-Anak
@@ -95,6 +99,10 @@
     </div>
   </body>
   <script>
+    const resizeExternalImage = (ImgtoBeResized) => {
+      return `https://images.weserv.nl/?url=${ImgtoBeResized}&q=60`;
+    };
+
     function GetURLParameter(sParam) {
       var sPageURL = window.location.search.substring(1);
       var sURLVariables = sPageURL.split("&");
@@ -137,12 +145,22 @@
         if (data.data.img) {
           document.getElementById("foto_ktp").innerHTML =
             "FOTO KTP : <img style='height:100px' src='" +
-            data.data.img +
+            resizeExternalImage(data.data.img) +
             "' />";
         } else {
           document.getElementById("foto_ktp").innerHTML =
             "FOTO KTP : Tidak ditemukan";
         }
+        if (data.data.selfi) {
+          document.getElementById("selfi").innerHTML =
+            "FOTO SELFI : <img style='height:100px' src='" +
+            resizeExternalImage(data.data.selfi) +
+            "' />";
+        } else {
+          document.getElementById("selfi").innerHTML =
+            "FOTO SELFI : Tidak ditemukan";
+        }
+        document.getElementById("hubungan").innerHTML = "" + data.data.hubungan;
         document.getElementById("pengikutDewasa").innerHTML =
           "" + data.data.pengikutDewasa;
         document.getElementById("pengikutAnak").innerHTML =
