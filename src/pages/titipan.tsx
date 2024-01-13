@@ -247,8 +247,9 @@ export default function Titipan({ userData, setuserData }: any) {
     }
 
     const resizeExternalImage = (ImgtoBeResized: any) => {
-        return `https://images.weserv.nl/?url=${ImgtoBeResized}&q=60`
-    }
+        return `https://images.weserv.nl/?url=https://app.easyrubero.com${ImgtoBeResized}&q=60`;
+    };
+
 
     const laporan = async (tanggal_mulai: any, tanggal_akhir: any) => {
         if (!tanggal_mulai) {

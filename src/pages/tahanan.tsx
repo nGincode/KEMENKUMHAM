@@ -215,8 +215,9 @@ export default function Tahanan({ userData, setuserData }: any) {
     }
 
     const resizeExternalImage = (ImgtoBeResized: any) => {
-        return `https://images.weserv.nl/?url=${ImgtoBeResized}&q=60`
-    }
+        return `https://images.weserv.nl/?url=https://app.easyrubero.com${ImgtoBeResized}&q=60`;
+    };
+
     const laporan = async () => {
 
         const get = await axios({
