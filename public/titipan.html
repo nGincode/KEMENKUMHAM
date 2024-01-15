@@ -148,17 +148,26 @@
             document.getElementById("perkara_tahanan").innerHTML =
               "PERKARA : " + data.data.tahanan.perkara;
 
-            function printDiv(divId) {
-              var printContents = document.getElementById(divId).innerHTML;
-              var originalContents = document.body.innerHTML;
+            document.addEventListener("readystatechange", (event) => {
+              // When HTML/DOM elements are ready:
+              if (event.target.readyState === "interactive") {
+              }
 
-              document.body.innerHTML = printContents;
+              // When window loaded ( external resources are loaded too- `css`,`src`, etc...)
+              if (event.target.readyState === "complete") {
+                function printDiv(divId) {
+                  var printContents = document.getElementById(divId).innerHTML;
+                  var originalContents = document.body.innerHTML;
 
-              window.print();
+                  document.body.innerHTML = printContents;
 
-              document.body.innerHTML = originalContents;
-            }
-            printDiv("body");
+                  window.print();
+
+                  document.body.innerHTML = originalContents;
+                }
+                printDiv("body");
+              }
+            });
           } else {
             document.getElementById("body").innerHTML =
               "<div>Tidak ditemukan data</div>";
