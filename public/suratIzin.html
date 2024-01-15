@@ -181,26 +181,17 @@
         document.getElementById("hari").innerHTML =
           "HARI/TANGGAL : " + data.data.waktuKunjungan.slice(0, 10);
 
-        document.addEventListener("readystatechange", (event) => {
-          // When HTML/DOM elements are ready:
-          if (event.target.readyState === "interactive") {
-          }
+        function printDiv(divId) {
+          var printContents = document.getElementById(divId).innerHTML;
+          var originalContents = document.body.innerHTML;
 
-          // When window loaded ( external resources are loaded too- `css`,`src`, etc...)
-          if (event.target.readyState === "complete") {
-            function printDiv(divId) {
-              var printContents = document.getElementById(divId).innerHTML;
-              var originalContents = document.body.innerHTML;
+          document.body.innerHTML = printContents;
 
-              document.body.innerHTML = printContents;
+          window.print();
 
-              window.print();
-
-              document.body.innerHTML = originalContents;
-            }
-            printDiv("body");
-          }
-        });
+          document.body.innerHTML = originalContents;
+        }
+        printDiv("body");
       } else {
         document.getElementById("body").innerHTML =
           "<div>Tidak ditemukan data</div>";
