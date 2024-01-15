@@ -160,7 +160,8 @@
           document.getElementById("selfi").innerHTML =
             "FOTO SELFI : Tidak ditemukan";
         }
-        document.getElementById("hubungan").innerHTML = "" + data.data.hubungan;
+        document.getElementById("hubungan").innerHTML =
+          "HUBUNGAN DENGAN WBP : " + data.data.hubungan;
         document.getElementById("pengikutDewasa").innerHTML =
           "" + data.data.pengikutDewasa;
         document.getElementById("pengikutAnak").innerHTML =
@@ -179,7 +180,21 @@
         const d = new Date(data.data.waktuKunjungan);
         document.getElementById("hari").innerHTML =
           "HARI/TANGGAL : " + data.data.waktuKunjungan.slice(0, 10);
+      } else {
+        document.getElementById("body").innerHTML =
+          "<div>Tidak ditemukan data</div>";
+      }
+    };
 
+    apiIzin();
+
+    document.addEventListener("readystatechange", (event) => {
+      // When HTML/DOM elements are ready:
+      if (event.target.readyState === "interactive") {
+      }
+
+      // When window loaded ( external resources are loaded too- `css`,`src`, etc...)
+      if (event.target.readyState === "complete") {
         function printDiv(divId) {
           var printContents = document.getElementById(divId).innerHTML;
           var originalContents = document.body.innerHTML;
@@ -191,12 +206,7 @@
           document.body.innerHTML = originalContents;
         }
         printDiv("body");
-      } else {
-        document.getElementById("body").innerHTML =
-          "<div>Tidak ditemukan data</div>";
       }
-    };
-
-    apiIzin();
+    });
   </script>
 </html>
