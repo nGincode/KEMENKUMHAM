@@ -48,14 +48,10 @@ export default function Tahanan({ userData, setuserData }: any) {
                     (document.getElementById('formCreate') as HTMLFormElement).reset();
                     (document.getElementById('closeImg') as HTMLInputElement)?.click();
                 }).catch(error => {
-                    if (error.code === 'ECONNABORTED') {
-                        toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
+                    if (error?.response?.data?.massage) {
+                        toast.error(error.response.data.massage);
                     } else {
-                        if (error?.response?.data?.massage) {
-                            toast.error(error.response.data.massage);
-                        } else {
-                            toast.error(error.message);
-                        }
+                        toast.error(error.message);
                     }
                 });
             } catch (error: any) {

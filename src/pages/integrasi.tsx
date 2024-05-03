@@ -46,14 +46,10 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 }).then((res: any) => {
                     setdataTahanan(res.data.data)
                 }).catch(error => {
-                    if (error.code === 'ECONNABORTED') {
-                        toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
+                    if (error?.response?.data?.massage) {
+                        toast.error(error.response.data.massage);
                     } else {
-                        if (error?.response?.data?.massage) {
-                            toast.error(error.response.data.massage);
-                        } else {
-                            toast.error(error.message);
-                        }
+                        toast.error(error.message);
                     }
                 });
             } catch (error: any) {
@@ -84,14 +80,10 @@ export default function Pengajuan({ userData, setuserData }: any) {
                     (document.getElementById('formCreate') as HTMLFormElement).reset();
                     (document.getElementById('closeImg') as HTMLInputElement)?.click();
                 }).catch(error => {
-                    if (error.code === 'ECONNABORTED') {
-                        toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
+                    if (error?.response?.data?.massage) {
+                        toast.error(error.response.data.massage);
                     } else {
-                        if (error?.response?.data?.massage) {
-                            toast.error(error.response.data.massage);
-                        } else {
-                            toast.error(error.message);
-                        }
+                        toast.error(error.message);
                     }
                 }).finally(() => {
                     setloadingSubmit(false);
@@ -228,8 +220,8 @@ export default function Pengajuan({ userData, setuserData }: any) {
             let extension = files[0].type;
             let size = files[0].size;
             if (extension === "image/jpeg" || extension === "image/png") {
-                if (size > 5000000) {
-                    return alert("Ukuran img harus < 5000kb");
+                if (size > 20000000) {
+                    return alert("Ukuran img harus < 20Mb");
                 } else {
                     // let ktp: any = null;
                     // ktp = await convertFileToBase64(files[0]);
@@ -245,8 +237,8 @@ export default function Pengajuan({ userData, setuserData }: any) {
             let extension1 = files1[0].type;
             let size1 = files1[0].size;
             if (extension1 === "application/pdf") {
-                if (size1 > 5000000) {
-                    return alert("Ukuran harus < 5000kb");
+                if (size1 > 20000000) {
+                    return alert("Ukuran harus < 20Mb");
                 } else {
                     // let file1: any = null;
                     // file1 = await convertFileToBase64(files1[0]);
@@ -262,8 +254,8 @@ export default function Pengajuan({ userData, setuserData }: any) {
             let extension2 = files2[0].type;
             let size2 = files2[0].size;
             if (extension2 === "application/pdf") {
-                if (size2 > 5000000) {
-                    return alert("Ukuran harus < 5000kb");
+                if (size2 > 20000000) {
+                    return alert("Ukuran harus < 20Mb");
                 } else {
                     // let file2: any = null;
                     // file2 = await convertFileToBase64(files2[0]);
@@ -281,8 +273,8 @@ export default function Pengajuan({ userData, setuserData }: any) {
             let extension3 = files3[0].type;
             let size3 = files3[0].size;
             if (extension3 === "application/pdf") {
-                if (size3 > 5000000) {
-                    return alert("Ukuran harus < 5000kb");
+                if (size3 > 20000000) {
+                    return alert("Ukuran harus < 20Mb");
                 } else {
                     // let file3: any = null;
                     // file3 = await convertFileToBase64(files3[0]);
@@ -301,8 +293,8 @@ export default function Pengajuan({ userData, setuserData }: any) {
             let extension4 = files4[0].type;
             let size4 = files4[0].size;
             if (extension4 === "application/pdf") {
-                if (size4 > 5000000) {
-                    return alert("Ukuran harus < 5000kb");
+                if (size4 > 20000000) {
+                    return alert("Ukuran harus < 20Mb");
                 } else {
                     // let file4: any = null;
                     // file4 = await convertFileToBase64(files4[0]);
@@ -344,7 +336,6 @@ export default function Pengajuan({ userData, setuserData }: any) {
         const get = await axios({
             method: "GET",
             url: URLAPI + `?tanggal_mulai=${tanggal_mulai}&tanggal_akhir=${tanggal_akhir}`,
-            timeout: 5000,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }

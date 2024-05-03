@@ -43,14 +43,10 @@ export default function Kunjungan({ userData, setuserData }: any) {
                 }).then((res: any) => {
                     setdataTahanan(res.data.data)
                 }).catch(error => {
-                    if (error.code === 'ECONNABORTED') {
-                        toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
+                    if (error?.response?.data?.massage) {
+                        toast.error(error.response.data.massage);
                     } else {
-                        if (error?.response?.data?.massage) {
-                            toast.error(error.response.data.massage);
-                        } else {
-                            toast.error(error.message);
-                        }
+                        toast.error(error.message);
                     }
                 });
             } catch (error: any) {
@@ -79,14 +75,10 @@ export default function Kunjungan({ userData, setuserData }: any) {
                     (document.getElementById('formCreate') as HTMLFormElement).reset();
                     (document.getElementById('closeImg') as HTMLInputElement)?.click();
                 }).catch(error => {
-                    if (error.code === 'ECONNABORTED') {
-                        toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
+                    if (error?.response?.data?.massage) {
+                        toast.error(error.response.data.massage);
                     } else {
-                        if (error?.response?.data?.massage) {
-                            toast.error(error.response.data.massage);
-                        } else {
-                            toast.error(error.message);
-                        }
+                        toast.error(error.message);
                     }
                 });
             } catch (error: any) {
@@ -209,8 +201,8 @@ export default function Kunjungan({ userData, setuserData }: any) {
             let extension = files.type;
             let size = files.size;
             if (extension === 'image/jpeg' || extension === 'image/png') {
-                if (size > 5000000) {
-                    return toast.error("Size img only < 5000kb");
+                if (size > 20000000) {
+                    return toast.error("Size img only < 20Mb");
                 } else {
                     // img = await convertFileToBase64(files);
                     img = files
@@ -225,8 +217,8 @@ export default function Kunjungan({ userData, setuserData }: any) {
         let files2 = event.target.suratIzin?.files?.[0];
         if (files2) {
             let size2 = files2.size;
-            if (size2 > 5000000) {
-                return toast.error("Size img only < 5Mb");
+            if (size2 > 20000000) {
+                return toast.error("Size img only < 20Mb");
             } else {
                 // suratIzin = await convertFileToBase64(files2);
                 suratIzin = files2;
@@ -238,8 +230,8 @@ export default function Kunjungan({ userData, setuserData }: any) {
         let files3 = event.target.selfi?.files?.[0];
         if (files3) {
             let size3 = files3.size;
-            if (size3 > 5000000) {
-                return toast.error("Size img only < 5Mb");
+            if (size3 > 20000000) {
+                return toast.error("Size img only < 20Mb");
             } else {
                 // suratIzin = await convertFileToBase64(files2);
                 selfi = files3;

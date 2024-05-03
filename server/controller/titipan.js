@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 const Crypto = require("crypto");
 const numeral = require("numeral");
 const moment = require("moment");
+const sharp = require("sharp");
 
 const put = async (req, res) => {
   const { users_id, users_uuid } = req.user;
@@ -274,10 +275,17 @@ const post = async (req, res) => {
   //   );
   // }
 
-  const fileUpload = (files, type, dirname) => {
+  const fileUpload = async (files, type, dirname) => {
     if (files) {
       let nameFile = "/upload" + dirname + files.name;
-      files.mv(require("path").join(__dirname, "../../public" + nameFile));
+      if (type !== "image") {
+        files.mv(require("path").join(__dirname, "../../public" + nameFile));
+      } else {
+        await sharp(files.data)
+          .webp({ quality: 50 })
+          .toFile(require("path").join(__dirname, "../../public" + nameFile));
+      }
+
       return nameFile;
     } else {
       return null;
@@ -296,7 +304,7 @@ const post = async (req, res) => {
     tahanan_id: tahanan_id,
     noHp: noHp,
     tanggal: tanggal,
-    img: fileUpload(
+    img: await fileUpload(
       file,
       "image",
       `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
