@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import numeral from "numeral";
 import moment from "moment";
+import { compress, compressAccurately } from 'image-conversion';
 
 import Select from "../components/reactSelect";
 import ImgUpload from "../components/imgUpload";
@@ -15,6 +16,7 @@ import ReactSelect from "../components/reactSelect";
 
 export default function Kunjungan({ userData, setuserData }: any) {
     const [pagePermission, setpagePermission] = useState([]);
+    const [loadingSubmit, setloadingSubmit] = useState(false);
     const [dataTahanan, setdataTahanan] = useState<any>([]);
     const [dateData, setdateData] = useState<any>([moment().format('YYYY-MM-DD'), moment().add(7, 'days').format('YYYY-MM-DD')]);
     const [dataCreate, setdataCreate] = useState();
@@ -43,14 +45,16 @@ export default function Kunjungan({ userData, setuserData }: any) {
                 }).then((res: any) => {
                     setdataTahanan(res.data.data)
                 }).catch(error => {
-                    if (error?.response?.data?.massage) {
-                        toast.error(error.response.data.massage);
-                    } else {
-                        toast.error(error.message);
-                    }
+                    // if (error?.response?.data?.massage) {
+                    //     toast.error(error.response.data.massage);
+                    // } else {
+                    //     toast.error(error.message);
+                    // }
+                    console.log(error?.response?.data?.massage);
                 });
             } catch (error: any) {
-                toast.error(error.response.data.massage);
+                // toast.error(error.response.data.massage);
+                console.log(error.response.data.massage);
             }
 
         }
@@ -84,6 +88,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
             } catch (error: any) {
                 toast.error(error.response.data.massage);
             }
+            setloadingSubmit(false);
         }
     }
 
@@ -194,9 +199,12 @@ export default function Kunjungan({ userData, setuserData }: any) {
     }
 
     const submitAdd = async (event: any) => {
+        setloadingSubmit(true);
         event.preventDefault();
+
+        const formData = new FormData(document.getElementById("formCreate") as any);
         let img = null;
-        let files = event.target.file?.files?.[0];
+        let files = (document.getElementById('file') as any)?.files[0];
         if (files) {
             let extension = files.type;
             let size = files.size;
@@ -214,7 +222,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
 
 
         let suratIzin = null;
-        let files2 = event.target.suratIzin?.files?.[0];
+        let files2 = (document.getElementById('suratIzin') as any)?.files[0];
         if (files2) {
             let size2 = files2.size;
             if (size2 > 20000000) {
@@ -227,7 +235,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
 
 
         let selfi = null;
-        let files3 = event.target.selfi?.files?.[0];
+        let files3 = (document.getElementById('selfi') as any)?.files[0];
         if (files3) {
             let size3 = files3.size;
             if (size3 > 20000000) {
@@ -270,8 +278,21 @@ export default function Kunjungan({ userData, setuserData }: any) {
         };
 
 
-        const formData = new FormData(document.getElementById("formCreate") as any);
 
+        if (files) {
+            const file = await compressAccurately(files, 100)
+            formData.append('file', file, files.name);
+        }
+
+        if (files3) {
+            const file2 = await compressAccurately(files3, 100)
+            formData.append('selfi', file2, files3.name);
+        }
+
+        if (files2) {
+            const file3 = await compressAccurately(files2, 100)
+            formData.append('file', file3, files2.name);
+        }
         handleApi('create', formData);
     };
 
@@ -469,13 +490,11 @@ export default function Kunjungan({ userData, setuserData }: any) {
                                                     <div>
                                                         <ImgUpload
                                                             label="Foto KTP"
-                                                            name="file"
                                                             id="file" />
                                                     </div>
                                                     <div className="ml-5">
                                                         <ImgUpload
                                                             label="Selfi"
-                                                            name="selfi"
                                                             id="selfi" />
                                                     </div>
                                                 </div>
@@ -565,7 +584,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
                                                                 <div className="col-12  col-md-6 ">
                                                                     <label>Surat Izin</label>
                                                                     <div className="mb-24">
-                                                                        <input type="file" required accept="image/*,application/pdf" name="suratIzin" id="suratIzin" />
+                                                                        <input type="file" required accept="image/*" id="suratIzin" />
                                                                     </div>
                                                                 </div>
                                                                 : null}
@@ -584,7 +603,10 @@ export default function Kunjungan({ userData, setuserData }: any) {
 
                                             <div className="modal-footer pt-0 px-24 pb-24">
                                                 <div className="divider"></div>
-                                                <Button type="submit" className="w-full" color="blue">Submit</Button>
+                                                {loadingSubmit ?
+                                                    <Button className="w-full" disabled color="blue">Sedang Upload...</Button> :
+                                                    <Button type="submit" className="w-full" color="blue">Submit</Button>
+                                                }
                                             </div>
                                         </form>
                                         : <div className="text-center m-5">Data Tahanan Isi Terlebih Dahulu</div>}
@@ -594,7 +616,7 @@ export default function Kunjungan({ userData, setuserData }: any) {
                     </div>
                 </div>
                 <div className="col-12">
-                    <div className="card hp-contact-card mb-32 -mt-3 shadow-md">
+                    <div className="card hp-contact-card mb-32 -mt-3 shadow-lg">
                         <div className="card-body px-0">
                             <ReactTable
                                 search={search}

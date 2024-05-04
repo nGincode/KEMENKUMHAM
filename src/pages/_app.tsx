@@ -76,7 +76,6 @@ export default function App({ Component, pageProps }: AppProps) {
                     await axios({
                         method: "GET",
                         url: "/api/user/" + localStorage.getItem("client_id"),
-                        timeout: 5000,
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -89,11 +88,13 @@ export default function App({ Component, pageProps }: AppProps) {
                         setuserData(res.data.data);
                         setloadingFull(false);
                     }).catch(error => {
-                        if (error.code === 'ECONNABORTED') {
-                            toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
-                        } else {
-                            toast.error(error.message);
-                        }
+                        // if (error.code === 'ECONNABORTED') {
+                        //     toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
+                        // } else {
+                        //     toast.error(error.message);
+                        // }
+                        console.log(error.message);
+                        setloadingFull(false);
                     });
                 } catch (error: any) {
                     if (localStorage.getItem('token'))

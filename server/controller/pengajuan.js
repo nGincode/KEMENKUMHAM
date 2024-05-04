@@ -6,7 +6,6 @@ const Crypto = require("crypto");
 const numeral = require("numeral");
 const moment = require("moment");
 const path = require("path");
-const sharp = require("sharp");
 
 const getId = async (req, res) => {
   // const { users_id, users_uuid, email, username } = req.user;
@@ -277,7 +276,7 @@ const post = async (req, res) => {
   const uuid = Crypto.randomUUID();
 
   const { users_id, users_uuid } = req.user;
-  const { ktp, files1, files2, files3, files4, files5, files6, files7 } =
+  const { file, files1, files2, files3, files4, files5, files6, files7 } =
     req.files;
 
   // const fileUpload = (files, type, dirname) => {
@@ -314,18 +313,10 @@ const post = async (req, res) => {
   //     return null;
   //   }
   // };
-
   const fileUpload = async (files, type, dirname) => {
     if (files) {
       let nameFile = "/upload" + dirname + files.name;
-      if (type !== "image") {
-        files.mv(require("path").join(__dirname, "../../public" + nameFile));
-      } else {
-        await sharp(files.data)
-          .webp({ quality: 50 })
-          .toFile(require("path").join(__dirname, "../../public" + nameFile));
-      }
-
+      files.mv(require("path").join(__dirname, "../../public" + nameFile));
       return nameFile;
     } else {
       return null;
@@ -345,7 +336,7 @@ const post = async (req, res) => {
     tahanan_id: tahanan_id,
     email: email,
     ktp: await fileUpload(
-      ktp,
+      file,
       "image",
       `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
     ),

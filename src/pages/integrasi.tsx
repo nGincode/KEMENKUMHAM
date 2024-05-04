@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import numeral from "numeral";
 import moment from "moment";
+import { compress, compressAccurately } from 'image-conversion';
 
 import Select from "../components/reactSelect";
 import ImgUpload from "../components/imgUpload";
@@ -46,14 +47,16 @@ export default function Pengajuan({ userData, setuserData }: any) {
                 }).then((res: any) => {
                     setdataTahanan(res.data.data)
                 }).catch(error => {
-                    if (error?.response?.data?.massage) {
-                        toast.error(error.response.data.massage);
-                    } else {
-                        toast.error(error.message);
-                    }
+                    // if (error?.response?.data?.massage) {
+                    //     toast.error(error.response.data.massage);
+                    // } else {
+                    //     toast.error(error.message);
+                    // }
+                    console.log(error?.response?.data?.massage);
                 });
             } catch (error: any) {
-                toast.error(error.response.data.massage);
+                // toast.error(error.response.data.massage);
+                console.log(error.response.data.massage);
             }
 
         }
@@ -64,7 +67,6 @@ export default function Pengajuan({ userData, setuserData }: any) {
 
     const handleApi = async (url: any, data: any = null) => {
         if (url === 'create') {
-            setloadingSubmit(true);
             try {
                 await axios({
                     method: "POST",
@@ -201,6 +203,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
     }
 
     const submitAdd = async (event: any) => {
+        setloadingSubmit(true);
         event.preventDefault();
 
         const formData = new FormData(document.getElementById("formCreate") as any);
@@ -215,7 +218,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
             return alert("Jenis Kelamin Belum dipilih")
         }
 
-        let files = event.target.ktp?.files;
+        let files = (document.getElementById('ktp') as any)?.files;
         if (files?.[0]) {
             let extension = files[0].type;
             let size = files[0].size;
@@ -307,7 +310,9 @@ export default function Pengajuan({ userData, setuserData }: any) {
             formData.delete("files4");
         }
 
-
+        if (files[0]) {
+            formData.append('file', await compressAccurately(files[0], 100), files[0].name);
+        }
         handleApi('create', formData);
     };
 
@@ -500,7 +505,6 @@ export default function Pengajuan({ userData, setuserData }: any) {
                                             <div className="modal-body">
                                                 <ImgUpload
                                                     label="Foto KTP"
-                                                    name="ktp"
                                                     id="ktp" />
 
                                                 <div className="col-12 col-md-12">
@@ -658,7 +662,7 @@ export default function Pengajuan({ userData, setuserData }: any) {
                     </div>
                 </div>
                 <div className="col-12">
-                    <div className="card hp-contact-card mb-32 -mt-3 shadow-md">
+                    <div className="card hp-contact-card mb-32 -mt-3 shadow-lg">
                         <div className="card-body px-0">
                             <ReactTable
                                 search={search}

@@ -447,7 +447,7 @@ export default function Tahanan({ userData, setuserData }: any) {
                 </div>
 
                 <div className="col-12">
-                    <div className="card hp-contact-card mb-32 -mt-3 shadow-md">
+                    <div className="card hp-contact-card mb-32 -mt-3 shadow-lg">
                         <div className="card-body px-0">
                             <ReactTable
                                 search={search}

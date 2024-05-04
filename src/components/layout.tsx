@@ -150,7 +150,7 @@ export default function layout({ children = null, logOut, userData }: any) {
 
     return (
         <>
-            <main className="hp-bg-color-dark-90 d-flex min-vh-100 bg-gradient-to-r from-gray-100 from-20% to-indigo-200 to-100%">
+            <main className="hp-bg-color-dark-90 d-flex min-vh-100 bg-gradient-to-r from-gray-100 from-5% to-indigo-300 to-100%">
                 <div className=" hp-bg-color-black-20delete hp-sidebar hp-bg-color-dark-90 border-end border-black-40 hp-border-color-dark-80">
                     <div className="hp-sidebar-container">
                         <div className="hp-sidebar-header-menu">
