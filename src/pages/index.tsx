@@ -121,13 +121,13 @@ export default function Index({ userData, setuserData }: any) {
                             '_blank'
                         );
                     } else {
-                        return toast.error('Kode Barcode Tidak Sesuai');
+                        // return toast.error('Kode Barcode Tidak Sesuai');
                     }
                 }).catch(error => {
-                    return toast.error('Kode Barcode Tidak Sesuai');
+                    // return toast.error('Kode Barcode Tidak Sesuai');
                 });
             } catch (error: any) {
-                toast.error(error.response.data.massage);
+                // toast.error(error.response.data.massage);
             }
         } else {
             if (value[0]) {
@@ -145,16 +145,16 @@ export default function Index({ userData, setuserData }: any) {
                                 '_blank'
                             );
                         } else {
-                            return toast.error('Kode Barcode Tidak Sesuai');
+                            // return toast.error('Kode Barcode Tidak Sesuai');
                         }
                     }).catch(error => {
-                        return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
+                        // return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
                     });
                 } catch (error: any) {
-                    toast.error(error.response.data.massage);
+                    // toast.error(error.response.data.massage);
                 }
             } else {
-                return toast.error('Kode Barcode Tidak Sesuai');
+                // return toast.error('Kode Barcode Tidak Sesuai');
             }
         }
 
