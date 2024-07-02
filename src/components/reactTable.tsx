@@ -590,7 +590,6 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
         if (type === 'edit') {
             try {
                 await axios({
-                    timeout: 5000,
                     method: "PUT",
                     url: urlData + '/' + uuid,
                     data: dataPost,
@@ -619,7 +618,6 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
         } else if (type === 'delete') {
             try {
                 await axios({
-                    timeout: 5000,
                     method: "DELETE",
                     url: urlData + '/' + uuid,
                     headers: {
@@ -655,7 +653,6 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
             }
             try {
                 await axios({
-                    timeout: 5000,
                     method: "GET",
                     url: urlFatch + (companyActive ? "?company_id=" + JSON.parse(localStorage.getItem('companyActive') as string)?.value + '&' + dateURL : '?' + dateURL),
                     headers: {
