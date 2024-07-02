@@ -323,7 +323,8 @@ export default function Kunjungan({ userData, setuserData }: any) {
             method: "GET",
             url: URLAPI + `?tanggal_mulai=${tanggal_mulai}&tanggal_akhir=${tanggal_akhir}`,
             headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json"
             }
         })
 
