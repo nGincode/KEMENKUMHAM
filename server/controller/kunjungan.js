@@ -214,7 +214,6 @@ const get = async (req, res) => {
       ],
     });
   }
-
   const data = Kunjungan.map((val) => {
     return {
       img: val.img,
@@ -246,7 +245,7 @@ const get = async (req, res) => {
   res.json({
     status: 200,
     massage: "Get data successful",
-    data: Kunjungan,
+    data: data,
   });
 };
 const post = async (req, res) => {
