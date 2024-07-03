@@ -214,6 +214,9 @@ const get = async (req, res) => {
       ],
     });
   }
+
+  console.log(Kunjungan);
+
   const data = Kunjungan.map((val) => {
     return {
       img: val.img,
@@ -241,8 +244,6 @@ const get = async (req, res) => {
       selfi: val.selfi,
     };
   });
-
-  console.log(data);
 
   res.json({
     status: 200,
