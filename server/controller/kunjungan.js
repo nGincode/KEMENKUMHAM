@@ -215,40 +215,40 @@ const get = async (req, res) => {
     });
   }
 
-  console.log(Kunjungan);
-
-  const data = Kunjungan.map((val) => {
-    return {
-      img: val.img,
-      uuid: val.uuid,
-      waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
-        "DD/MM/YYYY"
-      ),
-      tahanan: val.tahanan.nama,
-      tahanan_id: {
-        value: val.tahanan.id,
-        label: val.tahanan.nama,
-      },
-      kamar: val.tahanan.kamar,
-      perkara: val.tahanan.perkara,
-      nama: val.nama,
-      noHp: val.noHp,
-      NIK: val.NIK,
-      jenisKelamin: val.jenisKelamin,
-      alamat: val.alamat,
-      pengikutDewasa: val.pengikutDewasa,
-      pengikutAnak: val.pengikutAnak,
-      antrian: val.antrian,
-      suratIzin: val.suratIzin,
-      hubungan: val.hubungan,
-      selfi: val.selfi,
-    };
-  });
+  const data = await Promise.all(
+    Kunjungan.map((val) => {
+      return {
+        img: val.img,
+        uuid: val.uuid,
+        waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
+          "DD/MM/YYYY"
+        ),
+        tahanan: val.tahanan.nama,
+        tahanan_id: {
+          value: val.tahanan.id,
+          label: val.tahanan.nama,
+        },
+        kamar: val.tahanan.kamar,
+        perkara: val.tahanan.perkara,
+        nama: val.nama,
+        noHp: val.noHp,
+        NIK: val.NIK,
+        jenisKelamin: val.jenisKelamin,
+        alamat: val.alamat,
+        pengikutDewasa: val.pengikutDewasa,
+        pengikutAnak: val.pengikutAnak,
+        antrian: val.antrian,
+        suratIzin: val.suratIzin,
+        hubungan: val.hubungan,
+        selfi: val.selfi,
+      };
+    })
+  );
 
   res.json({
     status: 200,
     massage: "Get data successful",
-    data: data,
+    data: await data,
   });
 };
 const post = async (req, res) => {
