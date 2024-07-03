@@ -242,6 +242,8 @@ const get = async (req, res) => {
     };
   });
 
+  console.log(data);
+
   res.json({
     status: 200,
     massage: "Get data successful",
