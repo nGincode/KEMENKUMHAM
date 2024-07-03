@@ -181,102 +181,72 @@ const del = async (req, res) => {
 const get = async (req, res) => {
   const { tanggal_akhir, tanggal_mulai } = req.query;
 
-  let data;
+  let Kunjungan;
   if (tanggal_mulai && tanggal_akhir) {
-    data = await kunjungan
-      .findAll({
-        where: {
-          waktuKunjungan: {
-            [Op.between]: [tanggal_mulai, tanggal_akhir],
+    Kunjungan = await kunjungan.findAll({
+      where: {
+        waktuKunjungan: {
+          [Op.between]: [tanggal_mulai, tanggal_akhir],
+        },
+      },
+      order: [["id", "DESC"]],
+      include: [
+        {
+          model: tahanan,
+          as: "tahanan",
+          attributes: {
+            exclude: ["uuid", "createdAt", "updatedAt"],
           },
         },
-        order: [["id", "DESC"]],
-        include: [
-          {
-            model: tahanan,
-            as: "tahanan",
-            attributes: {
-              exclude: ["uuid", "createdAt", "updatedAt"],
-            },
-          },
-        ],
-      })
-      .map((val) => {
-        return {
-          img: val.img,
-          uuid: val.uuid,
-          waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
-            "DD/MM/YYYY"
-          ),
-          tahanan: val.tahanan.nama,
-          tahanan_id: {
-            value: val.tahanan.id,
-            label: val.tahanan.nama,
-          },
-          kamar: val.tahanan.kamar,
-          perkara: val.tahanan.perkara,
-          nama: val.nama,
-          noHp: val.noHp,
-          NIK: val.NIK,
-          jenisKelamin: val.jenisKelamin,
-          alamat: val.alamat,
-          pengikutDewasa: val.pengikutDewasa,
-          pengikutAnak: val.pengikutAnak,
-          antrian: val.antrian,
-          suratIzin: val.suratIzin,
-          hubungan: val.hubungan,
-          selfi: val.selfi,
-        };
-      });
+      ],
+    });
   } else {
-    data = await kunjungan
-      .findAll({
-        order: [["id", "DESC"]],
-        include: [
-          {
-            model: tahanan,
-            as: "tahanan",
-            attributes: {
-              exclude: ["uuid", "createdAt", "updatedAt"],
-            },
+    Kunjungan = await kunjungan.findAll({
+      order: [["id", "DESC"]],
+      include: [
+        {
+          model: tahanan,
+          as: "tahanan",
+          attributes: {
+            exclude: ["uuid", "createdAt", "updatedAt"],
           },
-        ],
-      })
-      .map((val) => {
-        return {
-          img: val.img,
-          uuid: val.uuid,
-          waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
-            "DD/MM/YYYY"
-          ),
-          tahanan: val.tahanan.nama,
-          tahanan_id: {
-            value: val.tahanan.id,
-            label: val.tahanan.nama,
-          },
-          kamar: val.tahanan.kamar,
-          perkara: val.tahanan.perkara,
-          nama: val.nama,
-          noHp: val.noHp,
-          NIK: val.NIK,
-          jenisKelamin: val.jenisKelamin,
-          alamat: val.alamat,
-          pengikutDewasa: val.pengikutDewasa,
-          pengikutAnak: val.pengikutAnak,
-          antrian: val.antrian,
-          suratIzin: val.suratIzin,
-          hubungan: val.hubungan,
-          selfi: val.selfi,
-        };
-      });
+        },
+      ],
+    });
   }
 
-  console.log(data);
+  const data = Kunjungan.map((val) => {
+    return {
+      img: val.img,
+      uuid: val.uuid,
+      waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
+        "DD/MM/YYYY"
+      ),
+      tahanan: val.tahanan.nama,
+      tahanan_id: {
+        value: val.tahanan.id,
+        label: val.tahanan.nama,
+      },
+      kamar: val.tahanan.kamar,
+      perkara: val.tahanan.perkara,
+      nama: val.nama,
+      noHp: val.noHp,
+      NIK: val.NIK,
+      jenisKelamin: val.jenisKelamin,
+      alamat: val.alamat,
+      pengikutDewasa: val.pengikutDewasa,
+      pengikutAnak: val.pengikutAnak,
+      antrian: val.antrian,
+      suratIzin: val.suratIzin,
+      hubungan: val.hubungan,
+      selfi: val.selfi,
+    };
+  });
 
   res.json({
     status: 200,
     massage: "Get data successful",
-    data: await data,
+    data: Kunjungan,
   });
 };
 const post = async (req, res) => {
