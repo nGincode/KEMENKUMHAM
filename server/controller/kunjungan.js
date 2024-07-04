@@ -221,13 +221,13 @@ const get = async (req, res) => {
       waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
         "DD/MM/YYYY"
       ),
-      tahanan: val.tahanan.nama,
+      tahanan: val.tahanan?.nama ?? "Tahanan ini di hapus",
       tahanan_id: {
-        value: val.tahanan.id,
-        label: val.tahanan.nama,
+        value: val.tahanan?.id ?? null,
+        label: val.tahanan?.nama ?? null,
       },
-      kamar: val.tahanan.kamar,
-      perkara: val.tahanan.perkara,
+      kamar: val.tahanan?.kamar ?? null,
+      perkara: val.tahanan?.perkara ?? null,
       nama: val.nama,
       noHp: val.noHp,
       NIK: val.NIK,
