@@ -529,7 +529,7 @@ router.post("/titipanUsers", async (req, res) => {
     },
   });
 
-  if (totalTitipan.length > 150) {
+  if (totalTitipan.length > 200) {
     return res.json({
       status: 400,
       massage: "Maaf, Penitipan Melebihi Batas",
