@@ -239,7 +239,7 @@ router.post("/kunjunganUsers", async (req, res) => {
     });
   }
 
-  if (totalWaktuKunj.length > 100) {
+  if (totalWaktuKunj.length > 200) {
     return res.json({
       status: 400,
       massage: "Maaf, Waktu Kunjungan Melebihi Batas",
