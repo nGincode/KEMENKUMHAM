@@ -177,71 +177,80 @@ const del = async (req, res) => {
   });
 };
 const get = async (req, res) => {
-  const { tanggal_akhir, tanggal_mulai } = req.query;
-  let Titipan;
-  if (tanggal_mulai && tanggal_akhir) {
-    Titipan = await titipan.findAll({
-      where: {
-        createdAt: {
-          [Op.between]: [
-            moment(tanggal_mulai, "YYYY-MM-DD").format("YYYY-MM-DD 00:00:00"),
-            moment(tanggal_akhir, "YYYY-MM-DD").format("YYYY-MM-DD 23:59:59"),
-          ],
-        },
-      },
-      order: [["id", "DESC"]],
-      include: [
-        {
-          model: tahanan,
-          as: "tahanan",
-          attributes: {
-            exclude: ["uuid", "createdAt", "updatedAt"],
+  try {
+    const { tanggal_akhir, tanggal_mulai } = req.query;
+    let Titipan;
+    if (tanggal_mulai && tanggal_akhir) {
+      Titipan = await titipan.findAll({
+        where: {
+          createdAt: {
+            [Op.between]: [
+              moment(tanggal_mulai, "YYYY-MM-DD").format("YYYY-MM-DD 00:00:00"),
+              moment(tanggal_akhir, "YYYY-MM-DD").format("YYYY-MM-DD 23:59:59"),
+            ],
           },
         },
-      ],
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: tahanan,
+            as: "tahanan",
+            attributes: {
+              exclude: ["uuid", "createdAt", "updatedAt"],
+            },
+          },
+        ],
+      });
+    } else {
+      Titipan = await titipan.findAll({
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: tahanan,
+            as: "tahanan",
+            attributes: {
+              exclude: ["uuid", "createdAt", "updatedAt"],
+            },
+          },
+        ],
+      });
+    }
+    const data = Titipan.map((val) => {
+      return {
+        img: val.img,
+        uuid: val.uuid,
+        tanggal: moment(val.tanggal).format("DD/MM/YYYY"),
+        tahanan: val.tahanan.nama,
+        tahanan_id: {
+          value: val.tahanan.id,
+          label: val.tahanan.nama,
+        },
+        kamar: val.tahanan.kamar,
+        perkara: val.tahanan.perkara,
+        nama: val.nama,
+        noHp: val.noHp,
+        NIK: val.NIK,
+        jenisKelamin: val.jenisKelamin,
+        alamat: val.alamat,
+        hubungan: val.hubungan,
+        antrian: val.antrian,
+        keterangan: val.keterangan,
+      };
     });
-  } else {
-    Titipan = await titipan.findAll({
-      order: [["id", "DESC"]],
-      include: [
-        {
-          model: tahanan,
-          as: "tahanan",
-          attributes: {
-            exclude: ["uuid", "createdAt", "updatedAt"],
-          },
-        },
-      ],
+
+    res.json({
+      status: 200,
+      massage: "Get data successful",
+      data: data,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: 500,
+      massage: "Get data failed",
+      data: err,
     });
   }
-  const data = Titipan.map((val) => {
-    return {
-      img: val.img,
-      uuid: val.uuid,
-      tanggal: moment(val.tanggal).format("DD/MM/YYYY"),
-      tahanan: val.tahanan.nama,
-      tahanan_id: {
-        value: val.tahanan.id,
-        label: val.tahanan.nama,
-      },
-      kamar: val.tahanan.kamar,
-      perkara: val.tahanan.perkara,
-      nama: val.nama,
-      noHp: val.noHp,
-      NIK: val.NIK,
-      jenisKelamin: val.jenisKelamin,
-      alamat: val.alamat,
-      hubungan: val.hubungan,
-      antrian: val.antrian,
-      keterangan: val.keterangan,
-    };
-  });
-
-  res.json({
-    status: 200,
-    massage: "Get data successful",
-    data: data,
-  });
 };
 const post = async (req, res) => {
   const {
