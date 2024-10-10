@@ -6,11 +6,11 @@ const port = dotenv.parsed.PORT;
 const URL = dotenv.parsed.URL;
 
 const nextConfig = {
-  // reactStrictMode: true,
-  // swcMinify: true,
-  // images: {
-  //   unoptimized: true,
-  // },
+  reactStrictMode: true,
+  swcMinify: true,
+  images: {
+    unoptimized: true,
+  },
   env: {
     HOSTNAME: hostname,
     PORT: port,
