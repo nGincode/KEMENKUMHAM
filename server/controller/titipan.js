@@ -222,8 +222,8 @@ const get = async (req, res) => {
         tanggal: moment(val.tanggal).format("DD/MM/YYYY"),
         tahanan: val.tahanan?.nama ?? "(Tahanan dihapus)",
         tahanan_id: {
-          value: val.tahanan?.id,
-          label: val.tahanan?.nama,
+          value: val.tahanan?.id ?? null,
+          label: val.tahanan?.nama ?? null,
         },
         kamar: val?.tahanan?.kamar ?? "-",
         perkara: val?.tahanan?.perkara ?? "-",
