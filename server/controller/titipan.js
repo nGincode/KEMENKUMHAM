@@ -220,10 +220,10 @@ const get = async (req, res) => {
         img: val.img,
         uuid: val.uuid,
         tanggal: moment(val.tanggal).format("DD/MM/YYYY"),
-        tahanan: val?.tahanan?.nama ?? "(Tahanan dihapus)",
+        tahanan: val.tahanan?.nama ?? "(Tahanan dihapus)",
         tahanan_id: {
-          value: val.tahanan.id,
-          label: val.tahanan.nama,
+          value: val.tahanan?.id,
+          label: val.tahanan?.nama,
         },
         kamar: val?.tahanan?.kamar ?? "-",
         perkara: val?.tahanan?.perkara ?? "-",
