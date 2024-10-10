@@ -183,10 +183,7 @@ const get = async (req, res) => {
     Titipan = await titipan.findAll({
       where: {
         createdAt: {
-          [Op.between]: [
-            moment(tanggal_mulai, "YYYY-MM-DD").format("YYYY-MM-DD"),
-            moment(tanggal_akhir, "YYYY-MM-DD").format("YYYY-MM-DD"),
-          ],
+          [Op.between]: [tanggal_mulai, tanggal_akhir],
         },
       },
       order: [["id", "DESC"]],
