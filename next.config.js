@@ -8,12 +8,12 @@ const URL = dotenv.parsed.URL;
 const nextConfig = {
   // reactStrictMode: true,
   // swcMinify: true,
-  // images: {
-  //   unoptimized: true,
-  // },
   images: {
-    domains: ["app.easyrubero.com"],
+    unoptimized: false,
   },
+  // images: {
+  //   domains: ["app.easyrubero.com"],
+  // },
   env: {
     HOSTNAME: hostname,
     PORT: port,
