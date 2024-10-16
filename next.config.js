@@ -6,10 +6,10 @@ const port = dotenv.parsed.PORT;
 const URL = dotenv.parsed.URL;
 
 const nextConfig = {
-  // reactStrictMode: true,
-  // swcMinify: true,
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
-    unoptimized: false,
+    unoptimized: true,
   },
   // images: {
   //   domains: ["app.easyrubero.com"],
