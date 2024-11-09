@@ -46,6 +46,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      integrasi: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
       img: {
         type: Sequelize.STRING,
       },

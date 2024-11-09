@@ -59,6 +59,10 @@ module.exports = (sequelize, DataTypes) => {
       img: {
         type: DataTypes.STRING,
       },
+      integrasi: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

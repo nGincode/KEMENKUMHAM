@@ -31,6 +31,7 @@ const put = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const {
     name,
+    integrasi,
     phone,
     jalan,
     block,
@@ -73,6 +74,7 @@ const put = async (req, res) => {
     name: name,
     phone: phone,
     email: email,
+    integrasi: integrasi == "Ya" ? 1 : 0,
     address: {
       jalan: jalan,
       block: block,
@@ -110,6 +112,7 @@ const putId = async (req, res) => {
     perkara,
     image,
     imgDel,
+    integrasi,
   } = req.body;
 
   const Tahanan = await tahanan.findOne({
@@ -160,6 +163,7 @@ const putId = async (req, res) => {
     nama: nama,
     BIN: BIN,
     kamar: kamar,
+    integrasi: integrasi == "Ya" ? 1 : 0,
     statusTahanan: statusTahanan,
     perkara: perkara,
     img: imgData,
@@ -213,6 +217,7 @@ const get = async (req, res) => {
       ["statusTahanan", "DESC"],
     ],
   });
+
   const data = tahananDb.map((val) => {
     return {
       id: val.id,
@@ -247,7 +252,8 @@ const get = async (req, res) => {
                 moment(val.tanggalKeluar).diff(moment(), "months", true)
               ) + " Bulan"
           : "-",
-      integrasi:
+      integrasi: val.integrasi ? "Ya" : "Tidak",
+      integrasiStatus:
         val.statusTahanan !== "Tahanan"
           ? val.tanggalKeluar > val.tanggalMasuk
             ? Math.round(
@@ -275,8 +281,17 @@ const get = async (req, res) => {
   });
 };
 const post = async (req, res) => {
-  const { nama, tanggal, tanggal_keluar, BIN, kamar, status, perkara, img } =
-    req.body;
+  const {
+    nama,
+    tanggal,
+    tanggal_keluar,
+    BIN,
+    kamar,
+    status,
+    perkara,
+    img,
+    integrasi,
+  } = req.body;
   const { users_id, users_uuid } = req.user;
 
   const cek = await tahanan.findOne({ where: { nama: nama } });
@@ -308,6 +323,7 @@ const post = async (req, res) => {
     BIN: BIN,
     kamar: kamar,
     statusTahanan: status,
+    integrasi: integrasi == "Ya" ? 1 : 0,
     perkara: perkara,
     img: img ? "/upload/tahanan/" + uuid + "." + type : null,
   };

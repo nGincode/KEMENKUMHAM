@@ -124,7 +124,9 @@ router.get("/narapidana", async (req, res) => {
           ) *
             (2 / 3) >
           Math.round(moment(val.tanggalKeluar).diff(moment(), "months", true))
-          ? data.push(val)
+          ? val.integrasi
+            ? data.push(val)
+            : null
           : null
         : null;
     });
@@ -584,20 +586,102 @@ router.post("/titipanUsers", async (req, res) => {
 });
 
 router.post("/slider", async (req, res) => {
-  const { data } = req.body;
-  require("fs").writeFileSync(
-    __dirname + `/../../public/slider.json`,
-    JSON.stringify(data)
-  );
-  res.json(data);
-});
+  const { del, get } = req.body;
+  const fs = require("fs");
+  // Define the upload directory inside the public folder
+  const uploadDir = path.join(process.cwd(), "public", "upload/slider");
 
-router.get("/slider", async (req, res) => {
-  const data = require("fs").readFileSync(
-    __dirname + `/../../public/slider.json`,
-    "utf8"
-  );
-  res.json(JSON.parse(data));
+  if (get) {
+    try {
+      // Check if the directory exists
+      if (!fs.existsSync(uploadDir)) {
+        return res.status(200).json({ error: "Directory not found" });
+      }
+
+      // Read the files in the directory
+      const files = fs.readdirSync(uploadDir); // returns an array of filenames
+
+      // If you want the full path of each file, you can map over the filenames
+      const filePaths = files.map((file) => `/upload/slider/${file}`);
+
+      // Return the list of file paths
+      return res.status(200).json(filePaths);
+    } catch (error) {
+      console.error("Error reading files:", error);
+      return res.status(200).json({ error: "Failed to get files" });
+    }
+  } else if (del) {
+    const filename = del;
+
+    if (!filename || typeof filename !== "string") {
+      return res.status(200).json({ error: "Filename is required" });
+    }
+
+    // Ensure the file exists before attempting to delete it
+    const filePath = path.join(process.cwd(), "public", filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(200).json({ error: "File not found" });
+    }
+
+    try {
+      // Delete the file
+      fs.unlinkSync(filePath); // Synchronously deletes the file
+
+      // Return a success message
+      return res
+        .status(200)
+        .json({ message: `File ${filename} deleted successfully` });
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      return res.status(200).json({ error: "Failed to delete the file" });
+    }
+  }
+
+  // Check if files are present in the request
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(200).json({ error: "No files were uploaded." });
+  }
+
+  // Ensure the upload directory exists
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
+  // Process each file (handling multiple files, if present)
+  const uploadedFiles = req.files;
+
+  const filePaths = [];
+
+  // If multiple files are uploaded, iterate through them
+  for (const [key, file] of Object.entries(uploadedFiles)) {
+    if (Array.isArray(file)) {
+      for (const singleFile of file) {
+        // Rename the file with the current date and time
+        const timestamp = new Date().toISOString().replace(/[:.-]/g, ""); // Create a timestamp string (remove colons, dots, etc.)
+        const newFileName = `${timestamp}-${singleFile.name}`;
+        const filePath = path.join(uploadDir, newFileName);
+
+        // Move the file to the upload directory with the new name
+        await singleFile.mv(filePath);
+        filePaths.push(`/upload/${newFileName}`);
+      }
+    } else {
+      // Rename the file with the current date and time
+      const timestamp = new Date().toISOString().replace(/[:.-]/g, ""); // Create a timestamp string (remove colons, dots, etc.)
+      const newFileName = `${timestamp}-${file.name}`;
+      const filePath = path.join(uploadDir, newFileName);
+
+      // Move the file to the upload directory with the new name
+      await file.mv(filePath);
+      filePaths.push(`/upload/${newFileName}`);
+    }
+  }
+
+  // Return the paths of the uploaded files
+  res.status(200).json({
+    message: "Files uploaded successfully.",
+    filePaths,
+  });
 });
 
 module.exports = router;

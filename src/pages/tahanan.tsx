@@ -152,6 +152,17 @@ export default function Tahanan({ userData, setuserData }: any) {
                     { label: 'Tahanan', value: 'Tahanan' }
                 ]
             },
+            {
+                name: 'integrasi',
+                type: 'reactSelect',
+                id: 'integrasi',
+                label: "Integrasi",
+                select: [
+                    { label: 'Ya', value: 'Ya' },
+                    { label: 'Tidak', value: 'Tidak' }
+                ],
+                required: true
+            },
         ]
     const convertFileToBase64 = (file: any) => {
         return new Promise((resolve, reject) => {
@@ -197,6 +208,7 @@ export default function Tahanan({ userData, setuserData }: any) {
             kamar: event.target.kamar.value,
             status: event.target.status_val.value,
             perkara: event.target.perkara_val.value,
+            integrasi: event.target.integrasi_val.value,
             img: img
         };
 
@@ -427,6 +439,19 @@ export default function Tahanan({ userData, setuserData }: any) {
                                                             data={[
                                                                 { label: 'Narapidana', value: 'Narapidana' },
                                                                 { label: 'Tahanan', value: 'Tahanan' }
+                                                            ]}
+                                                            required={true}
+                                                        />
+                                                    </div>
+                                                </div> <div className="col-12 col-md-6">
+                                                    <div className="mb-24">
+                                                        <ReactSelect
+                                                            name='integrasi'
+                                                            id="integrasi"
+                                                            label='Integrasi'
+                                                            data={[
+                                                                { label: 'Ya', value: 'Ya' },
+                                                                { label: 'Tidak', value: 'Tidak' }
                                                             ]}
                                                             required={true}
                                                         />
