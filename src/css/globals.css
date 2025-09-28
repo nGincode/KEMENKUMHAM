@@ -16,66 +16,83 @@
   }
 }
 ::-webkit-scrollbar {
-  width: 0.7em;
-  height:0.5em;
+  height: 9px;
 }
- 
+
 ::-webkit-scrollbar-track {
   display: none;
+  background-color: transparent;
 }
- 
+
 ::-webkit-scrollbar-thumb {
   background-color: darkgrey;
-  border-radius:10px;
+  border-radius: 10px;
 }
 
+.gulir-atas {
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 20px;
+}
 
+.konten-lebar {
+  height: 1px;
+}
 
-
+/* Optional: styling untuk scrollbar agar lebih minimalis */
+.gulir-atas::-webkit-scrollbar {
+  height: 9px;
+}
+.gulir-atas::-webkit-scrollbar-track {
+  background: transparent;
+}
+.gulir-atas::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 5px;
+}
 
 #html5-qrcode-button-camera-start {
-    padding: 0.625rem 1rem;
-    font-size: 0.813rem;
-    border-radius: 1.125rem;
-    font-weight: 400;
-    color: white;
-    background-color: #68e365;
-    border-color: #68e365;
-    margin: 10px;
+  padding: 0.625rem 1rem;
+  font-size: 0.813rem;
+  border-radius: 1.125rem;
+  font-weight: 400;
+  color: white;
+  background-color: #68e365;
+  border-color: #68e365;
+  margin: 10px;
 }
 
 #html5-qrcode-button-camera-stop {
-    padding: 0.625rem 1rem;
-    font-size: 0.813rem;
-    border-radius: 1.125rem;
-    font-weight: 400;
-    color: white;
-    background-color: #68e365;
-    border-color: #68e365;
-    margin: 10px;
+  padding: 0.625rem 1rem;
+  font-size: 0.813rem;
+  border-radius: 1.125rem;
+  font-weight: 400;
+  color: white;
+  background-color: #68e365;
+  border-color: #68e365;
+  margin: 10px;
 }
 
 img {
-    display: unset;
+  display: unset;
 }
 
 video {
-    border-radius: 40px 40px 0px 0px;
+  border-radius: 40px 40px 0px 0px;
 }
 
 #qr-shaded-region {
-    border-radius: 40px 40px 0px 0px;
+  border-radius: 40px 40px 0px 0px;
 }
 
 #qr-reader {
-    background-color: silver;
-    border: unset;
+  background-color: silver;
+  border: unset;
 }
 
 .imgManage {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 5px;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
 }
-

@@ -179,7 +179,7 @@ const del = async (req, res) => {
   });
 };
 const get = async (req, res) => {
-  const { tanggal_akhir, tanggal_mulai } = req.query;
+  const { tanggal_akhir, tanggal_mulai, waktu } = req.query;
 
   let Kunjungan;
   if (tanggal_mulai && tanggal_akhir) {
@@ -214,9 +214,11 @@ const get = async (req, res) => {
       ],
     });
   }
+
   const data = Kunjungan.map((val) => {
     return {
       img: val.img,
+      waktu: waktu ? moment(val.updatedAt).format("HH:mm") : undefined,
       uuid: val.uuid,
       waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
         "DD/MM/YYYY"

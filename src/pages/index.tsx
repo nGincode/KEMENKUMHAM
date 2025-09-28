@@ -11,7 +11,6 @@ import { Button } from "@material-tailwind/react";
 export default function Index({ userData, setuserData }: any) {
     const [onsliderData, setsliderData] = useState([]);
 
-
     useEffect(() => {
         (document as any).title = 'Dashboard';
         $("#qr-reader img").hide();
@@ -38,6 +37,10 @@ export default function Index({ userData, setuserData }: any) {
         const sliderJson = async () => {
             axios.post('api/slider', { get: true })
                 .then((res: any) => {
+                    if (res?.data?.error) {
+                        return toast.error(res.data.error);
+                    }
+
                     setsliderData(res.data)
                 })
 

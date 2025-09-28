@@ -11,14 +11,17 @@ import ImgUpload from "../components/imgUpload";
 import ReactTable from "../components/reactTable";
 import DebouncedInput from "../components/debouncedInput"
 import ReactSelect from "../components/reactSelect";
+import moment from "moment";
 
 export default function Tahanan({ userData, setuserData }: any) {
     const [pagePermission, setpagePermission] = useState([]);
     const [dataTahanan, setDataTahanan] = useState([]);
     const [dataCreate, setdataCreate] = useState();
     const [search, setsearch] = useState('');
+    const [searchValue, setSearchValue] = useState([]);
     const URLAPI = "/api/tahanan";
     const Subject = "Tahanan";
+    const [dateData, setdateData] = useState<any>([moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]);
 
     useEffect(() => {
         (document as any).title = Subject;
@@ -163,6 +166,19 @@ export default function Tahanan({ userData, setuserData }: any) {
                 ],
                 required: true
             },
+            {
+                name: 'penampilan',
+                type: 'reactSelect',
+                id: 'penampilan',
+                label: "Penampilan",
+                select: [
+                    { label: "Kunjungan", value: "kunjungan" },
+                    { label: "Integarasi", value: "integrasi" },
+                    { label: "Kunjungan Kuasa Hukum", value: "kuasa hukum" }
+                ],
+                multi: true,
+                required: true
+            },
         ]
     const convertFileToBase64 = (file: any) => {
         return new Promise((resolve, reject) => {
@@ -209,6 +225,7 @@ export default function Tahanan({ userData, setuserData }: any) {
             status: event.target.status_val.value,
             perkara: event.target.perkara_val.value,
             integrasi: event.target.integrasi_val.value,
+            penampilan: searchValue.map((val: any) => val.value).join(", "),
             img: img
         };
 
@@ -443,7 +460,8 @@ export default function Tahanan({ userData, setuserData }: any) {
                                                             required={true}
                                                         />
                                                     </div>
-                                                </div> <div className="col-12 col-md-6">
+                                                </div>
+                                                <div className="col-12 col-md-6">
                                                     <div className="mb-24">
                                                         <ReactSelect
                                                             name='integrasi'
@@ -454,6 +472,27 @@ export default function Tahanan({ userData, setuserData }: any) {
                                                                 { label: 'Tidak', value: 'Tidak' }
                                                             ]}
                                                             required={true}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-md-6">
+                                                    <div className="mb-24 -mt-3">
+                                                        <label className="text-xs text-blue-gray-500">
+                                                            Perlihatkan
+                                                        </label>
+                                                        <ReactSelect
+                                                            name="view"
+                                                            id="view"
+                                                            label="Perlihatkan"
+                                                            data={[
+                                                                { label: "Kunjungan", value: "kunjungan" },
+                                                                { label: "Integarasi", value: "integrasi" },
+                                                                { label: "Kunjungan Kuasa Hukum", value: "kuasa hukum" }
+                                                            ]}
+                                                            setSearchValue={setSearchValue}
+                                                            required={true}
+                                                            multi={true}
                                                         />
                                                     </div>
                                                 </div>
@@ -483,6 +522,33 @@ export default function Tahanan({ userData, setuserData }: any) {
                                 urlFatch={URLAPI}
                                 reload={dataCreate}
                                 modalData={modalData}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div className="col-12">
+                    <h1 className="hp-mb-0 text-4xl font-bold">History Kunjungan Hari Ini</h1>
+                </div>
+
+                <div className="col-12">
+                    <div className="card hp-contact-card mb-32 -mt-3 shadow-lg">
+                        <div className="card-body px-0">
+                            <ReactTable
+                                search={search}
+                                date={dateData}
+                                urlFatch={"/api/kunjungan?waktu=true&"}
+                                reload={dataCreate}
+                                action={{
+                                    userData: userData,
+                                    kunjungan: true,
+                                    delete: pagePermission.find((val: any) => val == "delete") ? URLAPI : null,
+                                    edit: pagePermission.find((val: any) => val == "edit") ? URLAPI : null
+                                }}
+                                hiddenPaginate={true}
+                                hiddenSearch={true}
+                                showData={["img", "waktu", "tahanan", "kamar", "perkara", 'nama']}
                             />
                         </div>
                     </div>

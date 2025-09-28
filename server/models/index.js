@@ -13,6 +13,7 @@ const config = {
   password: dotenv.parsed.DATABASE_PASSWORD,
   host: dotenv.parsed.HOST,
   dialect: dotenv.parsed.DATABASE_DIALECT,
+  logging: false,
 };
 
 const db = {};

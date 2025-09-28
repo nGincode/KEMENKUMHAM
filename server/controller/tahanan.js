@@ -45,6 +45,7 @@ const put = async (req, res) => {
     kodepos,
     email,
     company_id,
+    penampilan,
   } = req.body;
 
   const Npwp = await stock.findOne({
@@ -75,6 +76,7 @@ const put = async (req, res) => {
     phone: phone,
     email: email,
     integrasi: integrasi == "Ya" ? 1 : 0,
+    penampilan: penampilan,
     address: {
       jalan: jalan,
       block: block,
@@ -98,7 +100,6 @@ const put = async (req, res) => {
     data: data,
   });
 };
-
 const putId = async (req, res) => {
   const { uuid } = req.params;
   const { users_id, users_uuid } = req.user;
@@ -113,6 +114,7 @@ const putId = async (req, res) => {
     image,
     imgDel,
     integrasi,
+    penampilan,
   } = req.body;
 
   const Tahanan = await tahanan.findOne({
@@ -167,6 +169,7 @@ const putId = async (req, res) => {
     statusTahanan: statusTahanan,
     perkara: perkara,
     img: imgData,
+    penampilan: penampilan,
   };
 
   await Tahanan.update(data);
@@ -210,7 +213,6 @@ const del = async (req, res) => {
 };
 const get = async (req, res) => {
   const { users_id, users_uuid, email, username, permission } = req.user;
-
   const tahananDb = await tahanan.findAll({
     order: [
       ["id", "DESC"],
@@ -271,6 +273,7 @@ const get = async (req, res) => {
               : "Belum Bisa"
             : "Tanggal Tidak Valid"
           : "-",
+      penampilan: val.penampilan,
     };
   });
 
@@ -290,6 +293,7 @@ const post = async (req, res) => {
     status,
     perkara,
     img,
+    penampilan,
     integrasi,
   } = req.body;
   const { users_id, users_uuid } = req.user;
@@ -324,6 +328,7 @@ const post = async (req, res) => {
     kamar: kamar,
     statusTahanan: status,
     integrasi: integrasi == "Ya" ? 1 : 0,
+    penampilan: penampilan,
     perkara: perkara,
     img: img ? "/upload/tahanan/" + uuid + "." + type : null,
   };

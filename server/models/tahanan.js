@@ -59,8 +59,8 @@ module.exports = (sequelize, DataTypes) => {
       img: {
         type: DataTypes.STRING,
       },
-      integrasi: {
-        type: DataTypes.BOOLEAN,
+      penampilan: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       createdAt: {

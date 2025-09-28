@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Component, useEffect, useState, useReducer, useMemo } from "react";
+import React, { Component, useEffect, useState, useReducer, useMemo, useRef } from "react";
 import axios from "axios";
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 import toast, { Toaster } from 'react-hot-toast';
@@ -83,7 +84,7 @@ const convertCamelCase = (text: any) => {
     }
 }
 
-export default function ReactTable({ search, action, modalData, dataFatch, urlFatch, Subject, reload, date }: any) {
+export default function ReactTable({ showData, search, action, modalData, dataFatch, urlFatch, Subject, reload, date, hiddenPaginate, hiddenSearch }: any) {
     const [dataEdit, setdataEdit] = useState<any>();
     const [click, setclick] = useState<any>();
     const [data, setdata] = useState<any>([]);
@@ -92,6 +93,9 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
     const [globalFilter, setGlobalFilter] = useState('');
     const [loading, setloading] = useState(true);
     const [modalView, setmodalView] = useState(modalData)
+    const gulirAtasRef = useRef<HTMLDivElement>(null);
+    const gulirBawahRef = useRef<HTMLDivElement>(null);
+    const tabelRef = useRef<HTMLTableElement>(null);
 
 
     useEffect(() => {
@@ -105,6 +109,41 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
     useEffect(() => {
         handleApi('view');
     }, [date]);
+
+
+    useEffect(() => {
+        if (!showData) {
+            const gulirAtas = gulirAtasRef.current;
+            const gulirBawah = gulirBawahRef.current;
+            const tabel = tabelRef.current;
+            const kontenLebar = gulirAtas?.querySelector('.konten-lebar') as HTMLDivElement;
+
+            if (!gulirAtas || !gulirBawah || !tabel || !kontenLebar) return;
+
+
+            // 1. Atur lebar konten atas agar sama dengan lebar tabel
+            kontenLebar.style.width = `${tabel.scrollWidth}px`;
+
+            // 2. Fungsi untuk sinkronisasi
+            const syncScrollAtas = () => {
+                gulirBawah.scrollLeft = gulirAtas.scrollLeft;
+            };
+            const syncScrollBawah = () => {
+                gulirAtas.scrollLeft = gulirBawah.scrollLeft;
+            };
+
+            // 3. Tambahkan event listener
+            gulirAtas.addEventListener('scroll', syncScrollAtas);
+            gulirBawah.addEventListener('scroll', syncScrollBawah);
+
+            // 4. Cleanup untuk mencegah memory leak
+            return () => {
+                gulirAtas.removeEventListener('scroll', syncScrollAtas);
+                gulirBawah.removeEventListener('scroll', syncScrollBawah);
+            };
+
+        }
+    }, [data]);
 
     const convertFileToBase64 = (file: any) => {
         return new Promise((resolve, reject) => {
@@ -135,6 +174,16 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
             }
 
         }
+
+
+        modalData.map((m: any) => {
+            if (m.multi && m.type == "reactSelect") {
+                const semuaPenampilan = dataPost.getAll(m.name);
+                const hasilString = semuaPenampilan.join(',');
+                dataPost.set(m.name, hasilString);
+            }
+        })
+
         handleApi('edit', urlFatch, dataEdit.uuid, dataPost);
     }
 
@@ -164,13 +213,55 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
         }
     }
 
+    function AvatarCell({ row }: any) {
+        const [imageOke, setImageOke] = useState(false);
+
+        useEffect(() => {
+            let active = true;
+            if (row.original.img) {
+                fetch(row.original.img, { method: "HEAD" })
+                    .then((res) => {
+                        if (active) setImageOke(res.ok);
+                    })
+                    .catch(() => {
+                        if (active) setImageOke(false);
+                    });
+            }
+            return () => {
+                active = false;
+            };
+        }, [row.original.img]);
+
+        if (row.original.img && imageOke) {
+            return (
+                <a target="_blank" href={row.original.img}>
+                    <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">
+                        <Image
+                            width={50}
+                            height={50}
+                            src={row.original.img}
+                            className="object-cover rounded-full w-12 h-12"
+                            alt={row.original.nama ?? row.original.uuid}
+                        />
+                    </div>
+                </a>
+            );
+        }
+
+        return (
+            <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">
+                {(row.original.nama ?? row.original.namaLengkap ?? row.original.username).substring(0, 2)}
+            </div>
+        );
+    }
+
     let array: any = [];
     if (data?.[0]) {
         Object.keys(data[0]).map((val: any, i: number) => {
             if (val == 'uuid' || val == 'addressJson' || val == 'itemJson' || val == 'id' || val == 'tahanan_id') { } else {
                 if (val === 'img') {
                     array.push({
-                        id: 'img',
+                        id: showData?.includes('img') ? 'img2' : 'img',
                         header: () => null,
                         cell: ({ row }: any) => {
                             if (row.original.img) {
@@ -187,7 +278,10 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                         header: () => 'Selfi',
                         cell: ({ row }: any) => {
                             if (row.original.selfi) {
-                                return <a target="_blank" href={row.original.selfi}><div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle"><Image width={50} height={50} src={row.original.selfi} className=" object-cover rounded-full w-12 h-12" alt={row.original.nama ?? row.original.uuid} /></div></a>
+                                return <a target="_blank" href={row.original.selfi}><div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">
+                                    <Image width={50} height={50} src={row.original.selfi} className=" object-cover rounded-full w-12 h-12" alt={row.original.nama ?? row.original.uuid} />
+                                </div>
+                                </a>
                             } else {
                                 return <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">{(row.original.nama ?? row.original.namaLengkap ?? row.original.username).substring(0, 2)}</div>
                             }
@@ -550,7 +644,7 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                 }
 
             },
-        }];
+        }].filter((m) => showData ? showData.includes(m.id?.replace('img2', 'img') || m.accessorKey) : true);
 
     const table = useReactTable({
         data,
@@ -652,9 +746,10 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                 dateURL += 'tanggal_mulai=' + date[0] + '&tanggal_akhir=' + date[1];
             }
             try {
+                const url = (companyActive ? "?company_id=" + JSON.parse(localStorage.getItem('companyActive') as string)?.value + '&' + dateURL : '?' + dateURL);
                 await axios({
                     method: "GET",
-                    url: urlFatch + (companyActive ? "?company_id=" + JSON.parse(localStorage.getItem('companyActive') as string)?.value + '&' + dateURL : '?' + dateURL),
+                    url: urlFatch.includes('?') ? urlFatch + url.replace('?', "") : urlFatch + url,
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -693,18 +788,23 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
         </div>)
     }
 
+
     if (data.length) {
         ($("#nophoneEdit") as any).mask("(+62) 000-0000-0000");
         return (
             <>
-                <div className="table-responsive">
-                    <table className="table align-middle table-hover  text-sm -mb-2">
+                <div className="gulir-atas -mt-9 mx-5" ref={gulirAtasRef}>
+                    <div className="konten-lebar"></div>
+                </div>
+                <div className="table-responsive" ref={gulirBawahRef}>
+                    <table ref={tabelRef} className="table align-middle table-hover  text-sm -mb-2">
                         <thead>
                             {table.getHeaderGroups().map(headerGroup => (
                                 <tr key={headerGroup.id}>
                                     {headerGroup.headers.map(header => {
+                                        const isActionColumn = header.id === 'action';
                                         return (
-                                            <th key={header.id} colSpan={header.colSpan}>
+                                            <th className={isActionColumn ? "sticky right-0 bg-white z-10 border-l" : ""} key={header.id} colSpan={header.colSpan}>
                                                 {header.isPlaceholder ? null : (
                                                     <>
                                                         <div
@@ -730,7 +830,7 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                                                                 ,
                                                             }[header.column.getIsSorted() as string] ?? null}
                                                         </div>
-                                                        {header.column.getCanFilter() ? (
+                                                        {!hiddenSearch && header.column.getCanFilter() ? (
                                                             <div className="mt-2 text-sm">
                                                                 <Filter column={header.column} table={table} />
                                                             </div>
@@ -748,8 +848,12 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                                 return (
                                     <tr key={row.id} className={row.original?.ceklist ? "bg-green-100" : ""}>
                                         {row.getVisibleCells().map(cell => {
+                                            const isActionColumn = cell.column.id === 'action';
+                                            const rowBgClass = row.original?.ceklist ? "bg-green-100" : "bg-white";
                                             return (
-                                                <td key={cell.id}>
+                                                <td
+                                                    className={isActionColumn ? `sticky right-0 ${rowBgClass} border-l` : ""}
+                                                    key={cell.id}>
                                                     {flexRender(
                                                         cell.column.columnDef.cell,
                                                         cell.getContext()
@@ -765,67 +869,68 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                     </table>
                     <div className="h-2" />
                 </div>
-                <div className="flex flex-wrap items-center gap-2 mt-3 ml-5">
-                    <button
-                        className="border rounded p-1"
-                        onClick={() => table.setPageIndex(0)}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        {'<<'}
-                    </button>
-                    <button
-                        className="border rounded p-1"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        {'<'}
-                    </button>
-                    <button
-                        className="border rounded p-1"
-                        onClick={() => { table.nextPage(); setpageActive(table.getState().pagination.pageIndex + 1) }}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        {'>'}
-                    </button>
-                    <button
-                        className="border rounded p-1"
-                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        {'>>'}
-                    </button>
-                    <span className="flex items-center gap-1">
-                        <div>Page</div>
-                        <strong>
-                            {table.getState().pagination.pageIndex + 1} of{' '}
-                            {table.getPageCount()} |  Total {table.getPrePaginationRowModel().rows.length} Rows
-                        </strong>
-                    </span>
-                    <span className="flex items-center gap-1">
-                        | Go to page:
-                        <input
-                            type="number"
-                            defaultValue={table.getState().pagination.pageIndex + 1}
+                {!hiddenPaginate &&
+                    <div className="flex flex-wrap items-center gap-2 mt-3 ml-5">
+                        <button
+                            className="border rounded p-1"
+                            onClick={() => table.setPageIndex(0)}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            {'<<'}
+                        </button>
+                        <button
+                            className="border rounded p-1"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            {'<'}
+                        </button>
+                        <button
+                            className="border rounded p-1"
+                            onClick={() => { table.nextPage(); setpageActive(table.getState().pagination.pageIndex + 1) }}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            {'>'}
+                        </button>
+                        <button
+                            className="border rounded p-1"
+                            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            {'>>'}
+                        </button>
+                        <span className="flex items-center gap-1">
+                            <div>Page</div>
+                            <strong>
+                                {table.getState().pagination.pageIndex + 1} of{' '}
+                                {table.getPageCount()} |  Total {table.getPrePaginationRowModel().rows.length} Rows
+                            </strong>
+                        </span>
+                        <span className="flex items-center gap-1">
+                            | Go to page:
+                            <input
+                                type="number"
+                                defaultValue={table.getState().pagination.pageIndex + 1}
+                                onChange={e => {
+                                    const page = e.target.value ? Number(e.target.value) - 1 : 0
+                                    table.setPageIndex(page)
+                                }}
+                                className="border p-1 rounded w-16"
+                            />
+                        </span>
+                        <select
+                            value={table.getState().pagination.pageSize}
                             onChange={e => {
-                                const page = e.target.value ? Number(e.target.value) - 1 : 0
-                                table.setPageIndex(page)
+                                table.setPageSize(Number(e.target.value))
                             }}
-                            className="border p-1 rounded w-16"
-                        />
-                    </span>
-                    <select
-                        value={table.getState().pagination.pageSize}
-                        onChange={e => {
-                            table.setPageSize(Number(e.target.value))
-                        }}
-                    >
-                        {[10, 20, 30, 40, 50].map(pageSize => (
-                            <option key={pageSize} value={pageSize}>
-                                Show {pageSize}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                        >
+                            {[10, 20, 30, 40, 50].map(pageSize => (
+                                <option key={pageSize} value={pageSize}>
+                                    Show {pageSize}
+                                </option>
+                            ))}
+                        </select>
+                    </div>}
                 <div className="modal fade" id="editUser" tabIndex={-1} aria-labelledby="editUserLabel" aria-hidden="true">
                     <div className="modal-dialog modal-xl modal-dialog-centered">
                         <div className="modal-content" >
@@ -903,15 +1008,21 @@ export default function ReactTable({ search, action, modalData, dataFatch, urlFa
                                                                                 <Textarea required={val.required} label={convertCamelCase(val.name)} variant="standard" className="border-b-1" defaultValue={dataEdit?.[val.name] ? dataEdit?.[val.name] : ''} name={val.name} id={`${val.id}Edit`} />
                                                                             </div>
                                                                             : val.type === 'reactSelect' ?
-                                                                                <div className="mb-24">
+                                                                                <div className={val.multi ? "mb-24  -mt-3" : "mb-24"}>
+                                                                                    {val.multi ?
+                                                                                        <label className="text-xs text-blue-gray-500">
+                                                                                            {convertCamelCase(val.name)}
+                                                                                        </label>
+                                                                                        : null}
                                                                                     <Select
                                                                                         id={`${val.id}Edit`}
                                                                                         name={val.name}
                                                                                         data={val.select}
                                                                                         search={val.search}
                                                                                         required={val.required}
+                                                                                        multi={val.multi}
                                                                                         label={convertCamelCase(val.label ?? val.name)}
-                                                                                        defaultValue={dataEdit?.[val.name] ? dataEdit?.[val.name]?.value ? dataEdit?.[val.name] : { label: convertCamelCase(dataEdit?.[val.name]), value: dataEdit?.[val.name] } : ''}
+                                                                                        defaultValue={dataEdit?.[val.name] ? dataEdit?.[val.name]?.value ? dataEdit?.[val.name] : val.multi ? dataEdit?.[val.name]?.split(',')?.map((v: any) => { return { value: v, label: v == 'kuasa hukum' ? "Kunjungan Kuasa Hukum" : convertCamelCase(v) } }) : { label: convertCamelCase(dataEdit?.[val.name]), value: dataEdit?.[val.name] } : ''}
                                                                                     />
                                                                                 </div>
                                                                                 : val.type === 'address' ?
