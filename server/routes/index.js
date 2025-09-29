@@ -78,6 +78,48 @@ router.post("/suratKunjungan", async (req, res) => {
   });
 });
 
+router.post("/suratKunjunganKuasaHukum", async (req, res) => {
+  const { uuid, barcode } = req.body;
+  const { tahanan, kunjungan, kunjunganKuasaHukum } = require("../models");
+  const { Op, json } = require("sequelize");
+  const moment = require("moment");
+  let Kunjungan = await kunjunganKuasaHukum.findOne({
+    where: {
+      uuid: uuid,
+    },
+    order: [["id", "DESC"]],
+    include: [
+      {
+        model: tahanan,
+        as: "tahanan",
+        attributes: {
+          exclude: ["uuid", "createdAt", "updatedAt"],
+        },
+      },
+    ],
+  });
+
+  if (!Kunjungan.antrian && !barcode) {
+    const antrian = await kunjunganKuasaHukum.findAll({
+      where: {
+        waktuKunjungan: Kunjungan.waktuKunjungan,
+        antrian: {
+          [Op.not]: null,
+        },
+      },
+    });
+
+    await Kunjungan.update({ antrian: antrian ? antrian.length + 1 : 1 });
+    Kunjungan.antrian = antrian ? antrian.length + 1 : 1;
+  }
+
+  return res.json({
+    status: 200,
+    massage: "Get data successful",
+    data: Kunjungan,
+  });
+});
+
 router.post("/suratTitipan", async (req, res) => {
   const { uuid } = req.body;
   const { tahanan, titipan } = require("../models");

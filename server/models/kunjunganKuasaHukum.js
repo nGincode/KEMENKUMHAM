@@ -50,10 +50,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      KTA: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       NIA: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -78,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      suratKuasa: {
+      suratIzin: {
         type: DataTypes.STRING,
         allowNull: true,
       },

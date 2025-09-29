@@ -101,7 +101,7 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                 type: 'img',
                 id: 'img',
                 full: true,
-                label: 'Upload KTP',
+                label: 'Upload KTA',
             },
             {
                 require: true,
@@ -116,13 +116,6 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                 type: 'text',
                 id: 'nama',
                 Label: 'Nama'
-            },
-            {
-                require: true,
-                name: 'KTA',
-                type: 'text',
-                id: 'KTA',
-                Label: 'Kartu Tanda Anggota'
             },
             {
                 require: true,
@@ -150,7 +143,6 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                 name: 'noHp',
                 type: 'number',
                 id: 'noHp',
-                full: true,
                 Label: 'No Wa'
             },
             {
@@ -215,13 +207,22 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
             }
         }
 
+
+        let suratIzin = null;
+        let files4 = (document.getElementById('suratIzin') as any)?.files[0];
+        if (files4) {
+            let size4 = files4.size;
+            if (size4 > 20000000) {
+                return toast.error("Size img only < 20Mb");
+            } else {
+                // suratIzin = await convertFileToBase64(files2);
+                suratIzin = files4;
+            }
+        }
+
         if (!event.target.tahanan_id.value) {
             setloadingSubmit(false);
             return toast.error("Tahanan dikunjungi belum terisi");
-        }
-        if (!event.target.KTA.value) {
-            setloadingSubmit(false);
-            return toast.error("Kartu Tanda Anggota belum terisi");
         }
         if (!event.target.NIA.value) {
             setloadingSubmit(false);
@@ -247,7 +248,7 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
 
         if (!img) {
             setloadingSubmit(false);
-            return toast.error("Upload KTP Wajib Terisi");
+            return toast.error("Upload KTA Wajib Terisi");
         }
 
         if (!selfi) {
@@ -260,17 +261,22 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
             return toast.error("Surat Kuasa Wajib Terisi");
         }
 
+        if (!suratIzin) {
+            setloadingSubmit(false);
+            return toast.error("Surat Izin Wajib Terisi");
+        }
+
         let data = {
             nama: event.target.nama.value,
             waktu: event.target.waktu.value,
             NIA: event.target.NIA.value,
-            KTA: event.target.KTA.value,
             tujuan: event.target.tujuan.value,
             lembaga: event.target.lembaga.value,
             tahanan_id: event.target.tahanan_id.value,
             noHp: event.target.noHp.value,
             img: img,
-            suratKuasa: suratKuasa
+            suratKuasa: suratKuasa,
+            suratIzin: suratIzin
         };
 
 
@@ -288,6 +294,11 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
         if (files2) {
             const file3 = await compressAccurately(files2, 100)
             formData.append('suratKuasa', file3, files2.name);
+        }
+
+        if (files4) {
+            const file4 = await compressAccurately(files4, 100)
+            formData.append('suratIzin', file4, files4.name);
         }
 
         handleApi('create', formData);
@@ -482,7 +493,7 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                                                 <div className="flex justify-center">
                                                     <div>
                                                         <ImgUpload
-                                                            label="Upload KTP"
+                                                            label="Upload KTA"
                                                             id="file" />
                                                     </div>
                                                     <div className="ml-5">
@@ -507,11 +518,6 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                                                     </div>
                                                     <div className="col-12 col-md-6">
                                                         <div className="mb-24">
-                                                            <Input type="text" required variant="standard" className="border-b-1" name="KTA" label="Kartu Tanda Anggota" id="KTA" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-md-6">
-                                                        <div className="mb-24">
                                                             <Input type="text" required variant="standard" className="border-b-1" name="NIA" label="Nomor Induk Advokat" id="NIA" />
                                                         </div>
                                                     </div>
@@ -532,8 +538,8 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                                                         </div>
                                                     </div>
 
-                                                    <div className="col-12 col-md-6">
-                                                        <div className="mb-24 -mt-5">
+                                                    <div className="col-12 col-md-12">
+                                                        <div className="mb-24 ">
                                                             <ReactSelect
                                                                 name='tahanan_id'
                                                                 search={true}
@@ -569,6 +575,12 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                                                             <input type="file" required accept="image/*" id="suratKuasa" />
                                                         </div>
                                                     </div>
+                                                    <div className="col-12  col-md-6 ">
+                                                        <label>Surat Izin Pihak Penahan</label>
+                                                        <div className="mb-24">
+                                                            <input type="file" required accept="image/*" id="suratIzin" />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -593,7 +605,7 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                                 search={search}
                                 action={{
                                     userData: userData,
-                                    kunjungan: true,
+                                    kunjunganKuasaHukum: true,
                                     delete: pagePermission.find((val: any) => val == "delete") ? URLAPI : null,
                                     edit: pagePermission.find((val: any) => val == "edit") ? URLAPI : null
                                 }}

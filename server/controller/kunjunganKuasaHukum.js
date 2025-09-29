@@ -1,100 +1,24 @@
-const jwt = require("jsonwebtoken");
-const { hash, verify } = require("node-php-password");
-const { User, tahanan, kunjungan, kunjunganKuasaHukum } = require("../models");
+const { tahanan, kunjunganKuasaHukum } = require("../models");
 const { Op } = require("sequelize");
 const Crypto = require("crypto");
-const numeral = require("numeral");
 const moment = require("moment");
-
-const put = async (req, res) => {
-  const { users_id, users_uuid } = req.user;
-  const {
-    name,
-    phone,
-    jalan,
-    block,
-    no,
-    rt,
-    rw,
-    kec,
-    kel,
-    prov,
-    kabkot,
-    kodepos,
-    email,
-    company_id,
-  } = req.body;
-
-  const Npwp = await stock.findOne({
-    where: { uuid: uuid },
-  });
-
-  const Company = await company.findOne({
-    where: {
-      uuid: company_id,
-    },
-  });
-
-  if (!Company) {
-    return res.status(400).json({
-      massage: "Company not found",
-    });
-  }
-
-  if (!Npwp) {
-    return res.json({
-      message: "STOCK not found",
-    });
-  }
-
-  const data = {
-    stock: req.body.stock,
-    name: name,
-    phone: phone,
-    email: email,
-    address: {
-      jalan: jalan,
-      block: block,
-      no: no,
-      rt: rt,
-      rw: rw,
-      kec: kec,
-      kel: kel,
-      prov: prov,
-      kabkot: kabkot,
-      kodepos: kodepos,
-    },
-    company_id: Company.id,
-  };
-
-  await stock.update(data);
-
-  res.json({
-    status: 200,
-    massage: "Update data successful",
-    data: data,
-  });
-};
 
 const putId = async (req, res) => {
   const { uuid } = req.params;
   const { users_id, users_uuid } = req.user;
   const {
     nama,
-    waktuKunjungan,
-    NIK,
-    alamat,
-    jenisKelamin,
-    pengikutDewasa,
-    pengikutAnak,
     tahanan_id,
     noHp,
-    hubungan,
+    NIA,
+    lembaga,
+    tujuan,
+    waktuKunjungan,
     image,
     imgDel,
   } = req.body;
 
-  const Kunjungan = await kunjungan.findOne({
+  const Kunjungan = await kunjunganKuasaHukum.findOne({
     where: { uuid: uuid },
   });
 
@@ -112,7 +36,7 @@ const putId = async (req, res) => {
       type = image.split(";")[0].split("/")[1];
       require("fs").writeFile(
         __dirname +
-          `/../../public/upload/kunjungan/${moment().format(
+          `/../../public/upload/kunjunganKuasaHukum/${moment().format(
             "YYYY-MM-DD"
           )}_${uuid}.${type}`,
         new Buffer.from(
@@ -124,7 +48,7 @@ const putId = async (req, res) => {
         }
       );
       imgData =
-        "/upload/kunjungan/" +
+        "/upload/kunjunganKuasaHukum/" +
         moment().format("YYYY-MM-DD") +
         "_" +
         uuid +
@@ -138,15 +62,12 @@ const putId = async (req, res) => {
   const data = {
     waktuKunjungan: waktuKunjungan,
     nama: nama,
-    NIK: NIK,
-    alamat: alamat,
-    jenisKelamin: jenisKelamin,
-    pengikutDewasa: pengikutDewasa,
-    pengikutAnak: pengikutAnak,
     tahanan_id: tahanan_id,
     noHp: noHp,
-    hubungan: hubungan,
     img: imgData,
+    NIA,
+    lembaga,
+    tujuan,
   };
 
   await Kunjungan.update(data);
@@ -161,7 +82,7 @@ const del = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const { uuid } = req.params;
 
-  const Kunjungan = await kunjungan.findOne({
+  const Kunjungan = await kunjunganKuasaHukum.findOne({
     where: { uuid: uuid },
   });
 
@@ -231,11 +152,11 @@ const get = async (req, res) => {
       perkara: val?.tahanan?.perkara ?? "-",
       nama: val.nama,
       noHp: val.noHp,
-      KTA: val.KTA,
       NIA: val.NIA,
       lembaga: val.lembaga,
       tujuan: val.tujuan,
       suratKuasa: val.suratKuasa,
+      suratIzin: val.suratIzin,
       antrian: val.antrian,
       selfi: val.selfi,
     };
@@ -248,8 +169,8 @@ const get = async (req, res) => {
   });
 };
 const post = async (req, res) => {
-  const { nama, tahanan_id, noHp, NIA, lembaga, tujuan, KTA, waktu } = req.body;
-  const { file, suratKuasa, selfi } = req.files;
+  const { nama, tahanan_id, noHp, NIA, lembaga, tujuan, waktu } = req.body;
+  const { file, suratKuasa, selfi, suratIzin } = req.files;
   const { users_id, users_uuid } = req.user;
 
   const antrian =
@@ -291,14 +212,13 @@ const post = async (req, res) => {
     NIA,
     lembaga,
     tujuan,
-    KTA,
     tahanan_id: tahanan_id,
     noHp: noHp,
     antrian: antrian + 1,
     img: await fileUpload(
       file,
       "image",
-      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_kta`
     ),
     selfi: await fileUpload(
       selfi,
@@ -309,6 +229,11 @@ const post = async (req, res) => {
       suratKuasa,
       "image",
       `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_suratKuasa`
+    ),
+    suratIzin: await fileUpload(
+      suratIzin,
+      "image",
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`
     ),
   };
 
@@ -339,7 +264,6 @@ const getId = async (req, res) => {
 
 module.exports = {
   get,
-  put,
   post,
   del,
   getId,

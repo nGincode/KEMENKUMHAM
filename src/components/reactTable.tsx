@@ -584,6 +584,9 @@ export default function ReactTable({ showData, search, action, modalData, dataFa
                         {action.kunjungan ?
                             <a target="_blank" href={'suratIzin.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                             : null}
+                        {action.kunjunganKuasaHukum ?
+                            <a target="_blank" href={'suratIzinKuasaHukum.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                            : null}
                         {action.titipan ?
                             <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                             : null}

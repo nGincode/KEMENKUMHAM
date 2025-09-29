@@ -37,10 +37,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      KTA: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       NIA: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -65,7 +61,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      suratKuasa: {
+      suratIzin: {
         type: Sequelize.STRING,
         allowNull: true,
       },

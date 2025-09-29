@@ -52,7 +52,7 @@
           text-align: center;
           padding: 20px;
           margin-right: 10px;
-          background: #025b01;
+          background: #5b0101;
           color: white;
           border-radius: 10px;
           font-weight: bolder;
@@ -64,30 +64,20 @@
       <div style="margin-bottom: 20px; text-transform: uppercase" id="nama">
         Nama : -
       </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="nik">
-        NIK KTP : -
+      <div style="margin-bottom: 20px; text-transform: uppercase" id="NIA">
+        NOMOR INDUK ADVOKAT : -
       </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="kelamin">
-        JENIS KELAMIN : -
+      <div style="margin-bottom: 20px; text-transform: uppercase" id="lembaga">
+        LEMBAGA : -
       </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="alamat">
-        ALAMAT : -
+      <div style="margin-bottom: 20px; text-transform: uppercase" id="tujuan">
+        TUJUAN : -
       </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="foto_ktp">
-        FOTO KTP : -
+      <div style="margin-bottom: 20px; text-transform: uppercase" id="foto_kta">
+        FOTO KTA : -
       </div>
       <div style="margin-bottom: 20px; text-transform: uppercase" id="selfi">
         FOTO SELFI : -
-      </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="hubungan">
-        HUBUNGAN DENGAN WBP : -
-      </div>
-      <div
-        style="margin-bottom: 25px; text-transform: uppercase"
-        id="pengikut_kunjungan"
-      >
-        PENGIKUT KUNJUNGAN : <span id="pengikutDewasa">-</span> Orang Dewasa &
-        <span id="pengikutAnak">-</span> Orang Anak-Anak
       </div>
       <div
         style="
@@ -188,7 +178,7 @@
       const formData = new FormData();
       formData.append("uuid", GetURLParameter("uuid"));
 
-      const dt = await fetch("api/suratKunjungan", {
+      const dt = await fetch("api/suratKunjunganKuasaHukum", {
         method: "POST",
         body: formData,
       });
@@ -207,13 +197,14 @@
         }
 
         document.getElementById("nama").innerHTML = "NAMA : " + data.data.nama;
-        document.getElementById("nik").innerHTML = "NIK KTP : " + data.data.NIK;
-        document.getElementById("kelamin").innerHTML =
-          "JENIS KELAMIN : " + data.data.jenisKelamin;
-        document.getElementById("alamat").innerHTML =
-          "ALAMAT : " + data.data.alamat;
+        document.getElementById("NIA").innerHTML =
+          "NOMOR INDUK ADVOKAT : " + data.data.NIA;
+        document.getElementById("lembaga").innerHTML =
+          "LEMBAGA : " + data.data.lembaga;
+        document.getElementById("tujuan").innerHTML =
+          "TUJUAN : " + data.data.tujuan;
         if (data.data.img) {
-          document.getElementById("foto_ktp").innerHTML =
+          document.getElementById("foto_kta").innerHTML =
             "FOTO KTP : <img style='height:100px' src='" +
             resizeExternalImage(data.data.img) +
             "' />";
@@ -230,12 +221,6 @@
           document.getElementById("selfi").innerHTML =
             "FOTO SELFI : Tidak ditemukan";
         }
-        document.getElementById("hubungan").innerHTML =
-          "HUBUNGAN DENGAN WBP : " + data.data.hubungan;
-        document.getElementById("pengikutDewasa").innerHTML =
-          "" + data.data.pengikutDewasa;
-        document.getElementById("pengikutAnak").innerHTML =
-          "" + data.data.pengikutAnak;
 
         document.getElementById("nama_tahanan").innerHTML =
           "NAMA : " + data.data.tahanan.nama;

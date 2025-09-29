@@ -5,7 +5,6 @@ const kunjunganController = require("../../controller/kunjunganKuasaHukum");
 
 router.get("/", kunjunganController.get);
 router.post("/", kunjunganController.post);
-router.put("/", kunjunganController.put);
 
 router.delete("/:uuid", kunjunganController.del);
 router.get("/:uuid", kunjunganController.getId);
