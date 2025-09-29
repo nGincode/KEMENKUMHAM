@@ -150,6 +150,7 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                 name: 'noHp',
                 type: 'number',
                 id: 'noHp',
+                full: true,
                 Label: 'No Wa'
             },
             {
@@ -159,6 +160,7 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                 id: 'tahanan_id',
                 label: 'Tahanan yang dikunjungi',
                 search: true,
+                full: true,
                 select: dataTahanan.map((val: any) => {
                     return { value: val.id, label: val.nama }
                 })

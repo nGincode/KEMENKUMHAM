@@ -267,8 +267,7 @@ const post = async (req, res) => {
   const { users_id, users_uuid } = req.user;
 
   const antrian =
-    (await kunjunganKuasaHukum.count({ where: { waktuKunjungan: waktu } })) +
-      (await kunjungan.count({ where: { waktuKunjungan: waktu } })) ?? 0;
+    (await kunjungan.count({ where: { waktuKunjungan: waktu } })) ?? 0;
 
   const orangKunjungan = await kunjungan.findAll({
     where: {

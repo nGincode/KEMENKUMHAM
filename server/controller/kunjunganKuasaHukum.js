@@ -253,8 +253,9 @@ const post = async (req, res) => {
   const { users_id, users_uuid } = req.user;
 
   const antrian =
-    (await kunjunganKuasaHukum.count({ where: { waktuKunjungan: waktu } })) +
-      (await kunjungan.count({ where: { waktuKunjungan: waktu } })) ?? 0;
+    (await kunjunganKuasaHukum.count({
+      where: { waktuKunjungan: waktu },
+    })) ?? 0;
 
   const orangKunjungan = await kunjunganKuasaHukum.findAll({
     where: {
@@ -281,7 +282,6 @@ const post = async (req, res) => {
       return null;
     }
   };
-  console.log(antrian);
 
   const data = {
     uuid: uuid,
