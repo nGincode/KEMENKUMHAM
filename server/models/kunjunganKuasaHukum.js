@@ -1,17 +1,20 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class tahanan extends Model {
+  class kunjunganKuasaHukum extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of DataTypes lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.tahanan, {
+        as: "tahanan",
+        foreignKey: "tahanan_id",
+      });
     }
   }
-  tahanan.init(
+  kunjunganKuasaHukum.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -27,45 +30,57 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      BIN: {
-        type: DataTypes.STRING,
+      tahanan_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       nama: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
       },
-      tanggalMasuk: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      tanggalKeluar: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-      },
-      perkara: {
+      noHp: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      kamar: {
+      antrian: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      waktuKunjungan: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      statusTahanan: {
+      KTA: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      NIA: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lembaga: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      tujuan: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       img: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
-      integrasi: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-      },
-      penampilan: {
+      selfi: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
+      },
+      suratKuasa: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      suratKuasa: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -78,13 +93,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "tahanan",
-      tableName: "tahanan",
+      modelName: "kunjunganKuasaHukum",
+      tableName: "kunjunganKuasaHukum",
       // timestamps: true,
       freezeTableName: true,
       // createdAt: "created_at",
       // updatedAt: "updated_at",
     }
   );
-  return tahanan;
+  return kunjunganKuasaHukum;
 };

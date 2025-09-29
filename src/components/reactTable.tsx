@@ -213,48 +213,6 @@ export default function ReactTable({ showData, search, action, modalData, dataFa
         }
     }
 
-    function AvatarCell({ row }: any) {
-        const [imageOke, setImageOke] = useState(false);
-
-        useEffect(() => {
-            let active = true;
-            if (row.original.img) {
-                fetch(row.original.img, { method: "HEAD" })
-                    .then((res) => {
-                        if (active) setImageOke(res.ok);
-                    })
-                    .catch(() => {
-                        if (active) setImageOke(false);
-                    });
-            }
-            return () => {
-                active = false;
-            };
-        }, [row.original.img]);
-
-        if (row.original.img && imageOke) {
-            return (
-                <a target="_blank" href={row.original.img}>
-                    <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">
-                        <Image
-                            width={50}
-                            height={50}
-                            src={row.original.img}
-                            className="object-cover rounded-full w-12 h-12"
-                            alt={row.original.nama ?? row.original.uuid}
-                        />
-                    </div>
-                </a>
-            );
-        }
-
-        return (
-            <div className="avatar-item avatar-lg d-flex align-items-center justify-content-center bg-primary-4 hp-bg-dark-primary text-primary hp-text-color-dark-0 rounded-circle">
-                {(row.original.nama ?? row.original.namaLengkap ?? row.original.username).substring(0, 2)}
-            </div>
-        );
-    }
-
     let array: any = [];
     if (data?.[0]) {
         Object.keys(data[0]).map((val: any, i: number) => {
@@ -295,6 +253,19 @@ export default function ReactTable({ showData, search, action, modalData, dataFa
                         cell: ({ row }: any) => {
                             if (row.original.suratIzin) {
                                 return <a target="_blank" href={row.original.suratIzin}><Button>Lihat</Button></a>
+                            } else {
+                                return '-'
+                            }
+                        },
+                        footer: (props: any) => props.column.id,
+                    })
+                } else if (val === 'suratKuasa') {
+                    array.push({
+                        id: 'suratKuasa',
+                        header: () => <div style={{ marginTop: "-56px" }}>{convertCamelCase(val)}</div>,
+                        cell: ({ row }: any) => {
+                            if (row.original.suratKuasa) {
+                                return <a target="_blank" href={row.original.suratKuasa}><Button>Lihat</Button></a>
                             } else {
                                 return '-'
                             }

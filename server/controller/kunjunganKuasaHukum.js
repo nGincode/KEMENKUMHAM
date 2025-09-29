@@ -179,11 +179,11 @@ const del = async (req, res) => {
   });
 };
 const get = async (req, res) => {
-  const { tanggal_akhir, tanggal_mulai, waktu } = req.query;
+  const { tanggal_akhir, tanggal_mulai } = req.query;
 
   let Kunjungan;
   if (tanggal_mulai && tanggal_akhir) {
-    Kunjungan = await kunjungan.findAll({
+    Kunjungan = await kunjunganKuasaHukum.findAll({
       where: {
         waktuKunjungan: {
           [Op.between]: [tanggal_mulai, tanggal_akhir],
@@ -201,7 +201,7 @@ const get = async (req, res) => {
       ],
     });
   } else {
-    Kunjungan = await kunjungan.findAll({
+    Kunjungan = await kunjunganKuasaHukum.findAll({
       order: [["id", "DESC"]],
       include: [
         {
@@ -218,7 +218,6 @@ const get = async (req, res) => {
   const data = Kunjungan.map((val) => {
     return {
       img: val.img,
-      waktu: waktu ? moment(val.updatedAt).format("HH:mm") : undefined,
       uuid: val.uuid,
       waktuKunjungan: moment(val.waktuKunjungan, "YYYY-MM-DD").format(
         "DD/MM/YYYY"
@@ -232,14 +231,12 @@ const get = async (req, res) => {
       perkara: val?.tahanan?.perkara ?? "-",
       nama: val.nama,
       noHp: val.noHp,
-      NIK: val.NIK,
-      jenisKelamin: val.jenisKelamin,
-      alamat: val.alamat,
-      pengikutDewasa: val.pengikutDewasa,
-      pengikutAnak: val.pengikutAnak,
+      KTA: val.KTA,
+      NIA: val.NIA,
+      lembaga: val.lembaga,
+      tujuan: val.tujuan,
+      suratKuasa: val.suratKuasa,
       antrian: val.antrian,
-      suratIzin: val.suratIzin,
-      hubungan: val.hubungan,
       selfi: val.selfi,
     };
   });
@@ -251,26 +248,15 @@ const get = async (req, res) => {
   });
 };
 const post = async (req, res) => {
-  const {
-    nama,
-    alamat,
-    tahanan_id,
-    noHp,
-    hubungan,
-    pengikut_dewasa,
-    pengikut_anak,
-    kelamin_val,
-    nik_ktp,
-    waktu,
-  } = req.body;
-  const { file, suratIzin, selfi } = req.files;
+  const { nama, tahanan_id, noHp, NIA, lembaga, tujuan, KTA, waktu } = req.body;
+  const { file, suratKuasa, selfi } = req.files;
   const { users_id, users_uuid } = req.user;
 
   const antrian =
     (await kunjunganKuasaHukum.count({ where: { waktuKunjungan: waktu } })) +
       (await kunjungan.count({ where: { waktuKunjungan: waktu } })) ?? 0;
 
-  const orangKunjungan = await kunjungan.findAll({
+  const orangKunjungan = await kunjunganKuasaHukum.findAll({
     where: {
       tahanan_id: tahanan_id,
       waktuKunjungan: waktu,
@@ -286,38 +272,6 @@ const post = async (req, res) => {
   }
 
   const uuid = Crypto.randomUUID();
-  // let type = null;
-  // if (img) {
-  //   type = img.split(";")[0].split("/")[1];
-  //   require("fs").writeFile(
-  //     __dirname +
-  //       `/../../public/upload/kunjungan/${moment().format(
-  //         "YYYY-MM-DD"
-  //       )}_${uuid}.${type}`,
-  //     new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
-  //     (err) => {
-  //       console.log(err);
-  //     }
-  //   );
-  // }
-
-  // let type2 = null;
-  // if (suratIzin) {
-  //   type2 = suratIzin.split(";")[0].split("/")[1];
-  //   require("fs").writeFile(
-  //     __dirname +
-  //       `/../../public/upload/kunjungan/${moment().format(
-  //         "YYYY-MM-DD"
-  //       )}_${uuid}_suratIzin.${type2}`,
-  //     new Buffer.from(
-  //       suratIzin.replace(/^data:image\/\w+;base64,/, ""),
-  //       "base64"
-  //     ),
-  //     (err) => {
-  //       console.log(err);
-  //     }
-  //   );
-  // }
   const fileUpload = async (files, type, dirname) => {
     if (files) {
       let nameFile = "/upload" + dirname + files.name;
@@ -327,55 +281,38 @@ const post = async (req, res) => {
       return null;
     }
   };
+  console.log(antrian);
 
   const data = {
     uuid: uuid,
     waktuKunjungan: waktu,
     user_id: users_id,
     nama: nama,
-    NIK: nik_ktp,
-    alamat: alamat,
-    jenisKelamin: kelamin_val,
-    pengikutDewasa: pengikut_dewasa,
-    pengikutAnak: pengikut_anak,
+    NIA,
+    lembaga,
+    tujuan,
+    KTA,
     tahanan_id: tahanan_id,
     noHp: noHp,
     antrian: antrian + 1,
     img: await fileUpload(
       file,
       "image",
-      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
     ),
     selfi: await fileUpload(
       selfi,
       "image",
-      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`
     ),
-    suratIzin: await fileUpload(
-      suratIzin,
+    suratKuasa: await fileUpload(
+      suratKuasa,
       "image",
-      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_suratKuasa`
     ),
-    hubungan: hubungan,
-    // img: img
-    //   ? "/upload/kunjungan/" +
-    //     moment().format("YYYY-MM-DD") +
-    //     "_" +
-    //     uuid +
-    //     "." +
-    //     type
-    //   : null,
-    // suratIzin: suratIzin
-    //   ? "/upload/kunjungan/" +
-    //     moment().format("YYYY-MM-DD") +
-    //     +"_" +
-    //     uuid +
-    //     "_suratIzin." +
-    //     type2
-    //   : null,
   };
 
-  await kunjungan.create(data);
+  await kunjunganKuasaHukum.create(data);
 
   res.json({
     status: 200,
@@ -385,7 +322,7 @@ const post = async (req, res) => {
 };
 const getId = async (req, res) => {
   const { uuid } = req.params;
-  const Kunjungan = await kunjungan.findOne({
+  const Kunjungan = await kunjunganKuasaHukum.findOne({
     where: { uuid: uuid },
   });
   if (!Kunjungan) {
