@@ -1,4 +1,4 @@
-const { tahanan, kunjunganKuasaHukum } = require("../models");
+const { tahanan, kunjungan_kuasa_hukum } = require("../models");
 const { Op } = require("sequelize");
 const Crypto = require("crypto");
 const moment = require("moment");
@@ -18,7 +18,7 @@ const putId = async (req, res) => {
     imgDel,
   } = req.body;
 
-  const Kunjungan = await kunjunganKuasaHukum.findOne({
+  const Kunjungan = await kunjungan_kuasa_hukum.findOne({
     where: { uuid: uuid },
   });
 
@@ -82,7 +82,7 @@ const del = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const { uuid } = req.params;
 
-  const Kunjungan = await kunjunganKuasaHukum.findOne({
+  const Kunjungan = await kunjungan_kuasa_hukum.findOne({
     where: { uuid: uuid },
   });
 
@@ -104,7 +104,7 @@ const get = async (req, res) => {
 
   let Kunjungan;
   if (tanggal_mulai && tanggal_akhir) {
-    Kunjungan = await kunjunganKuasaHukum.findAll({
+    Kunjungan = await kunjungan_kuasa_hukum.findAll({
       where: {
         waktuKunjungan: {
           [Op.between]: [tanggal_mulai, tanggal_akhir],
@@ -122,7 +122,7 @@ const get = async (req, res) => {
       ],
     });
   } else {
-    Kunjungan = await kunjunganKuasaHukum.findAll({
+    Kunjungan = await kunjungan_kuasa_hukum.findAll({
       order: [["id", "DESC"]],
       include: [
         {
@@ -174,11 +174,11 @@ const post = async (req, res) => {
   const { users_id, users_uuid } = req.user;
 
   const antrian =
-    (await kunjunganKuasaHukum.count({
+    (await kunjungan_kuasa_hukum.count({
       where: { waktuKunjungan: waktu },
     })) ?? 0;
 
-  const orangKunjungan = await kunjunganKuasaHukum.findAll({
+  const orangKunjungan = await kunjungan_kuasa_hukum.findAll({
     where: {
       tahanan_id: tahanan_id,
       waktuKunjungan: waktu,
@@ -237,7 +237,7 @@ const post = async (req, res) => {
     ),
   };
 
-  await kunjunganKuasaHukum.create(data);
+  await kunjungan_kuasa_hukum.create(data);
 
   res.json({
     status: 200,
@@ -247,7 +247,7 @@ const post = async (req, res) => {
 };
 const getId = async (req, res) => {
   const { uuid } = req.params;
-  const Kunjungan = await kunjunganKuasaHukum.findOne({
+  const Kunjungan = await kunjungan_kuasa_hukum.findOne({
     where: { uuid: uuid },
   });
   if (!Kunjungan) {

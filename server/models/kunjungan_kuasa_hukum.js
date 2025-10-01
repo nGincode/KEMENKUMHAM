@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class kunjunganKuasaHukum extends Model {
+  class kunjungan_kuasa_hukum extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of DataTypes lifecycle.
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  kunjunganKuasaHukum.init(
+  kunjungan_kuasa_hukum.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -89,13 +89,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "kunjungankuasahukum",
-      tableName: "kunjungankuasahukum",
+      modelName: "kunjungan_kuasa_hukum",
+      tableName: "kunjungan_kuasa_hukum",
       // timestamps: true,
       freezeTableName: true,
       // createdAt: "created_at",
       // updatedAt: "updated_at",
     }
   );
-  return kunjunganKuasaHukum;
+  return kunjungan_kuasa_hukum;
 };
