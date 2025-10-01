@@ -89,8 +89,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "kunjunganKuasaHukum",
-      tableName: "kunjunganKuasaHukum",
+      modelName: "kunjungankuasahukum",
+      tableName: "kunjungankuasahukum",
       // timestamps: true,
       freezeTableName: true,
       // createdAt: "created_at",
