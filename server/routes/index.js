@@ -9,7 +9,7 @@ const path = require("path");
 const user = require("./user");
 const kunjungan = require("./kunjungan");
 const pengajuan = require("./pengajuan");
-const kunjunganKuasaHukum = require("./kunjunganKuasaHukum");
+const kunjungan_kuasa_hukum = require("./kunjunganKuasaHukum");
 const titipan = require("./titipan");
 const tahanan = require("./tahanan");
 const auth = require("./auth");
@@ -31,7 +31,7 @@ router.use("/user", verifToken, user);
 router.use("/permission", verifToken, permission);
 router.use("/tahanan", verifToken, tahanan);
 router.use("/kunjungan", verifToken, kunjungan);
-router.use("/kunjunganKuasaHukum", verifToken, kunjunganKuasaHukum);
+router.use("/kunjunganKuasaHukum", verifToken, kunjungan_kuasa_hukum);
 router.use("/titipan", verifToken, titipan);
 router.use("/pengajuan", verifToken, pengajuan);
 router.use("/", auth);
@@ -80,10 +80,10 @@ router.post("/suratKunjungan", async (req, res) => {
 
 router.post("/suratKunjunganKuasaHukum", async (req, res) => {
   const { uuid, barcode } = req.body;
-  const { tahanan, kunjungan, kunjunganKuasaHukum } = require("../models");
+  const { tahanan, kunjungan, kunjungan_kuasa_hukum } = require("../models");
   const { Op, json } = require("sequelize");
   const moment = require("moment");
-  let Kunjungan = await kunjunganKuasaHukum.findOne({
+  let Kunjungan = await kunjungan_kuasa_hukum.findOne({
     where: {
       uuid: uuid,
     },
@@ -100,7 +100,7 @@ router.post("/suratKunjunganKuasaHukum", async (req, res) => {
   });
 
   if (!Kunjungan.antrian && !barcode) {
-    const antrian = await kunjunganKuasaHukum.findAll({
+    const antrian = await kunjungan_kuasa_hukum.findAll({
       where: {
         waktuKunjungan: Kunjungan.waktuKunjungan,
         antrian: {
@@ -364,15 +364,15 @@ router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
 
   const uuid = Crypto.randomUUID();
 
-  const { kunjunganKuasaHukum } = require("../models");
+  const { kunjungan_kuasa_hukum } = require("../models");
 
-  const totalWaktuKunj = await kunjunganKuasaHukum.findAll({
+  const totalWaktuKunj = await kunjungan_kuasa_hukum.findAll({
     where: {
       waktuKunjungan: moment().format("YYYY-MM-DD"),
     },
   });
 
-  const orangKunjungan = await kunjunganKuasaHukum.findAll({
+  const orangKunjungan = await kunjungan_kuasa_hukum.findAll({
     where: {
       tahanan_id: tahanan,
       waktuKunjungan: moment().format("YYYY-MM-DD"),
@@ -436,7 +436,7 @@ router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
     ),
   };
 
-  await kunjunganKuasaHukum.create(data);
+  await kunjungan_kuasa_hukum.create(data);
 
   res.json({
     status: 200,
