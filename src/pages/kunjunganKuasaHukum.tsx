@@ -341,16 +341,16 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                     <td>No</td>
                     <td>KTP</td>
                     <td>Selfi</td>
+                    <td>Surat Kuasa</td>
+                    <td>Surat Izin</td>
                     <td>Waktu Kunjungan</td>
                     <td>Nama</td>
-                    <td>NIK</td>
-                    <td>Jenis Kelamin</td>
-                    <td>No Hp</td>
-                    <td>Alamat</td>
-                    <td>Pengunjung</td>
+                    <td>NIA</td>
+                    <td>Asal</td>
+                    <td>Tujuan</td>
+                    <td>No Hp</td>  
                     <td>Nama Tahanan</td>
-                    <td>Perkara</td>
-                    <td>Hubungan</td>
+                    <td>Perkara</td> 
                 </tr>`;
             }
             htmlData += `
@@ -358,16 +358,16 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                 <td>${i + 1}</td>
                 <td><img src='${resizeExternalImage(val.img)}' height='50' /></td>
                 <td><img src='${resizeExternalImage(val.selfi)}' height='50' /></td>
+                <td><img src='${resizeExternalImage(val.suratKuasa)}' height='50' /></td>
+                <td><img src='${resizeExternalImage(val.suratIzin)}' height='50' /></td>
                 <td>${val.waktuKunjungan}</td>
                 <td>${val.nama}</td>
-                <td>${val.NIK}</td>
-                <td>${val.jenisKelamin}</td>
-                <td>${val.noHp}</td>
-                <td>${val.alamat}</td>
-                <td>${val.pengikutDewasa ? val.pengikutDewasa + ' Dewasa' : ''} ${val.pengikutAnak ? '& ' + val.pengikutAnak + ' Anak-Anak' : ''} </td>
-                <td>${val.tahanan}</td>
-                <td>${val.perkara}</td>
-                <td>${val.hubungan ?? '-'}</td>
+                <td>${val.NIA}</td>
+                <td>${val.lembaga}</td>
+                <td>${val.tujuan}</td>
+                <td>${val.noHp}</td>  
+                <td>${val.namaTahanan}</td>
+                <td>${val.perkara}</td> 
             </tr>
             `;
 
