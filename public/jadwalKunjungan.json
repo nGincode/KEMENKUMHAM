@@ -1,14 +1,14 @@
 [
   {
     "label": "Pidum",
-    "day": ["Monday", "Wednesday"]
+    "day": ["Monday", "Wednesday", "Saturday"]
   },
   {
     "label": "Narkoba",
-    "day": ["Tuesday", "Thursday"]
+    "day": ["Tuesday", "Thursday", "Saturday"]
   },
   {
     "label": "Tipikor",
-    "day": ["Tuesday", "Thursday"]
+    "day": ["Tuesday", "Thursday", "Saturday"]
   }
 ]
