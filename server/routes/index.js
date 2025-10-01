@@ -358,6 +358,93 @@ router.post("/kunjunganUsers", async (req, res) => {
   });
 });
 
+router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
+  const { nama, NIA, tahanan, noHp, lembaga, tujuan } = req.body;
+  const { suratKuasa, KTA, suratIzin, selfi } = req.files;
+
+  const uuid = Crypto.randomUUID();
+
+  const { kunjunganKuasaHukum } = require("../models");
+
+  const totalWaktuKunj = await kunjunganKuasaHukum.findAll({
+    where: {
+      waktuKunjungan: moment().format("YYYY-MM-DD"),
+    },
+  });
+
+  const orangKunjungan = await kunjunganKuasaHukum.findAll({
+    where: {
+      tahanan_id: tahanan,
+      waktuKunjungan: moment().format("YYYY-MM-DD"),
+    },
+  });
+
+  if (orangKunjungan.length) {
+    return res.json({
+      status: 400,
+      massage:
+        "Maaf, Warga Binaan ini telah di kunjungi hari ini,\nKembali lagi besok",
+    });
+  }
+
+  if (totalWaktuKunj.length > 200) {
+    return res.json({
+      status: 400,
+      massage: "Maaf, Waktu Kunjungan Melebihi Batas",
+    });
+  }
+
+  const fileUpload = (files, type, dirname) => {
+    if (files) {
+      let nameFile = "/upload" + dirname + files.name;
+      files.mv(require("path").join(__dirname, "../../public" + nameFile));
+      return nameFile;
+    } else {
+      return null;
+    }
+  };
+
+  const data = {
+    uuid: uuid,
+    waktuKunjungan: moment().format("YYYY-MM-DD"),
+    user_id: 0,
+    nama: nama,
+    NIA: NIA,
+    lembaga: lembaga,
+    tujuan: tujuan,
+    tahanan_id: tahanan,
+    noHp: noHp,
+    img: fileUpload(
+      KTA,
+      "image",
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_kta`
+    ),
+    selfi: fileUpload(
+      selfi,
+      "image",
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`
+    ),
+    suratIzin: fileUpload(
+      suratIzin,
+      "image",
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`
+    ),
+    suratKuasa: fileUpload(
+      suratKuasa,
+      "image",
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_suratKuasa`
+    ),
+  };
+
+  await kunjunganKuasaHukum.create(data);
+
+  res.json({
+    status: 200,
+    massage: "Berhasil dibuat",
+    data: data,
+  });
+});
+
 router.post("/pengajuanUsers", async (req, res) => {
   const {
     pilihan,

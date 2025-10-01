@@ -77,31 +77,56 @@ export default function Index({ userData, setuserData }: any) {
                 toast.error(error.response.data.massage);
             }
         } else {
-            if (value[0]) {
+            if (value?.[1] == 'kuasa_hukum') {
                 try {
                     await axios({
                         method: "GET",
-                        url: '/api/kunjungan/' + value[0],
+                        url: '/api/kunjunganKuasaHukum/' + value[0],
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
                     }).then((res: any) => {
                         if (res.data.data) {
                             window.open(
-                                url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                                url + '/suratIzinKuasaHukum.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
                                 '_blank'
                             );
                         } else {
-                            return toast.error('Kode Barcode Tidak Sesuai');
+                            // return toast.error('Kode Barcode Tidak Sesuai');
                         }
                     }).catch(error => {
-                        return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
+                        // return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
                     });
                 } catch (error: any) {
-                    toast.error(error.response.data.massage);
+                    // toast.error(error.response.data.massage);
                 }
             } else {
-                return toast.error('Kode Barcode Tidak Sesuai');
+                if (value[0]) {
+                    try {
+                        await axios({
+                            method: "GET",
+                            url: '/api/kunjungan/' + value[0],
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }).then((res: any) => {
+                            if (res.data.data) {
+                                window.open(
+                                    url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                                    '_blank'
+                                );
+                            } else {
+                                return toast.error('Kode Barcode Tidak Sesuai');
+                            }
+                        }).catch(error => {
+                            return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
+                        });
+                    } catch (error: any) {
+                        toast.error(error.response.data.massage);
+                    }
+                } else {
+                    return toast.error('Kode Barcode Tidak Sesuai');
+                }
             }
         }
     }
@@ -133,18 +158,18 @@ export default function Index({ userData, setuserData }: any) {
                 // toast.error(error.response.data.massage);
             }
         } else {
-            if (value[0]) {
+            if (value?.[1] == 'kuasa_hukum') {
                 try {
                     await axios({
                         method: "GET",
-                        url: '/api/kunjungan/' + value[0],
+                        url: '/api/kunjunganKuasaHukum/' + value[0],
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
                     }).then((res: any) => {
                         if (res.data.data) {
                             window.open(
-                                url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                                url + '/suratIzinKuasaHukum.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
                                 '_blank'
                             );
                         } else {
@@ -157,7 +182,32 @@ export default function Index({ userData, setuserData }: any) {
                     // toast.error(error.response.data.massage);
                 }
             } else {
-                // return toast.error('Kode Barcode Tidak Sesuai');
+                if (value[0]) {
+                    try {
+                        await axios({
+                            method: "GET",
+                            url: '/api/kunjungan/' + value[0],
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }).then((res: any) => {
+                            if (res.data.data) {
+                                window.open(
+                                    url + '/suratIzin.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                                    '_blank'
+                                );
+                            } else {
+                                // return toast.error('Kode Barcode Tidak Sesuai');
+                            }
+                        }).catch(error => {
+                            // return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
+                        });
+                    } catch (error: any) {
+                        // toast.error(error.response.data.massage);
+                    }
+                } else {
+                    // return toast.error('Kode Barcode Tidak Sesuai');
+                }
             }
         }
 
