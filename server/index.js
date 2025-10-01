@@ -26,7 +26,11 @@ app.prepare().then(() => {
   server.use(cookieParser());
   server.use(
     cors({
-      origin: ["https://easyrubero.com", "https://app.easyrubero.com"],
+      origin: [
+        "https://easyrubero.com",
+        "https://app.easyrubero.com",
+        "http://lapas",
+      ],
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
       allowedHeaders: [
         "Content-Type",
