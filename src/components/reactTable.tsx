@@ -216,7 +216,7 @@ export default function ReactTable({ showData, search, action, modalData, dataFa
     let array: any = [];
     if (data?.[0]) {
         Object.keys(data[0]).map((val: any, i: number) => {
-            if (val == 'uuid' || val == 'addressJson' || val == 'itemJson' || val == 'id' || val == 'tahanan_id') { } else {
+            if (val == 'uuid' || val == 'addressJson' || val == 'itemJson' || val == 'id' || val == 'tahanan_id' || val == 'historyKunjungan') { } else {
                 if (val === 'img') {
                     array.push({
                         id: showData?.includes('img') ? 'img2' : 'img',
@@ -762,6 +762,8 @@ export default function ReactTable({ showData, search, action, modalData, dataFa
         </div>)
     }
 
+    console.log(dataEdit);
+
 
     if (data.length) {
         ($("#nophoneEdit") as any).mask("(+62) 000-0000-0000");
@@ -1129,7 +1131,45 @@ export default function ReactTable({ showData, search, action, modalData, dataFa
                                                                                                     defaultValue={userCompany}
                                                                                                 />
                                                                                             </div>
-                                                                                            : null
+                                                                                            : val.type === 'history_kunjungan' ?
+                                                                                                <div className="w-full mt-2">
+                                                                                                    <div className="font-bold border-b-2 border-gray-300">Kunjungan History</div>
+                                                                                                    <table className="w-full border border-gray-200 text-sm">
+                                                                                                        <thead className="bg-gray-100">
+                                                                                                            <tr>
+                                                                                                                <th className="border border-gray-200 px-3 py-2 text-left w-6">No</th>
+                                                                                                                <th className="border border-gray-200 px-3 py-2 text-left">Waktu Kunjungan</th>
+                                                                                                                <th className="border border-gray-200 px-3 py-2 text-left">Nama Pengunjung</th>
+                                                                                                                <th className="border border-gray-200 px-3 py-2 text-left">Kelompok Pengunjung</th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            {dataEdit?.historyKunjungan?.length > 0 ? (
+                                                                                                                dataEdit.historyKunjungan.map((item: any, i: number) => (
+                                                                                                                    <tr key={i}>
+                                                                                                                        <td className="border border-gray-200 px-3 py-2">{i + 1}</td>
+                                                                                                                        <td className="border border-gray-200 px-3 py-2">
+                                                                                                                            {moment(item.waktuKunjungan).format("DD MMM YYYY")}{" "}
+                                                                                                                            {moment(item.updatedAt).format("HH:mm")}
+                                                                                                                        </td>
+                                                                                                                        <td className="border border-gray-200 px-3 py-2">{item.nama}</td>
+                                                                                                                        <td className="border border-gray-200 px-3 py-2">
+                                                                                                                            {item?.NIA ? "Kuasa Hukum" : "Umum"}
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                ))
+                                                                                                            ) : (
+                                                                                                                <tr>
+                                                                                                                    <td colSpan={4} className="border border-gray-200 px-3 py-4 text-center text-gray-500">
+                                                                                                                        Tidak ada data ditemukan
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            )}
+                                                                                                        </tbody>
+                                                                                                    </table>
+
+                                                                                                </div>
+                                                                                                : null
                                                     }</div>
                                             })}
 

@@ -353,6 +353,7 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                     <td>Perkara</td> 
                 </tr>`;
             }
+
             htmlData += `
             <tr>
                 <td>${i + 1}</td>
@@ -366,7 +367,7 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                 <td>${val.lembaga}</td>
                 <td>${val.tujuan}</td>
                 <td>${val.noHp}</td>  
-                <td>${val.namaTahanan}</td>
+                <td>${val.tahanan}</td>
                 <td>${val.perkara}</td> 
             </tr>
             `;

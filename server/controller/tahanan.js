@@ -1,6 +1,11 @@
 const jwt = require("jsonwebtoken");
 const { hash, verify } = require("node-php-password");
-const { User, tahanan, kunjungan } = require("../models");
+const {
+  User,
+  tahanan,
+  kunjungan,
+  kunjungan_kuasa_hukum,
+} = require("../models");
 const { Op } = require("sequelize");
 const Crypto = require("crypto");
 const numeral = require("numeral");
@@ -214,11 +219,29 @@ const del = async (req, res) => {
 const get = async (req, res) => {
   const { users_id, users_uuid, email, username, permission } = req.user;
   const tahananDb = await tahanan.findAll({
+    include: [
+      {
+        model: kunjungan,
+        as: "kunjungan",
+        limit: 3,
+        separate: true,
+        order: [["waktuKunjungan", "DESC"]],
+      },
+      {
+        model: kunjungan_kuasa_hukum,
+        as: "kunjunganKuasaHukum",
+        limit: 3,
+        separate: true,
+        order: [["waktuKunjungan", "DESC"]],
+      },
+    ],
     order: [
       ["id", "DESC"],
       ["statusTahanan", "DESC"],
     ],
   });
+
+  console.log(tahananDb);
 
   const data = tahananDb.map((val) => {
     return {
@@ -274,6 +297,9 @@ const get = async (req, res) => {
             : "Tanggal Tidak Valid"
           : "-",
       penampilan: val.penampilan,
+      historyKunjungan: [...val.kunjungan, ...val.kunjunganKuasaHukum].sort(
+        (a, b) => new Date(b.waktuKunjungan) - new Date(a.waktuKunjungan)
+      ),
     };
   });
 

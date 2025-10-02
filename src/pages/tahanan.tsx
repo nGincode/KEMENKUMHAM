@@ -179,6 +179,11 @@ export default function Tahanan({ userData, setuserData }: any) {
                 multi: true,
                 required: true
             },
+            {
+                name: 'history_kunjungan',
+                type: 'history_kunjungan',
+                full: true
+            }
         ]
     const convertFileToBase64 = (file: any) => {
         return new Promise((resolve, reject) => {
@@ -233,11 +238,6 @@ export default function Tahanan({ userData, setuserData }: any) {
 
 
     };
-
-    const byNumeral = (val: any) => {
-        let value = numeral(val.target.value).format('0,0');
-        (document.getElementById(val.target.id) as HTMLInputElement).value = value;
-    }
 
     const resizeExternalImage = (ImgtoBeResized: any) => {
         return `https://images.weserv.nl/?url=https://app.easyrubero.com${ImgtoBeResized}&q=60`;
@@ -542,7 +542,6 @@ export default function Tahanan({ userData, setuserData }: any) {
                                 reload={dataCreate}
                                 action={{
                                     userData: userData,
-                                    kunjungan: true,
                                     delete: pagePermission.find((val: any) => val == "delete") ? URLAPI : null,
                                     edit: pagePermission.find((val: any) => val == "edit") ? URLAPI : null
                                 }}

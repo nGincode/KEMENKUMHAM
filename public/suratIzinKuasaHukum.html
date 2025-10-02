@@ -35,8 +35,15 @@
       </div>
       <img src="img/logo1.jpeg" style="height: 60px; margin-left: 110px" />
     </div>
-    <div style="text-align: center; font-weight: bolder; font-size: larger">
-      SURAT IZIN KUNJUNGAN
+    <div
+      style="
+        margin: 20px 0;
+        font-weight: bolder;
+        font-size: 18px;
+        text-decoration: underline;
+      "
+    >
+      SURAT IZIN KUNJUNGAN KUASA HUKUM
     </div>
     <div
       style="
@@ -73,11 +80,59 @@
       <div style="margin-bottom: 20px; text-transform: uppercase" id="tujuan">
         TUJUAN : -
       </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="foto_kta">
-        FOTO KTA : -
-      </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="selfi">
-        FOTO SELFI : -
+
+      <!-- Foto KTA & Selfi -->
+      <div
+        style="
+          display: flex;
+          justify-content: space-evenly;
+          margin: 25px 0;
+          text-align: center;
+        "
+      >
+        <div>
+          <div
+            style="
+              width: 160px;
+              height: 210px;
+              border: 2px solid #555;
+              border-radius: 8px;
+              margin: auto;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: white;
+              font-size: 12px;
+              font-weight: bold;
+            "
+            id="foto_kta"
+          >
+            FOTO KTA
+          </div>
+          <div style="margin-top: 8px; font-weight: bold">Foto KTA</div>
+        </div>
+
+        <div>
+          <div
+            style="
+              width: 160px;
+              height: 210px;
+              border: 2px solid #555;
+              border-radius: 8px;
+              margin: auto;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: white;
+              font-size: 12px;
+              font-weight: bold;
+            "
+            id="selfi"
+          >
+            FOTO SELFI
+          </div>
+          <div style="margin-top: 8px; font-weight: bold">Foto Selfi</div>
+        </div>
       </div>
       <div
         style="
@@ -205,21 +260,19 @@
           "TUJUAN : " + data.data.tujuan;
         if (data.data.img) {
           document.getElementById("foto_kta").innerHTML =
-            "FOTO KTP : <img style='height:100px' src='" +
-            resizeExternalImage(data.data.img) +
+            " <img style='height:200px;width:150px' src='" +
+            data.data.img +
             "' />";
         } else {
-          document.getElementById("foto_ktp").innerHTML =
-            "FOTO KTP : Tidak ditemukan";
+          document.getElementById("foto_ktp").innerHTML = "Tidak ditemukan";
         }
         if (data.data.selfi) {
           document.getElementById("selfi").innerHTML =
-            "FOTO SELFI : <img style='height:100px' src='" +
-            resizeExternalImage(data.data.selfi) +
+            "<img style='height:200px;width:150px' src='" +
+            data.data.selfi +
             "' />";
         } else {
-          document.getElementById("selfi").innerHTML =
-            "FOTO SELFI : Tidak ditemukan";
+          document.getElementById("selfi").innerHTML = "Tidak ditemukan";
         }
 
         document.getElementById("nama_tahanan").innerHTML =
@@ -246,7 +299,10 @@
 
           document.body.innerHTML = originalContents;
         }
-        printDiv("body");
+
+        setTimeout(() => {
+          printDiv("body");
+        }, 500);
       } else {
         document.getElementById("body").innerHTML =
           "<div>Tidak ditemukan data</div>";
