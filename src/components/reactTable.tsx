@@ -762,7 +762,6 @@ export default function ReactTable({ showData, search, action, modalData, dataFa
         </div>)
     }
 
-    console.log(dataEdit);
 
 
     if (data.length) {
