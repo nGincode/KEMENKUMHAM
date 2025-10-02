@@ -241,8 +241,6 @@ const get = async (req, res) => {
     ],
   });
 
-  console.log(tahananDb);
-
   const data = tahananDb.map((val) => {
     return {
       id: val.id,
