@@ -10,6 +10,7 @@ const user = require("./user");
 const kunjungan = require("./kunjungan");
 const pengajuan = require("./pengajuan");
 const kunjungan_kuasa_hukum = require("./kunjunganKuasaHukum");
+const jadwal = require("./jadwal");
 const titipan = require("./titipan");
 const tahanan = require("./tahanan");
 const auth = require("./auth");
@@ -34,6 +35,7 @@ router.use("/kunjungan", verifToken, kunjungan);
 router.use("/kunjunganKuasaHukum", verifToken, kunjungan_kuasa_hukum);
 router.use("/titipan", verifToken, titipan);
 router.use("/pengajuan", verifToken, pengajuan);
+router.use("/jadwal", jadwal);
 router.use("/", auth);
 
 router.post("/suratKunjungan", async (req, res) => {

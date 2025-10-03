@@ -10,6 +10,48 @@ import { Button } from "@material-tailwind/react";
 
 export default function Index({ userData, setuserData }: any) {
     const [onsliderData, setsliderData] = useState([]);
+    const [jadwal, setJadwal] = useState([
+        {
+            id: 1,
+            menu: "kunjungan",
+            label: "Pidum",
+            day: ["Monday", "Wednesday", "Saturday"],
+            time_start: "00:00:00",
+            time_end: "23:59:00",
+        },
+        {
+            id: 2,
+            menu: "kunjungan",
+            label: "Narkoba",
+            day: ["Tuesday", "Thursday", "Saturday"],
+            time_start: "00:00:00",
+            time_end: "23:59:00",
+        },
+        {
+            id: 3,
+            menu: "kunjungan",
+            label: "Tipikor",
+            day: ["Tuesday", "Thursday", "Saturday"],
+            time_start: "00:00:00",
+            time_end: "23:59:00",
+        },
+        {
+            id: 4,
+            menu: "kunjungan_kuasa_hukum",
+            label: "",
+            day: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            time_start: "00:00:00",
+            time_end: "23:59:00",
+        },
+        {
+            id: 5,
+            menu: "titipan",
+            label: "",
+            day: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            time_start: "12:00:00",
+            time_end: "17:59:00",
+        },
+    ]);
 
     useEffect(() => {
         (document as any).title = 'Dashboard';
@@ -34,18 +76,34 @@ export default function Index({ userData, setuserData }: any) {
             .addClass("mb-2");
 
 
-        const sliderJson = async () => {
-            axios.post('api/slider', { get: true })
-                .then((res: any) => {
-                    if (res?.data?.error) {
-                        return toast.error(res.data.error);
-                    }
+        const apiJson = async () => {
+            try {
+                axios.post('api/slider', { get: true })
+                    .then((res: any) => {
+                        if (res?.data?.error) {
+                            return toast.error(res.data.error);
+                        }
 
-                    setsliderData(res.data)
-                })
+                        setsliderData(res.data)
+                    })
+
+
+                axios.get('api/jadwal')
+                    .then((res: any) => {
+                        if (res?.data?.error) {
+                            return toast.error(res.data.error);
+                        }
+
+                        setJadwal(res.data.data.map((item: any) => ({ ...item, day: JSON.parse(item.day) })))
+
+                    })
+
+            } catch (error: any) {
+                return toast.error(error?.response?.data?.message || 'Gagal mengambil data');
+            }
 
         }
-        sliderJson()
+        apiJson()
 
     }, []);
 
@@ -316,6 +374,69 @@ export default function Index({ userData, setuserData }: any) {
         }
     };
 
+
+
+    const allDays = [
+        { en: "Monday", id: "Senin" },
+        { en: "Tuesday", id: "Selasa" },
+        { en: "Wednesday", id: "Rabu" },
+        { en: "Thursday", id: "Kamis" },
+        { en: "Friday", id: "Jumat" },
+        { en: "Saturday", id: "Sabtu" },
+        { en: "Sunday", id: "Minggu" },
+    ];
+
+
+    const handleDayChange = (id: number, day: string) => {
+        setJadwal((prev) =>
+            prev.map((item) =>
+                item.id === id
+                    ? {
+                        ...item,
+                        day: item.day.includes(day)
+                            ? item.day.filter((d) => d !== day)
+                            : [...item.day, day],
+                    }
+                    : item
+            )
+        );
+    };
+
+    const handleTimeChange = (id: number, field: string, value: string) => {
+        setJadwal((prev) =>
+            prev.map((item) =>
+                item.id === id ? { ...item, [field]: value } : item
+            )
+        );
+    };
+
+    const handleSubmitJadwal = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        console.log("Data yang disimpan:", jadwal);
+
+        try {
+            const res = await fetch("/api/jadwal", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(jadwal),
+            });
+
+            if (!res.ok) throw new Error("Gagal simpan data");
+
+            toast.success("Jadwal berhasil disimpan!");
+        } catch (err) {
+            console.error(err);
+            toast.error("Terjadi kesalahan saat menyimpan jadwal");
+        }
+    };
+
+    const groupByMenu = jadwal.reduce((acc: any, item) => {
+        if (!acc[item.menu]) acc[item.menu] = [];
+        acc[item.menu].push(item);
+        return acc;
+    }, {});
+
     return (
         <div className="row mb-32 g-32">
 
@@ -361,6 +482,82 @@ export default function Index({ userData, setuserData }: any) {
                     <center><Button type="submit">Simpan</Button></center>
                 </form>
             </div>
+
+            <form
+                onSubmit={handleSubmitJadwal}
+                className="space-y-8 bg-white p-20 rounded shadow-md"
+            >
+                <h2 className="text-xl font-bold text-center mb-6">
+                    Edit Jadwal Kunjungan
+                </h2>
+
+                {Object.keys(groupByMenu).map((menu) => (
+                    <div key={menu} className="space-y-6">
+                        {/* Judul Menu */}
+                        <h3 className="text-lg font-bold text-blue-700 uppercase border-b pb-1">
+                            {menu.replaceAll("_", " ")}
+                        </h3>
+
+                        {groupByMenu[menu].map((item: any) => (
+                            <div key={item.id} className="border rounded-lg p-4">
+                                <h4 className="font-semibold mb-2">{item.label}</h4>
+
+                                {/* Hari */}
+                                <div className="mb-2">
+                                    <p className="text-sm font-medium mb-1">Hari:</p>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                        {allDays.map((day) => (
+                                            <label key={day.en} className="flex items-center space-x-2">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={item.day.includes(day.en)}
+                                                    onChange={() => handleDayChange(item.id, day.en)}
+                                                />
+                                                <span className="text-sm">{day.id}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Jam */}
+                                <div className="flex gap-4 mt-3">
+                                    <div>
+                                        <label className="block text-sm font-medium">Jam Mulai</label>
+                                        <input
+                                            type="time"
+                                            value={item.time_start}
+                                            onChange={(e) =>
+                                                handleTimeChange(item.id, "time_start", e.target.value)
+                                            }
+                                            className="border rounded p-1"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium">Jam Selesai</label>
+                                        <input
+                                            type="time"
+                                            value={item.time_end}
+                                            onChange={(e) =>
+                                                handleTimeChange(item.id, "time_end", e.target.value)
+                                            }
+                                            className="border rounded p-1"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ))}
+
+                <div className="text-center">
+                    <button
+                        type="submit"
+                        className="bg-blue-600 text-white px-4 py-2 rounded"
+                    >
+                        Simpan
+                    </button>
+                </div>
+            </form>
         </div>
     )
 }
