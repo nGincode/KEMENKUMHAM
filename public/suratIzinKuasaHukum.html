@@ -286,8 +286,19 @@
           "KAMAR : " + data.data.tahanan.kamar;
 
         const d = new Date(data.data.waktuKunjungan);
+
+        // Ambil nama hari dalam bahasa Indonesia
+        const hari = d.toLocaleDateString("id-ID", { weekday: "long" });
+
+        // Format tanggal (YYYY-MM-DD → dd/mm/yyyy biar lebih enak dibaca)
+        const tanggal = d.toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+
         document.getElementById("hari").innerHTML =
-          "HARI/TANGGAL : " + data.data.waktuKunjungan.slice(0, 10);
+          "HARI/TANGGAL : " + hari.toUpperCase() + " / " + tanggal;
 
         function printDiv(divId) {
           var printContents = document.getElementById(divId).innerHTML;
