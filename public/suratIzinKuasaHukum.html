@@ -299,14 +299,18 @@
 
         const ud = new Date(data.data.updatedAt);
 
-        const jam = ud.toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false, // format 24 jam
-        });
+        const jam = String(ud.getHours()).padStart(2, "0");
+        const menit = String(ud.getMinutes()).padStart(2, "0");
 
         document.getElementById("hari").innerHTML =
-          "HARI/TANGGAL : " + hari.toUpperCase() + " / " + tanggal + " " + jam;
+          "HARI/TANGGAL : " +
+          hari.toUpperCase() +
+          "/" +
+          tanggal +
+          " " +
+          jam +
+          ":" +
+          menit;
 
         function printDiv(divId) {
           var printContents = document.getElementById(divId).innerHTML;
