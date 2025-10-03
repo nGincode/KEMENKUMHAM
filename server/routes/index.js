@@ -374,21 +374,6 @@ router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
     },
   });
 
-  const orangKunjungan = await kunjungan_kuasa_hukum.findAll({
-    where: {
-      tahanan_id: tahanan,
-      waktuKunjungan: moment().format("YYYY-MM-DD"),
-    },
-  });
-
-  if (orangKunjungan.length) {
-    return res.json({
-      status: 400,
-      massage:
-        "Maaf, Warga Binaan ini telah di kunjungi hari ini,\nKembali lagi besok",
-    });
-  }
-
   if (totalWaktuKunj.length > 200) {
     return res.json({
       status: 400,
