@@ -3,7 +3,8 @@ module.exports = {
     {
       name: "app.easyrubero.com",
       script: "server/index.js",
-      exec_mode: "fork",
+      exec_mode: "cluster",
+      instances: "max",
       autorestart: true,
       watch: false,
       version: "1.0.0",
