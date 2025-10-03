@@ -297,8 +297,16 @@
           year: "numeric",
         });
 
+        const ud = new Date(data.data.updatedAt);
+
+        const jam = ud.toLocaleTimeString("id-ID", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false, // format 24 jam
+        });
+
         document.getElementById("hari").innerHTML =
-          "HARI/TANGGAL : " + hari.toUpperCase() + " / " + tanggal;
+          "HARI/TANGGAL : " + hari.toUpperCase() + " / " + tanggal + " " + jam;
 
         function printDiv(divId) {
           var printContents = document.getElementById(divId).innerHTML;
