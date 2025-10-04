@@ -9,6 +9,7 @@ const logger = require("morgan");
 const path = require("path");
 const dotenv = require("dotenv").config();
 const bodyParser = require("body-parser");
+require("./../cron/cron.js");
 
 const dev = !process.env.DEV ? false : true;
 const hostname = dotenv.parsed.HOSTNAME;
