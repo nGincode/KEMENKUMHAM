@@ -9,7 +9,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       version: version,
-      max_memory_restart: "300M",
+      max_memory_restart: "200M",
       error_file: "/var/log/pm2/app.easyrubero.com-error.log",
       out_file: "/var/log/pm2/app.easyrubero.com-out.log",
       merge_logs: true,
