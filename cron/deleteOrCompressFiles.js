@@ -51,16 +51,16 @@ const processFiles = async () => {
       const ageInDays = (now - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
 
       try {
-        if (ageInDays > 100) {
+        if (ageInDays > 50) {
           // Hapus file
           await fs.unlink(filePath);
           console.log(`Deleted ${file} (age ${Math.floor(ageInDays)} days)`);
           writeLog(`Deleted ${file} from ${directoryPath}`);
-        } else if (ageInDays > 30) {
+        } else if (ageInDays > 10) {
           // Compress foto
           const tempPath = filePath + ".tmp.jpg";
           await sharp(filePath)
-            .resize({ width: 500 })
+            .resize({ width: 300 })
             .jpeg({ quality: 10 })
             .toFile(tempPath);
           await fs.move(tempPath, filePath, { overwrite: true });
