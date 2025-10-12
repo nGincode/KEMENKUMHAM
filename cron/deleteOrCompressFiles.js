@@ -51,7 +51,7 @@ const processFiles = async () => {
       const ageInDays = (now - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
 
       try {
-        if (ageInDays > 100) {
+        if (ageInDays > 50) {
           // Hapus file
           await fs.unlink(filePath);
           console.log(`Deleted ${file} (age ${Math.floor(ageInDays)} days)`);
