@@ -36,8 +36,8 @@ const safeRun = async () => {
   }
 };
 
-// Jalankan cron tiap hari jam 00:00 WIB
-cron.schedule("0 0 * * *", safeRun, {
+// Jalankan cron tiap hari jam 03:00 WIB
+cron.schedule("0 3 * * *", safeRun, {
   timezone: "Asia/Jakarta",
 });
 
