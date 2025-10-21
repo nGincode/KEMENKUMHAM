@@ -63,14 +63,14 @@ async function processFiles() {
             const ageInDays =
               (now - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
 
-            if (ageInDays > 50) {
+            if (ageInDays > 30) {
               await fs.unlink(filePath);
               console.log(`Deleted ${file} (${Math.floor(ageInDays)} days)`);
               await writeLog(logFile, `Deleted ${file} from ${directoryPath}`);
             } else if (ageInDays > 10) {
               const data = await sharp(filePath)
-                .resize({ width: 200 })
-                .jpeg({ quality: 30 })
+                .resize({ width: 100 })
+                .jpeg({ quality: 10 })
                 .toBuffer();
               await fs.writeFile(filePath, data);
               console.log(`Compressed ${file} (${Math.floor(ageInDays)} days)`);
@@ -80,6 +80,7 @@ async function processFiles() {
               );
             } else {
               console.log(`Keep ${file} (${Math.floor(ageInDays)} days)`);
+              await writeLog(logFile, `Keep ${file} from ${directoryPath}`);
             }
           } catch (err) {
             console.error(`Error processing ${file}:`, err.message);
