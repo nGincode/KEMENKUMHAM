@@ -30,49 +30,6 @@
     </div>
     <hr style="border: 1px solid black; margin: 0 0 20px 0" />
 
-    <!-- HEADER SURAT -->
-    <table
-      style="
-        width: 100%;
-        font-size: 14px;
-        margin-bottom: 10px;
-        border-collapse: collapse;
-      "
-    >
-      <tr>
-        <!-- KIRI -->
-        <td style="width: 60%; vertical-align: top">
-          <table style="border-collapse: collapse; font-size: 14px">
-            <tr>
-              <td style="width: 80px">Nomor</td>
-              <td style="width: 10px">:</td>
-              <td>WP.8.PAS.PAS8.KU.01.02 - 62</td>
-            </tr>
-            <tr>
-              <td>Sifat</td>
-              <td>:</td>
-              <td>Segera</td>
-            </tr>
-            <tr>
-              <td>Lampiran</td>
-              <td>:</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>Perihal</td>
-              <td>:</td>
-              <td>-</td>
-            </tr>
-          </table>
-        </td>
-
-        <!-- KANAN -->
-        <td style="text-align: right; vertical-align: top">
-          <span id="tanggal"></span>
-        </td>
-      </tr>
-    </table>
-
     <!-- ISI SURAT -->
     <div style="text-align: justify; font-size: 14px; margin-top: 30px">
       <p>
@@ -110,27 +67,6 @@
       >, dan tunjukkan kepada petugas loket Rutan Bengkulu saat kedatangan.
     </div>
     <script>
-      const tanggalElem = document.getElementById("tanggal");
-      const bulan = [
-        "Januari",
-        "Februari",
-        "Maret",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Agustus",
-        "September",
-        "Oktober",
-        "November",
-        "Desember",
-      ];
-      const now = new Date();
-      const hari = now.getDate();
-      const bulanNama = bulan[now.getMonth()];
-      const tahun = now.getFullYear();
-      tanggalElem.textContent = `Bengkulu, ${hari} ${bulanNama} ${tahun}`;
-
       function GetURLParameter(sParam) {
         var sPageURL = window.location.search.substring(1);
         var sURLVariables = sPageURL.split("&");

@@ -42,38 +42,6 @@
       SURAT IZIN TITIPAN BARANG
     </div>
 
-    <!-- HEADER SURAT -->
-    <div style="display: flex; justify-content: space-between">
-      <table
-        style="font-size: 14px; border-collapse: collapse; line-height: 1.8"
-      >
-        <tr>
-          <td style="width: 80px">Nomor</td>
-          <td style="width: 10px">:</td>
-          <td>WP.8.PAS.PAS8.KU.01.02 - 62</td>
-        </tr>
-        <tr>
-          <td>Sifat</td>
-          <td>:</td>
-          <td>Segera</td>
-        </tr>
-        <tr>
-          <td>Lampiran</td>
-          <td>:</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>Perihal</td>
-          <td>:</td>
-          <td>-</td>
-        </tr>
-      </table>
-
-      <div style="text-align: right; vertical-align: top">
-        <span id="tanggalKOP"></span>
-      </div>
-    </div>
-
     <!-- ISI SURAT -->
     <div style="text-align: left; font-size: 14px; line-height: 1.8">
       <div style="font-weight: bold; margin-top: 20px">DATA PENGUNJUNG</div>
@@ -144,28 +112,6 @@
     </div>
 
     <script>
-      // Buat tanggal otomatis
-      const bulan = [
-        "Januari",
-        "Februari",
-        "Maret",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Agustus",
-        "September",
-        "Oktober",
-        "November",
-        "Desember",
-      ];
-      const now = new Date();
-      document.getElementById(
-        "tanggalKOP"
-      ).textContent = `Bengkulu, ${now.getDate()} ${
-        bulan[now.getMonth()]
-      } ${now.getFullYear()}`;
-
       // Fungsi ambil data dari URL dan API (seperti sebelumnya)
       const resizeExternalImage = (img) =>
         `https://images.weserv.nl/?url=https://app.easyrubero.com${img}&q=60`;
