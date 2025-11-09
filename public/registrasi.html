@@ -1,94 +1,176 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registrasi</title>
+    <title>Registrasi Surat Kunjungan</title>
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
   </head>
-  <body style="width: 650px; text-align: center" id="body">
-    <div
+  <body
+    style="width: 700px; margin: auto; font-family: 'Times New Roman', serif"
+    id="body"
+  >
+    <!-- KOP SURAT -->
+    <div style="display: flex; align-items: center; margin-bottom: 5px">
+      <img src="img/logo3.png" style="height: 80px; margin-right: 15px" />
+      <div style="text-align: center; flex: 1">
+        <div style="font-weight: bold">
+          KEMENTERIAN HUKUM DAN HAK ASASI MANUSIA REPUBLIK INDONESIA<br />
+          DIREKTORAT JENDERAL PEMASYARAKATAN<br />
+          KANTOR WILAYAH BENGKULU<br />
+          RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
+        </div>
+        <div style="font-size: 12px">
+          Jl. Brigjen Berlian No.556 Bengkulu, Kel. Malabero, Kec. Teluk Segara,
+          Kota Bengkulu<br />
+          Laman : rutanbengkulu.kemenkumham.go.id, email :
+          rutanbengkulu@gmail.com
+        </div>
+      </div>
+    </div>
+    <hr style="border: 1px solid black; margin: 0 0 20px 0" />
+
+    <!-- HEADER SURAT -->
+    <table
       style="
-        display: flex;
         width: 100%;
-        background: #4f4326;
-        color: white;
-        padding: 10px;
-        align-items: center;
-        justify-content: center;
-        border: solid black 2px;
-        font-weight: bolder;
-        margin-bottom: 20px;
+        font-size: 14px;
+        margin-bottom: 10px;
+        border-collapse: collapse;
       "
     >
-      <img src="img/logo2.jpeg" style="height: 60px; margin-right: 110px" />
+      <tr>
+        <!-- KIRI -->
+        <td style="width: 60%; vertical-align: top">
+          <table style="border-collapse: collapse; font-size: 14px">
+            <tr>
+              <td style="width: 80px">Nomor</td>
+              <td style="width: 10px">:</td>
+              <td>WP.8.PAS.PAS8.KU.01.02 - 62</td>
+            </tr>
+            <tr>
+              <td>Sifat</td>
+              <td>:</td>
+              <td>Segera</td>
+            </tr>
+            <tr>
+              <td>Lampiran</td>
+              <td>:</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Perihal</td>
+              <td>:</td>
+              <td>-</td>
+            </tr>
+          </table>
+        </td>
+
+        <!-- KANAN -->
+        <td style="text-align: right; vertical-align: top">
+          <span id="tanggal"></span>
+        </td>
+      </tr>
+    </table>
+
+    <!-- ISI SURAT -->
+    <div style="text-align: justify; font-size: 14px; margin-top: 30px">
+      <p>
+        Terima kasih telah melakukan registrasi kunjungan online di Rumah
+        Tahanan Negara Kelas IIB Bengkulu. Mohon untuk menunjukkan kode QR
+        berikut kepada petugas loket saat kedatangan.
+      </p>
+    </div>
+
+    <!-- BARCODE -->
+    <div
+      style="
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+        text-align: center;
+      "
+    >
       <div>
-        KEMENTRIAN HUKUM DAN HAM RI<br />
-        KANTOR WILAYAH BENGKULU<br />
-        RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
+        <div id="barcode" style="display: inline-block"></div>
       </div>
-      <img src="img/logo1.jpeg" style="height: 60px; margin-left: 110px" />
     </div>
-    <div style="text-align: center; font-weight: bolder; font-size: larger">
-      Terima Kasih <br />
-      Sudah Mendaftar Kunjungan Online Rutan <br />
-      Malabero Bengkulu
-    </div>
-    <br />
-    <div style="text-align: center">
-      Barcode Registrasion
-      <br />
-      <br />
-      <div id="barcode" style="display: flex; justify-content: center"></div>
-      <div id="uuid" style="margin-top: 10px"></div>
-    </div>
-    <div style="text-align: left">
-      Note :<br />
-      Silahkan disimpan Barcode Anda dengan screenshoot/<a
-        style="color: blue; text-decoration: underline; cursor: pointer"
+
+    <!-- NOTE -->
+    <div style="font-size: 12px; margin-top: 40px">
+      <b>Catatan:</b><br />
+      Simpan barcode ini dengan melakukan tangkapan layar atau
+      <a
+        href="#"
         onclick="copylink()"
-        >copy link</a
-      >
-      <br />
-      dan perlihatkan Barcode anda ke petugas loket rutan
+        style="color: blue; text-decoration: underline"
+        >salin tautan</a
+      >, dan tunjukkan kepada petugas loket Rutan Bengkulu saat kedatangan.
     </div>
-  </body>
-  <script>
-    function GetURLParameter(sParam) {
-      var sPageURL = window.location.search.substring(1);
-      var sURLVariables = sPageURL.split("&");
-      for (var i = 0; i < sURLVariables.length; i++) {
-        var sParameterName = sURLVariables[i].split("=");
-        if (sParameterName[0] == sParam) {
-          return sParameterName[1];
+
+    <script>
+      const tanggalElem = document.getElementById("tanggal");
+      const bulan = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
+      ];
+      const now = new Date();
+      const hari = now.getDate();
+      const bulanNama = bulan[now.getMonth()];
+      const tahun = now.getFullYear();
+      tanggalElem.textContent = `Bengkulu, ${hari} ${bulanNama} ${tahun}`;
+
+      function GetURLParameter(sParam) {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split("&");
+        for (var i = 0; i < sURLVariables.length; i++) {
+          var sParameterName = sURLVariables[i].split("=");
+          if (sParameterName[0] == sParam) {
+            return sParameterName[1];
+          }
         }
       }
-    }
 
-    const copylink = () => {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Berhasil dicopy");
-    };
+      const copylink = () => {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Tautan berhasil disalin");
+      };
 
-    const api = async () => {
-      const formData = new FormData();
-      formData.append("uuid", GetURLParameter("uuid"));
-      formData.append("barcode", true);
+      const api = async () => {
+        const formData = new FormData();
+        formData.append("uuid", GetURLParameter("uuid"));
+        formData.append("barcode", true);
 
-      const dt = await fetch("api/suratKunjungan", {
-        method: "POST",
-        body: formData,
-      });
+        const dt = await fetch("api/suratKunjungan", {
+          method: "POST",
+          body: formData,
+        });
 
-      const res = await dt.json();
-      if (res.data?.uuid) {
-        new QRCode(document.getElementById("barcode"), res.data.uuid);
-        document.getElementById("uuid").innerHTML = res.data.uuid;
-      } else {
-        document.getElementById("body").innerHTML =
-          "<div>Tidak ditemukan data</div>";
-      }
-    };
-    api();
-  </script>
+        const res = await dt.json();
+        if (res.data?.uuid) {
+          new QRCode(document.getElementById("barcode"), {
+            text: res.data.uuid,
+            width: 300,
+            height: 300,
+          });
+        } else {
+          document.getElementById("body").innerHTML =
+            "<div>Tidak ditemukan data</div>";
+        }
+      };
+      api();
+    </script>
+  </body>
 </html>

@@ -1,273 +1,323 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Surat Izin Kunjungan</title>
   </head>
   <body
-    style="
-      width: 205mm;
-      text-align: center;
-      border: 1px black solid;
-      padding-bottom: 140px;
-    "
+    style="width: 700px; margin: auto; font-family: 'Times New Roman', serif"
     id="body"
   >
+    <!-- KOP SURAT -->
+    <div style="display: flex; align-items: center; margin-bottom: 5px">
+      <img src="img/logo3.png" style="height: 80px; margin-right: 15px" />
+      <div style="text-align: center; flex: 1">
+        <div style="font-weight: bold">
+          KEMENTERIAN HUKUM DAN HAK ASASI MANUSIA REPUBLIK INDONESIA<br />
+          DIREKTORAT JENDERAL PEMASYARAKATAN<br />
+          KANTOR WILAYAH BENGKULU<br />
+          RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
+        </div>
+        <div style="font-size: 12px">
+          Jl. Brigjen Berlian No.556 Bengkulu, Kel. Malabero, Kec. Teluk Segara,
+          Kota Bengkulu<br />
+          Laman : rutanbengkulu.kemenkumham.go.id, email :
+          rutanbengkulu@gmail.com
+        </div>
+      </div>
+    </div>
+    <hr style="border: 1px solid black; margin: 0 0 10px 0" />
+
+    <!-- JUDUL -->
     <div
       style="
-        display: flex;
-        background: #4f4326;
-        color: white;
-        padding: 10px;
-        align-items: center;
-        justify-content: center;
-        border: solid black 2px;
-        font-weight: bolder;
-        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 10px;
+        text-decoration: underline;
       "
     >
-      <img src="img/logo2.jpeg" style="height: 60px; margin-right: 110px" />
-      <div>
-        KEMENTRIAN HUKUM DAN HAM RI<br />
-        KANTOR WILAYAH BENGKULU<br />
-        RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
-      </div>
-      <img src="img/logo1.jpeg" style="height: 60px; margin-left: 110px" />
-    </div>
-    <div style="text-align: center; font-weight: bolder; font-size: larger">
       SURAT IZIN KUNJUNGAN
     </div>
-    <div
-      style="
-        text-align: left;
-        margin-left: 10px;
-        margin-top: 20px;
-        font-size: large;
-      "
-    >
+
+    <!-- HEADER SURAT -->
+    <div style="display: flex; justify-content: space-between">
+      <table
+        style="font-size: 14px; border-collapse: collapse; line-height: 1.8"
+      >
+        <tr>
+          <td style="width: 80px">Nomor</td>
+          <td style="width: 10px">:</td>
+          <td>WP.8.PAS.PAS8.KU.01.02 - 62</td>
+        </tr>
+        <tr>
+          <td>Sifat</td>
+          <td>:</td>
+          <td>Segera</td>
+        </tr>
+        <tr>
+          <td>Lampiran</td>
+          <td>:</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Perihal</td>
+          <td>:</td>
+          <td>-</td>
+        </tr>
+      </table>
+
+      <div style="text-align: right; vertical-align: top">
+        <span id="tanggal"></span>
+      </div>
+    </div>
+
+    <!-- ISI SURAT -->
+    <div style="text-align: left; font-size: 14px; line-height: 1.8">
       <div
         style="
+          margin-top: -90px;
+          margin-right: 20px;
           float: right;
           text-align: center;
-          padding: 20px;
-          margin-right: 10px;
+          padding: 10px;
           background: #025b01;
           color: white;
           border-radius: 10px;
           font-weight: bolder;
+          width: 120px;
         "
       >
         No Antrian <br />
         <div style="font-size: xx-large" id="antrian">1</div>
       </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="nama">
-        Nama : -
-      </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="nik">
-        NIK KTP : -
-      </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="kelamin">
-        JENIS KELAMIN : -
-      </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="alamat">
-        ALAMAT : -
-      </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="foto_ktp">
-        FOTO KTP : -
-      </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="selfi">
-        FOTO SELFI : -
-      </div>
-      <div style="margin-bottom: 20px; text-transform: uppercase" id="hubungan">
-        HUBUNGAN DENGAN WBP : -
-      </div>
-      <div
-        style="margin-bottom: 25px; text-transform: uppercase"
-        id="pengikut_kunjungan"
-      >
+
+      <div style="font-weight: bold; margin-top: 20px">DATA PENGUNJUNG</div>
+      <div id="nama" style="margin-left: 10px">Nama : -</div>
+      <div id="nik" style="margin-left: 10px">NIK KTP : -</div>
+      <div id="kelamin" style="margin-left: 10px">Jenis Kelamin : -</div>
+      <div id="alamat" style="margin-left: 10px">Alamat : -</div>
+      <div id="hubungan" style="margin-left: 10px">Hubungan dengan WBP : -</div>
+      <div id="pengikut_kunjungan" style="margin-left: 10px">
         PENGIKUT KUNJUNGAN : <span id="pengikutDewasa">-</span> Orang Dewasa &
-        <span id="pengikutAnak">-</span> Orang Anak-Anak
+        <span id="pengikutAnak">-</span> Anak-anak
       </div>
+
+      <!-- Foto KTA & Selfi -->
       <div
         style="
-          margin-bottom: 20px;
-          text-transform: uppercase;
-          font-weight: bolder;
+          display: flex;
+          justify-content: space-evenly;
+          margin-top: 15px;
+          text-align: center;
         "
       >
-        TAHANAN/NARAPIDANA YANG DIKUNJUNGI
+        <div>
+          <div
+            style="
+              width: 110px;
+              height: 150px;
+              border: 2px solid #555;
+              border-radius: 8px;
+              margin: auto;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: white;
+              font-size: 12px;
+              font-weight: bold;
+            "
+            id="foto_ktp"
+          >
+            FOTO KTP
+          </div>
+          <div style="margin-top: 8px; font-weight: bold">Foto KTP</div>
+        </div>
+
+        <div>
+          <div
+            style="
+              width: 110px;
+              height: 150px;
+              border: 2px solid #555;
+              border-radius: 8px;
+              margin: auto;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: white;
+              font-size: 12px;
+              font-weight: bold;
+            "
+            id="selfi"
+          >
+            FOTO SELFI
+          </div>
+          <div style="margin-top: 8px; font-weight: bold">Foto Selfi</div>
+        </div>
       </div>
+
+      <div style="font-weight: bold; margin-top: 10px">
+        TAHANAN / NARAPIDANA YANG DIKUNJUNGI
+      </div>
+      <div id="nama_tahanan" style="margin-left: 10px">Nama : -</div>
+      <div id="status_tahanan" style="margin-left: 10px">Status : -</div>
+      <div id="perkara_tahanan" style="margin-left: 10px">Perkara : -</div>
+      <div id="kamar_tahanan" style="margin-left: 10px">Kamar : -</div>
+
+      <div style="font-weight: bold; margin-top: 20px">WAKTU BERKUNJUNG</div>
+      <div id="hari" style="margin-left: 10px">Hari/Tanggal : -</div>
+
       <div
         style="
-          margin-bottom: 20px;
-          text-transform: uppercase;
-          margin-left: 10px;
-        "
-        id="nama_tahanan"
-      >
-        NAMA : -
-      </div>
-      <div
-        style="
-          margin-bottom: 25px;
-          text-transform: uppercase;
-          margin-left: 10px;
-        "
-        id="perkara_tahanan"
-      >
-        STATUS TAHANAN : -
-      </div>
-      <div
-        style="
-          margin-bottom: 25px;
-          text-transform: uppercase;
-          margin-left: 10px;
-        "
-        id="status_tahanan"
-      >
-        STATUS TAHANAN : -
-      </div>
-      <div
-        style="
-          margin-bottom: 25px;
-          text-transform: uppercase;
-          margin-left: 10px;
-        "
-        id="kamar_tahanan"
-      >
-        KAMAR TAHANAN : -
-      </div>
-      <div
-        style="
-          margin-bottom: 20px;
-          text-transform: uppercase;
-          font-weight: bolder;
+          float: right;
+          text-align: center;
+          margin-right: 50px;
+          margin-top: 20px;
         "
       >
-        WAKTU BERKUNJUNG PADA
-      </div>
-      <div
-        style="
-          margin-bottom: 20px;
-          text-transform: uppercase;
-          margin-left: 10px;
-        "
-        id="hari"
-      >
-        HARI/TANGGAL : -
-      </div>
-      <div style="float: right; text-align: center; margin-right: 50px">
         Petugas Loket
-        <br />
-        <br />
-        <br />
-        <br />
+        <br /><br /><br /><br />
         <div id="petugas">__________________________</div>
         <div id="petugas_nip">NIP:______________________</div>
       </div>
     </div>
-  </body>
-  <script>
-    const resizeExternalImage = (ImgtoBeResized) => {
-      return `https://images.weserv.nl/?url=https://app.easyrubero.com${ImgtoBeResized}&q=60`;
-    };
 
-    function GetURLParameter(sParam) {
-      var sPageURL = window.location.search.substring(1);
-      var sURLVariables = sPageURL.split("&");
-      for (var i = 0; i < sURLVariables.length; i++) {
-        var sParameterName = sURLVariables[i].split("=");
-        if (sParameterName[0] == sParam) {
-          return sParameterName[1];
+    <script>
+      // Buat tanggal otomatis
+      const bulan = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
+      ];
+      const now = new Date();
+      document.getElementById(
+        "tanggal"
+      ).textContent = `Bengkulu, ${now.getDate()} ${
+        bulan[now.getMonth()]
+      } ${now.getFullYear()}`;
+
+      // Fungsi ambil data dari URL dan API (seperti sebelumnya)
+      const resizeExternalImage = (img) =>
+        `https://images.weserv.nl/?url=https://app.easyrubero.com${img}&q=60`;
+
+      function GetURLParameter(sParam) {
+        const sPageURL = window.location.search.substring(1);
+        const sURLVariables = sPageURL.split("&");
+        for (let i = 0; i < sURLVariables.length; i++) {
+          const sParameterName = sURLVariables[i].split("=");
+          if (sParameterName[0] == sParam) return sParameterName[1];
         }
       }
-    }
 
-    const apiIzin = async () => {
-      const formData = new FormData();
-      formData.append("uuid", GetURLParameter("uuid"));
+      const apiIzin = async () => {
+        const formData = new FormData();
+        formData.append("uuid", GetURLParameter("uuid"));
+        const dt = await fetch("api/suratKunjungan", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await dt.json();
 
-      const dt = await fetch("api/suratKunjungan", {
-        method: "POST",
-        body: formData,
-      });
+        if (data.data?.nama) {
+          if (GetURLParameter("petugas") !== "null")
+            document.getElementById("petugas").innerHTML = decodeURIComponent(
+              GetURLParameter("petugas")
+            );
 
-      const data = await dt.json();
-      if (data.data?.nama) {
-        if (GetURLParameter("petugas") !== "null") {
-          document.getElementById("petugas").innerHTML = GetURLParameter(
-            "petugas"
-          ).replace("%20", " ");
-        }
+          if (GetURLParameter("NIP") !== "null")
+            document.getElementById("petugas_nip").innerHTML =
+              "NIP : " + GetURLParameter("NIP");
 
-        if (GetURLParameter("NIP") !== "null") {
-          document.getElementById("petugas_nip").innerHTML =
-            "NIP : " + GetURLParameter("NIP");
-        }
+          document.getElementById("nama").innerHTML =
+            "NAMA : " + data.data.nama;
+          document.getElementById("nik").innerHTML =
+            "NIK KTP : " + data.data.NIK;
+          document.getElementById("kelamin").innerHTML =
+            "JENIS KELAMIN : " + data.data.jenisKelamin;
+          document.getElementById("alamat").innerHTML =
+            "ALAMAT : " + data.data.alamat;
 
-        document.getElementById("nama").innerHTML = "NAMA : " + data.data.nama;
-        document.getElementById("nik").innerHTML = "NIK KTP : " + data.data.NIK;
-        document.getElementById("kelamin").innerHTML =
-          "JENIS KELAMIN : " + data.data.jenisKelamin;
-        document.getElementById("alamat").innerHTML =
-          "ALAMAT : " + data.data.alamat;
-        if (data.data.img) {
-          document.getElementById("foto_ktp").innerHTML =
-            "FOTO KTP : <img style='height:100px' src='" +
-            resizeExternalImage(data.data.img) +
-            "' />";
-        } else {
-          document.getElementById("foto_ktp").innerHTML =
-            "FOTO KTP : Tidak ditemukan";
-        }
-        if (data.data.selfi) {
-          document.getElementById("selfi").innerHTML =
-            "FOTO SELFI : <img style='height:100px' src='" +
-            resizeExternalImage(data.data.selfi) +
-            "' />";
-        } else {
-          document.getElementById("selfi").innerHTML =
-            "FOTO SELFI : Tidak ditemukan";
-        }
-        document.getElementById("hubungan").innerHTML =
-          "HUBUNGAN DENGAN WBP : " + data.data.hubungan;
-        document.getElementById("pengikutDewasa").innerHTML =
-          "" + data.data.pengikutDewasa;
-        document.getElementById("pengikutAnak").innerHTML =
-          "" + data.data.pengikutAnak;
+          if (data.data.img) {
+            document.getElementById("foto_ktp").innerHTML =
+              " <img style='height:150px;width:110px' src='" +
+              data.data.img +
+              "' />";
+          } else {
+            document.getElementById("foto_ktp").innerHTML = "Tidak ditemukan";
+          }
+          if (data.data.selfi) {
+            document.getElementById("selfi").innerHTML =
+              "<img style='height:150px;width:110px' src='" +
+              data.data.selfi +
+              "' />";
+          } else {
+            document.getElementById("selfi").innerHTML = "Tidak ditemukan";
+          }
 
-        document.getElementById("nama_tahanan").innerHTML =
-          "NAMA : " + data.data.tahanan.nama;
-        document.getElementById("status_tahanan").innerHTML =
-          "STATUS : " + data.data.tahanan.statusTahanan;
-        document.getElementById("antrian").innerHTML = data.data.antrian;
-        document.getElementById("perkara_tahanan").innerHTML =
-          "PERKARA : " + data.data.tahanan.perkara;
-        document.getElementById("kamar_tahanan").innerHTML =
-          "KAMAR : " + data.data.tahanan.kamar;
+          document.getElementById("hubungan").innerHTML =
+            "HUBUNGAN DENGAN WBP : " + data.data.hubungan;
+          document.getElementById("pengikutDewasa").innerHTML =
+            data.data.pengikutDewasa;
+          document.getElementById("pengikutAnak").innerHTML =
+            data.data.pengikutAnak;
 
-        const d = new Date(data.data.waktuKunjungan);
-        document.getElementById("hari").innerHTML =
-          "HARI/TANGGAL : " + data.data.waktuKunjungan.slice(0, 10);
+          document.getElementById("nama_tahanan").innerHTML =
+            "NAMA : " + data.data.tahanan.nama;
+          document.getElementById("status_tahanan").innerHTML =
+            "STATUS : " + data.data.tahanan.statusTahanan;
+          document.getElementById("perkara_tahanan").innerHTML =
+            "PERKARA : " + data.data.tahanan.perkara;
+          document.getElementById("kamar_tahanan").innerHTML =
+            "KAMAR : " + data.data.tahanan.kamar;
+          document.getElementById("antrian").innerHTML = data.data.antrian;
 
-        function printDiv(divId) {
-          var printContents = document.getElementById(divId).innerHTML;
-          var originalContents = document.body.innerHTML;
+          const d = new Date(data.data.waktuKunjungan);
 
-          document.body.innerHTML = printContents;
+          // Ambil nama hari dalam bahasa Indonesia
+          const hari = d.toLocaleDateString("id-ID", { weekday: "long" });
+
+          // Format tanggal (YYYY-MM-DD → dd/mm/yyyy biar lebih enak dibaca)
+          const tanggal = d.toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          });
+
+          const ud = new Date(data.data.updatedAt);
+
+          const jam = String(ud.getHours()).padStart(2, "0");
+          const menit = String(ud.getMinutes()).padStart(2, "0");
+
+          document.getElementById("hari").innerHTML =
+            "HARI/TANGGAL : " +
+            hari.toUpperCase() +
+            "/" +
+            tanggal +
+            " " +
+            jam +
+            ":" +
+            menit;
 
           window.print();
-
-          document.body.innerHTML = originalContents;
+        } else {
+          document.getElementById("body").innerHTML =
+            "<div>Tidak ditemukan data</div>";
         }
-        printDiv("body");
-      } else {
-        document.getElementById("body").innerHTML =
-          "<div>Tidak ditemukan data</div>";
-      }
-    };
+      };
 
-    apiIzin();
-  </script>
+      apiIzin();
+    </script>
+  </body>
 </html>
