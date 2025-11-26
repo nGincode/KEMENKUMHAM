@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "node server/index.js",
     "lint": "next lint",
-    "publish": "npx pm2 stop 0 && git pull && next build && npx pm2 start 0"
+    "publish": "npx pm2 stop 0 && git pull && next build && npx pm2 start 0",
+    "cron": "node ./cron/deleteOrCompressFiles.js"
   },
   "dependencies": {
     "@faker-js/faker": "7.6.0",
