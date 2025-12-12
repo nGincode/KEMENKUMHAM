@@ -63,11 +63,11 @@ async function processFiles() {
             const ageInDays =
               (now - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
 
-            if (ageInDays > 30) {
+            if (ageInDays > 90) {
               await fs.unlink(filePath);
               console.log(`Deleted ${file} (${Math.floor(ageInDays)} days)`);
               await writeLog(logFile, `Deleted ${file} from ${directoryPath}`);
-            } else if (ageInDays > 10) {
+            } else if (ageInDays > 30) {
               const data = await sharp(filePath)
                 .resize({ width: 100 })
                 .jpeg({ quality: 10 })
