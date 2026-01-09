@@ -1,6 +1,11 @@
 const jwt = require("jsonwebtoken");
 const { hash, verify } = require("node-php-password");
-const { User, tahanan, kunjungan, kunjunganKuasaHukum } = require("../models");
+const {
+  User,
+  tahanan,
+  kunjungan,
+  kunjungan_kuasa_hukum,
+} = require("../models");
 const { Op } = require("sequelize");
 const Crypto = require("crypto");
 const numeral = require("numeral");
@@ -182,7 +187,49 @@ const get = async (req, res) => {
   const { tanggal_akhir, tanggal_mulai, waktu } = req.query;
 
   let Kunjungan;
-  if (tanggal_mulai && tanggal_akhir) {
+  if (tanggal_mulai && tanggal_akhir && waktu) {
+    const whereClause = {
+      antrian: {
+        [Op.ne]: null,
+      },
+      waktuKunjungan: {
+        [Op.between]: [tanggal_mulai, tanggal_akhir],
+      },
+    };
+
+    const includeClause = [
+      {
+        model: tahanan,
+        as: "tahanan",
+        attributes: {
+          exclude: ["uuid", "createdAt", "updatedAt"],
+        },
+      },
+    ];
+
+    const kunjunganBiasa = await kunjungan.findAll({
+      where: whereClause,
+      order: [["id", "DESC"]],
+      include: includeClause,
+    });
+
+    const kunjunganKuasaHukum = await kunjungan_kuasa_hukum.findAll({
+      where: whereClause,
+      order: [["id", "DESC"]],
+      include: includeClause,
+    });
+
+    Kunjungan = [
+      ...kunjunganBiasa.map((item) => ({
+        ...item.toJSON(),
+        jenis: "Umum",
+      })),
+      ...kunjunganKuasaHukum.map((item) => ({
+        ...item.toJSON(),
+        jenis: "Kuasa Hukum",
+      })),
+    ].sort((a, b) => b.updatedAt - a.updatedAt);
+  } else if (tanggal_mulai && tanggal_akhir) {
     Kunjungan = await kunjungan.findAll({
       where: {
         waktuKunjungan: {

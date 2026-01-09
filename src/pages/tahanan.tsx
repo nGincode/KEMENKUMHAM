@@ -547,7 +547,7 @@ export default function Tahanan({ userData, setuserData }: any) {
                                 }}
                                 hiddenPaginate={true}
                                 hiddenSearch={true}
-                                showData={["img", "waktu", "tahanan", "kamar", "perkara", 'nama']}
+                                showData={["img", "waktu", "tahanan", "kamar", "perkara", 'nama', 'jenis']}
                             />
                         </div>
                     </div>

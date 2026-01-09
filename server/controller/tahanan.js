@@ -193,16 +193,6 @@ const del = async (req, res) => {
     where: { uuid: uuid },
   });
 
-  const Kunjungan = await kunjungan.findOne({
-    where: { tahanan_id: Tahanan.id },
-  });
-
-  if (Kunjungan) {
-    return res.status(400).json({
-      massage: "Tahanan digunakan pada kunjungan",
-    });
-  }
-
   if (!Tahanan) {
     return res.status(400).json({
       massage: "Tahanan tidak ada",
