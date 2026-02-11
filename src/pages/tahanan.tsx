@@ -47,7 +47,7 @@ export default function Tahanan({ userData, setuserData }: any) {
                 }).then((res: any) => {
                     setdataCreate(res.data.data)
                     toast.success(res.data.massage);
-                    ($('.btn-close') as any).trigger("click");
+                    (document.querySelector('.btn-close') as HTMLButtonElement)?.click();
                     (document.getElementById('formCreate') as HTMLFormElement).reset();
                     (document.getElementById('closeImg') as HTMLInputElement)?.click();
                 }).catch(error => {

@@ -1,37 +1,11 @@
 const jwt = require("jsonwebtoken");
 const { hash, verify } = require("node-php-password");
-const {
-  User,
-  tahanan,
-  kunjungan,
-  kunjungan_kuasa_hukum,
-} = require("../models");
-const { Op } = require("sequelize");
+const { tahanan, kunjungan, kunjungan_kuasa_hukum } = require("../models");
+const { Op, where } = require("sequelize");
 const Crypto = require("crypto");
 const numeral = require("numeral");
 const moment = require("moment");
 
-const getId = async (req, res) => {
-  const { users_id, users_uuid, email, username } = req.user;
-  const { uuid } = req.params;
-
-  const Npwp = await stock.findOne({
-    where: { uuid: uuid },
-    attributes: ["uuid", "stock", "name", "phone", "address"],
-  });
-
-  if (!Npwp) {
-    return res.json({
-      massage: "STOCK not found",
-    });
-  }
-
-  res.json({
-    status: 200,
-    massage: "Get data successful",
-    data: Npwp,
-  });
-};
 const put = async (req, res) => {
   const { users_id, users_uuid } = req.user;
   const {
@@ -151,11 +125,11 @@ const putId = async (req, res) => {
         __dirname + `/../../public/upload/tahanan/${uuid}.${type}`,
         new Buffer.from(
           image.replace(/^data:image\/\w+;base64,/, ""),
-          "base64"
+          "base64",
         ),
         (err) => {
           console.log(err);
-        }
+        },
       );
       imgData = "/upload/tahanan/" + uuid + "." + type;
     } else {
@@ -199,7 +173,7 @@ const del = async (req, res) => {
     });
   }
 
-  await Tahanan.destroy();
+  await Tahanan.update({ deletedAt: new Date() });
 
   res.json({
     massage: "Hapus Berhasil",
@@ -209,6 +183,7 @@ const del = async (req, res) => {
 const get = async (req, res) => {
   const { users_id, users_uuid, email, username, permission } = req.user;
   const tahananDb = await tahanan.findAll({
+    where: { deletedAt: null },
     include: [
       {
         model: kunjungan,
@@ -241,7 +216,7 @@ const get = async (req, res) => {
       kamar: val.kamar,
       tanggalMasuk: moment(val.tanggalMasuk, "YYYY-MM-DD").format("DD/MM/YYYY"),
       tanggalKeluar: moment(val.tanggalKeluar, "YYYY-MM-DD").format(
-        "DD/MM/YYYY"
+        "DD/MM/YYYY",
       ),
       perkara: val.perkara,
       statusTahanan: val.statusTahanan,
@@ -251,18 +226,18 @@ const get = async (req, res) => {
               moment(val.tanggalKeluar).diff(
                 moment(val.tanggalMasuk),
                 "months",
-                true
-              )
+                true,
+              ),
             ) + " Bulan"
           : "-",
       sisaTahan:
         val.tanggalKeluar > val.tanggalMasuk
           ? Math.round(
-              moment(val.tanggalKeluar).diff(moment(), "months", true)
+              moment(val.tanggalKeluar).diff(moment(), "months", true),
             ) < 0
             ? "Bebas"
             : Math.round(
-                moment(val.tanggalKeluar).diff(moment(), "months", true)
+                moment(val.tanggalKeluar).diff(moment(), "months", true),
               ) + " Bulan"
           : "-",
       integrasi: val.integrasi ? "Ya" : "Tidak",
@@ -273,12 +248,12 @@ const get = async (req, res) => {
                 moment(val.tanggalKeluar).diff(
                   moment(val.tanggalMasuk),
                   "months",
-                  true
-                )
+                  true,
+                ),
               ) *
                 (2 / 3) >
               Math.round(
-                moment(val.tanggalKeluar).diff(moment(), "months", true)
+                moment(val.tanggalKeluar).diff(moment(), "months", true),
               )
               ? "Bisa Di Ajukan"
               : "Belum Bisa"
@@ -286,7 +261,7 @@ const get = async (req, res) => {
           : "-",
       penampilan: val.penampilan,
       historyKunjungan: [...val.kunjungan, ...val.kunjunganKuasaHukum].sort(
-        (a, b) => new Date(b.waktuKunjungan) - new Date(a.waktuKunjungan)
+        (a, b) => new Date(b.waktuKunjungan) - new Date(a.waktuKunjungan),
       ),
     };
   });
@@ -328,7 +303,7 @@ const post = async (req, res) => {
       new Buffer.from(img.replace(/^data:image\/\w+;base64,/, ""), "base64"),
       (err) => {
         console.log(err);
-      }
+      },
     );
   }
 
@@ -361,6 +336,5 @@ module.exports = {
   put,
   post,
   del,
-  getId,
   putId,
 };

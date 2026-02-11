@@ -6,14 +6,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import axios from "axios";
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-
-if (typeof window !== "undefined") {
-    (window as any).$ = require('jquery');
-    (window as any).moment = require('moment');
-    (window as any).ApexCharts = require('./../../public/app-assets/js/plugin/apexcharts.min.js');
-    (window as any).bootstrap = require('./../../public/app-assets/js/plugin/bootstrap.bundle.min.js');
-    (window as any).autocomplete = require("./../../public/app-assets/js/plugin/autocomplete.min.js");
-}
+import $ from 'jquery';
 
 import Login from "./auth/login";
 import LoadingPage from '../components/loadingPage';
@@ -119,6 +112,16 @@ export default function App({ Component, pageProps }: AppProps) {
 
     useEffect(() => {
         handleApi('user');
+    }, []);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            (window as any).$ = (window as any).jQuery = $;
+            (window as any).moment = require('moment');
+            (window as any).ApexCharts = require('./../../public/app-assets/js/plugin/apexcharts.min.js');
+            (window as any).bootstrap = require('./../../public/app-assets/js/plugin/bootstrap.bundle.min.js');
+            (window as any).autocomplete = require("./../../public/app-assets/js/plugin/autocomplete.min.js");
+        }
     }, []);
 
     const router = useRouter();

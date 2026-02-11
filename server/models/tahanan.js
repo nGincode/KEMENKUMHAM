@@ -82,6 +82,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      deletedAt: {
+        type: DataTypes.DATE,
+      },
     },
     {
       sequelize,
@@ -91,7 +94,7 @@ module.exports = (sequelize, DataTypes) => {
       freezeTableName: true,
       // createdAt: "created_at",
       // updatedAt: "updated_at",
-    }
+    },
   );
   return tahanan;
 };

@@ -13,7 +13,7 @@ async function ensureTodayLogFile() {
   await fs.ensureDir(logsRoot);
   const todayFolder = path.join(
     logsRoot,
-    new Date().toISOString().slice(0, 10)
+    new Date().toISOString().slice(0, 10),
   );
   await fs.ensureDir(todayFolder);
   return path.join(todayFolder, "cron.log");
@@ -33,11 +33,11 @@ async function cleanupOldLogs() {
       const folderPath = path.join(logsRoot, folder);
       const stats = await fs.stat(folderPath);
       const ageInDays = (now - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
-      if (ageInDays > 30) {
+      if (ageInDays > 60) {
         await fs.remove(folderPath);
         console.log(`Deleted old log folder: ${folder}`);
       }
-    })
+    }),
   );
 }
 
@@ -76,7 +76,7 @@ async function processFiles() {
               console.log(`Compressed ${file} (${Math.floor(ageInDays)} days)`);
               await writeLog(
                 logFile,
-                `Compressed ${file} from ${directoryPath}`
+                `Compressed ${file} from ${directoryPath}`,
               );
             } else {
               console.log(`Keep ${file} (${Math.floor(ageInDays)} days)`);
@@ -86,7 +86,7 @@ async function processFiles() {
             console.error(`Error processing ${file}:`, err.message);
             await writeLog(logFile, `Error ${file}: ${err.message}`);
           }
-        })
+        }),
       );
     }
   }

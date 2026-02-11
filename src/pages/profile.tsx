@@ -39,7 +39,10 @@ export default function Profile({ userData, setuserData }: any) {
                     toast.success(res.data.massage);
                     setuserData(res.data.data);
                     localStorage.setItem('token', res.data.token);
-                    ($('.btn-close') as any).trigger("click");
+                    const closeButton = document.querySelector('.btn-close') as HTMLElement;
+                    if (closeButton) {
+                        closeButton.click();
+                    }
                 }).catch(error => {
                     if (error.code === 'ECONNABORTED') {
                         toast.error('Maaf database sedang mengalami gagal koneksi, harap kembali lagi nanti');
@@ -357,7 +360,10 @@ export default function Profile({ userData, setuserData }: any) {
                                             <li className="mt-4 mb-16">
                                                 <a onClick={() => {
                                                     setTab(1);
-                                                    ($('#profileClose') as any).trigger("click");
+                                                    const profileClose = document.getElementById('profileClose') as HTMLElement;
+                                                    if (profileClose) {
+                                                        profileClose.click();
+                                                    }
                                                 }} className={tab === 1 ? "cursor-pointer active position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center" : "position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center cursor-pointer "} >
                                                     <i className="iconly-Curved-User me-16"></i>
                                                     <span>Data Personal</span>
@@ -368,7 +374,10 @@ export default function Profile({ userData, setuserData }: any) {
                                             <li className="mt-4 mb-16">
                                                 <a onClick={() => {
                                                     setTab(2);
-                                                    ($('#profileClose') as any).trigger("click");
+                                                    const profileClose = document.getElementById('profileClose') as HTMLElement;
+                                                    if (profileClose) {
+                                                        profileClose.click();
+                                                    }
                                                 }} className={tab === 2 ? "cursor-pointer active position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center" : "position-relative text-black-80 hp-text-color-dark-30 hp-hover-text-color-primary-1 hp-hover-text-color-dark-0 py-12 px-24 d-flex align-items-center cursor-pointer "} >
                                                     <i className="iconly-Curved-Password me-16"></i>
                                                     <span>Ubah Password</span>
