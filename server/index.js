@@ -25,28 +25,29 @@ app.prepare().then(() => {
   server.use(express.urlencoded({ limit: "50mb", extended: true }));
   // dev && server.use(logger("dev"));
   server.use(cookieParser());
-  server.use(cors());
-  // server.use(
-  //   cors({
-  //     origin: [
-  //       "https://easyrubero.com",
-  //       "https://app.easyrubero.com",
-  //       "http://lapas",
-  //     ],
-  //     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
-  //     allowedHeaders: [
-  //       "Content-Type",
-  //       "Origin",
-  //       "X-Requested-With",
-  //       "Accept",
-  //       "x-client-key",
-  //       "x-client-token",
-  //       "x-client-secret",
-  //       "Authorization",
-  //     ],
-  //     credentials: true,
-  //   })
-  // );
+  // server.use(cors());
+  server.use(
+    cors({
+      origin: [
+        "https://easyrubero.com",
+        "http://easyrubero.com",
+        "https://app.easyrubero.com",
+        "http://lapas",
+      ],
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+      allowedHeaders: [
+        "Content-Type",
+        "Origin",
+        "X-Requested-With",
+        "Accept",
+        "x-client-key",
+        "x-client-token",
+        "x-client-secret",
+        "Authorization",
+      ],
+      credentials: true,
+    }),
+  );
   server.use(express.static(path.join(__dirname, "../public")));
   server.use(fileUpload());
 
