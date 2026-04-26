@@ -36,12 +36,15 @@ app.prepare().then(() => {
   server.use(
     cors({
       origin: function (origin, callback) {
-        if (!origin || whitelist.indexOf(origin) !== -1) {
+        const actualOrigin =
+          origin && origin.includes(",") ? origin.split(",")[0].trim() : origin;
+
+        if (!actualOrigin || whitelist.indexOf(actualOrigin) !== -1) {
           callback(null, true);
         } else {
           console.log(
             "\x1b[31m%s\x1b[0m",
-            `[CORS Blocked]: Request dari origin "${origin}" tidak terdaftar di whitelist.`,
+            `[CORS Blocked]: Origin asli: "${actualOrigin}"`,
           );
           callback(new Error("Not allowed by CORS"));
         }
