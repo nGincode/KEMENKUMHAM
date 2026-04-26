@@ -25,45 +25,45 @@ app.prepare().then(() => {
   server.use(express.urlencoded({ limit: "50mb", extended: true }));
   // dev && server.use(logger("dev"));
   server.use(cookieParser());
-  // server.use(cors());
-  const whitelist = [
-    "https://easyrubero.com",
-    "https://www.easyrubero.com",
-    "https://app.easyrubero.com",
-    "http://lapas",
-  ];
+  server.use(cors());
+  // const whitelist = [
+  //   "https://easyrubero.com",
+  //   "https://www.easyrubero.com",
+  //   "https://app.easyrubero.com",
+  //   "http://lapas",
+  // ];
 
-  server.use(
-    cors({
-      origin: function (origin, callback) {
-        const actualOrigin =
-          origin && origin.includes(",") ? origin.split(",")[0].trim() : origin;
+  // server.use(
+  //   cors({
+  //     origin: function (origin, callback) {
+  //       const actualOrigin =
+  //         origin && origin.includes(",") ? origin.split(",")[0].trim() : origin;
 
-        if (!actualOrigin || whitelist.indexOf(actualOrigin) !== -1) {
-          callback(null, true);
-        } else {
-          console.log(
-            "\x1b[31m%s\x1b[0m",
-            `[CORS Blocked]: Origin asli: "${actualOrigin}"`,
-          );
-          callback(new Error("Not allowed by CORS"));
-        }
-      },
-      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
-      allowedHeaders: [
-        "Content-Type",
-        "Origin",
-        "X-Requested-With",
-        "Accept",
-        "x-client-key",
-        "x-client-token",
-        "x-client-secret",
-        "Authorization",
-      ],
-      credentials: true,
-      optionsSuccessStatus: 200,
-    }),
-  );
+  //       if (!actualOrigin || whitelist.indexOf(actualOrigin) !== -1) {
+  //         callback(null, true);
+  //       } else {
+  //         console.log(
+  //           "\x1b[31m%s\x1b[0m",
+  //           `[CORS Blocked]: Origin asli: "${actualOrigin}"`,
+  //         );
+  //         callback(new Error("Not allowed by CORS"));
+  //       }
+  //     },
+  //     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+  //     allowedHeaders: [
+  //       "Content-Type",
+  //       "Origin",
+  //       "X-Requested-With",
+  //       "Accept",
+  //       "x-client-key",
+  //       "x-client-token",
+  //       "x-client-secret",
+  //       "Authorization",
+  //     ],
+  //     credentials: true,
+  //     optionsSuccessStatus: 200,
+  //   }),
+  // );
   server.use(express.static(path.join(__dirname, "../public")));
   server.use(fileUpload());
 
