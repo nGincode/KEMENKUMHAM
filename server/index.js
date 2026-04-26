@@ -26,14 +26,26 @@ app.prepare().then(() => {
   // dev && server.use(logger("dev"));
   server.use(cookieParser());
   // server.use(cors());
+  const whitelist = [
+    "https://easyrubero.com",
+    "https://www.easyrubero.com",
+    "https://app.easyrubero.com",
+    "http://lapas",
+  ];
+
   server.use(
     cors({
-      origin: [
-        "https://easyrubero.com",
-        "http://easyrubero.com",
-        "https://app.easyrubero.com",
-        "http://lapas",
-      ],
+      origin: function (origin, callback) {
+        if (!origin || whitelist.indexOf(origin) !== -1) {
+          callback(null, true);
+        } else {
+          console.log(
+            "\x1b[31m%s\x1b[0m",
+            `[CORS Blocked]: Request dari origin "${origin}" tidak terdaftar di whitelist.`,
+          );
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
       allowedHeaders: [
         "Content-Type",
@@ -46,6 +58,7 @@ app.prepare().then(() => {
         "Authorization",
       ],
       credentials: true,
+      optionsSuccessStatus: 200,
     }),
   );
   server.use(express.static(path.join(__dirname, "../public")));
