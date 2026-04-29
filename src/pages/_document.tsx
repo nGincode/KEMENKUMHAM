@@ -6,6 +6,10 @@ export default function Document() {
     return (
         <Html lang="en">
             <Head>
+                {/* META TAG UNTUK MEMBLOKIR GOOGLE/BOT */}
+                <meta name="robots" content="noindex, nofollow" />
+                <meta name="googlebot" content="noindex, nofollow" />
+
                 <link rel="icon" href="/img/logo.png" />
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
                 <link rel="stylesheet" type="text/css" href="/app-assets/css/plugin/swiper-bundle.min.css" />
