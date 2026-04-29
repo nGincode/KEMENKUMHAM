@@ -79,8 +79,8 @@ async function processFiles() {
                 `Compressed ${file} from ${directoryPath}`,
               );
             } else {
-              console.log(`Keep ${file} (${Math.floor(ageInDays)} days)`);
-              await writeLog(logFile, `Keep ${file} from ${directoryPath}`);
+              // console.log(`Keep ${file} (${Math.floor(ageInDays)} days)`);
+              // await writeLog(logFile, `Keep ${file} from ${directoryPath}`);
             }
           } catch (err) {
             console.error(`Error processing ${file}:`, err.message);
