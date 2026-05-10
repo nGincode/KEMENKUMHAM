@@ -1,0 +1,30 @@
+name: Deploy Easyrubero
+
+on:
+    push:
+        branches:
+            - main
+
+env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+    deploy:
+        runs-on: self-hosted
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Deploy to Docker
+              run: |
+                  cd /home/easyrubero.com/public_html
+                  git fetch --all
+                  git reset --hard origin/main
+                  git pull origin main
+                  docker compose down
+                  docker compose up -d --build
+                  docker image prune -f
+
+            - name: Fix Permissions
+              run: |
+                  chown -R easyr1376:easyr1376 /home/easyrubero.com/public_html
