@@ -34,7 +34,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/cron ./cron 
 
 # Expose port internal
-EXPOSE 3000
+EXPOSE 1999
 
 # Jalankan server custom Anda (Express)
 CMD ["npm", "start"]
