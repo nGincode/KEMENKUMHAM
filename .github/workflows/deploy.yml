@@ -17,7 +17,7 @@ jobs:
 
             - name: Deploy to Docker
               run: |
-                  cd /home/easyrubero.com/public_html
+                  cd /home/easyrubero.com/app.easyrubero.com
                   git fetch --all
                   git reset --hard origin/main
                   git pull origin main
@@ -27,4 +27,4 @@ jobs:
 
             - name: Fix Permissions
               run: |
-                  chown -R easyr1376:easyr1376 /home/easyrubero.com/public_html
+                  chown -R easyr1376:easyr1376 /home/easyrubero.com/app.easyrubero.com
