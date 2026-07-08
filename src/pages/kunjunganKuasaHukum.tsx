@@ -100,9 +100,9 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
                 name: 'img',
                 type: 'img',
                 id: 'img',
-                full: true,
                 label: 'Upload KTA',
             },
+            { name: 'selfi', type: 'img', id: 'selfi', label: 'Selfi' },
             {
                 require: true,
                 name: 'waktuKunjungan',
@@ -380,30 +380,27 @@ export default function kunjunganKuasaHukum({ userData, setuserData }: any) {
 
         mywindow.document.write('<html><head><title>Print</title>');
         mywindow.document.write('</head><body >');
-        mywindow.document.write(`<div
-            style="
-                text-align: center;
-                display: flex;
-                width: 100%;
-                background: #4f4326;
-                color: white;
-                padding: 10px;
-                align-items: center;
-                justify-content: center;
-                border: solid black 2px;
-                font-weight: bolder;
-                margin-bottom: 20px;
-            "
-            >
-            <img src="https://app.easyrubero.com/img/logo2.jpeg" style="height: 60px; margin-right: 110px" />
-            <div>
-                KEMENTRIAN HUKUM DAN HAM RI<br />
-                KANTOR WILAYAH BENGKULU<br />
-                RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
-            </div>
-            <img src="https://app.easyrubero.com/img/logo1.jpeg" style="height: 60px; margin-left: 110px" />
-            </div>
-            ${htmlData}`);
+        mywindow.document.write(`
+                   <div style="display: flex; align-items: center; margin-bottom: 5px">
+                        <img src="img/logo3.png" style="height: 80px; margin-right: 15px">
+                        <div style="text-align: center; flex: 1">
+                            <div style="font-weight: bold">
+                            KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN REPUBLIK INDONESIA<br>
+                            DIREKTORAT JENDERAL PEMASYARAKATAN<br>
+                            KANTOR WILAYAH BENGKULU<br>
+                            RUMAH TAHANAN NEGARA KELAS IIB BENGKULU
+                            </div>
+                            <div style="font-size: 12px">
+                            Jl. Brigjen Berlian No.556 Bengkulu, Kel. Malabero, Kec. Teluk Segara,
+                            Kota Bengkulu<br>
+                            Laman : rutanbengkulu.kemenkumham.go.id, email :
+                            rutanbengkulu@gmail.com
+                            </div>
+                        </div>
+                        </div> 
+                        <hr style="border: 1px solid black; margin: 0 0 10px 0" />
+                    ${htmlData}
+                `);
         mywindow.document.write('<style>table {width:100%} table, th, td {border: 1px solid black;border-collapse: collapse;}</style></body></html>');
 
         mywindow.document.close();

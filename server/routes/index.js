@@ -10,6 +10,7 @@ const user = require("./user");
 const kunjungan = require("./kunjungan");
 const pengajuan = require("./pengajuan");
 const kunjungan_kuasa_hukum = require("./kunjunganKuasaHukum");
+const kunjungan_aph = require("./kunjunganAph");
 const jadwal = require("./jadwal");
 const titipan = require("./titipan");
 const tahanan = require("./tahanan");
@@ -33,6 +34,7 @@ router.use("/permission", verifToken, permission);
 router.use("/tahanan", verifToken, tahanan);
 router.use("/kunjungan", verifToken, kunjungan);
 router.use("/kunjunganKuasaHukum", verifToken, kunjungan_kuasa_hukum);
+router.use("/kunjunganAph", verifToken, kunjungan_aph);
 router.use("/titipan", verifToken, titipan);
 router.use("/pengajuan", verifToken, pengajuan);
 router.use("/jadwal", jadwal);
@@ -122,6 +124,56 @@ router.post("/suratKunjunganKuasaHukum", async (req, res) => {
   });
 });
 
+router.post("/suratKunjunganAph", async (req, res) => {
+  const { uuid, barcode } = req.body;
+  const { tahanan, kunjungan_aph } = require("../models"); // Hapus panggilan kunjungan yang tidak terpakai
+  const { Op } = require("sequelize");
+  const moment = require("moment");
+
+  let Kunjungan = await kunjungan_aph.findOne({
+    where: {
+      uuid: uuid,
+    },
+    order: [["id", "DESC"]],
+    include: [
+      {
+        model: tahanan,
+        as: "tahanans", // <-- UBAH DI SINI: harus 'tahanans' sesuai model
+        attributes: {
+          exclude: ["uuid", "createdAt", "updatedAt"],
+        },
+      },
+    ],
+  });
+
+  if (!Kunjungan) {
+    return res.status(404).json({
+      status: 404,
+      massage: "Data Kunjungan tidak ditemukan",
+    });
+  }
+
+  if (!Kunjungan.antrian && !barcode) {
+    const antrian = await kunjungan_aph.findAll({
+      where: {
+        waktuKunjungan: Kunjungan.waktuKunjungan,
+        antrian: {
+          [Op.not]: null,
+        },
+      },
+    });
+
+    await Kunjungan.update({ antrian: antrian ? antrian.length + 1 : 1 });
+    Kunjungan.antrian = antrian ? antrian.length + 1 : 1;
+  }
+
+  return res.json({
+    status: 200,
+    massage: "Get data successful",
+    data: Kunjungan,
+  });
+});
+
 router.post("/suratTitipan", async (req, res) => {
   const { uuid } = req.body;
   const { tahanan, titipan } = require("../models");
@@ -165,8 +217,8 @@ router.get("/narapidana", async (req, res) => {
             moment(val.tanggalKeluar).diff(
               moment(val.tanggalMasuk),
               "months",
-              true
-            )
+              true,
+            ),
           ) *
             (2 / 3) >
           Math.round(moment(val.tanggalKeluar).diff(moment(), "months", true))
@@ -320,17 +372,17 @@ router.post("/kunjunganUsers", async (req, res) => {
     img: fileUpload(
       ktp,
       "image",
-      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`,
     ),
     selfi: fileUpload(
       selfi,
       "image",
-      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`,
     ),
     suratIzin: fileUpload(
       suratIzin,
       "image",
-      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`
+      `/kunjungan/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`,
     ),
     // img: ktpData
     //   ? "/upload/kunjungan/" +
@@ -404,26 +456,98 @@ router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
     img: fileUpload(
       KTA,
       "image",
-      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_kta`
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_kta`,
     ),
     selfi: fileUpload(
       selfi,
       "image",
-      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`,
     ),
     suratIzin: fileUpload(
       suratIzin,
       "image",
-      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`,
     ),
     suratKuasa: fileUpload(
       suratKuasa,
       "image",
-      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_suratKuasa`
+      `/kunjunganKuasaHukum/${moment().format("YYYY-MM-DD")}_${uuid}_suratKuasa`,
     ),
   };
 
   await kunjungan_kuasa_hukum.create(data);
+
+  res.json({
+    status: 200,
+    massage: "Berhasil dibuat",
+    data: data,
+  });
+});
+
+router.post("/kunjunganUsersAph", async (req, res) => {
+  const { nama, NIA, tahanan, noHp, lembaga, tujuan } = req.body;
+  const { suratTugas, KTA, suratIzin, selfi } = req.files;
+
+  const uuid = Crypto.randomUUID();
+
+  const { kunjungan_aph } = require("../models");
+
+  const totalWaktuKunj = await kunjungan_aph.findAll({
+    where: {
+      waktuKunjungan: moment().format("YYYY-MM-DD"),
+    },
+  });
+
+  if (totalWaktuKunj.length > 200) {
+    return res.json({
+      status: 400,
+      massage: "Maaf, Waktu Kunjungan Melebihi Batas",
+    });
+  }
+
+  const fileUpload = (files, type, dirname) => {
+    if (files) {
+      let nameFile = "/upload" + dirname + files.name;
+      files.mv(require("path").join(__dirname, "../../public" + nameFile));
+      return nameFile;
+    } else {
+      return null;
+    }
+  };
+
+  const data = {
+    uuid: uuid,
+    waktuKunjungan: moment().format("YYYY-MM-DD"),
+    user_id: 0,
+    nama: nama,
+    NIA: NIA,
+    lembaga: lembaga,
+    tujuan: tujuan,
+    tahanan_id: tahanan,
+    noHp: noHp,
+    img: fileUpload(
+      KTA,
+      "image",
+      `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_kta`,
+    ),
+    selfi: fileUpload(
+      selfi,
+      "image",
+      `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`,
+    ),
+    suratIzin: fileUpload(
+      suratIzin,
+      "image",
+      `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`,
+    ),
+    suratTugas: fileUpload(
+      suratTugas,
+      "image",
+      `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratTugas`,
+    ),
+  };
+
+  await kunjungan_aph.create(data);
 
   res.json({
     status: 200,
@@ -511,42 +635,42 @@ router.post("/pengajuanUsers", async (req, res) => {
     ktp: fileUpload(
       ktp,
       "image",
-      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`,
     ),
     files1: fileUpload(
       files1,
       "application",
-      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files1`
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files1`,
     ),
     files2: fileUpload(
       files2,
       "application",
-      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files2`
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files2`,
     ),
     files3: fileUpload(
       files3,
       "application",
-      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files3`
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files3`,
     ),
     files4: fileUpload(
       files4,
       "application",
-      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files4`
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files4`,
     ),
     files5: fileUpload(
       files5,
       "application",
-      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files5`
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files5`,
     ),
     files6: fileUpload(
       files6,
       "application",
-      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files6`
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files6`,
     ),
     files7: fileUpload(
       files7,
       "application",
-      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files7`
+      `/pengajuan/${moment().format("YYYY-MM-DD")}_${uuid}_files7`,
     ),
   };
 
@@ -682,7 +806,7 @@ router.post("/titipanUsers", async (req, res) => {
     img: fileUpload(
       ktp,
       "image",
-      `/titipan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`
+      `/titipan/${moment().format("YYYY-MM-DD")}_${uuid}_ktp`,
     ),
     // img: ktp
     //   ? "/upload/titipan/" +

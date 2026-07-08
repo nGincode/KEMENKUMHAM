@@ -64,6 +64,29 @@ export default function Index({ userData, setuserData }: any) {
             } catch (error: any) {
                 toast.error(error.response.data.massage);
             }
+        } else if (value?.[1] == 'aph') {
+            try {
+                await axios({
+                    method: "GET",
+                    url: '/api/kunjunganAph/' + value[0],
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }).then((res: any) => {
+                    if (res.data.data) {
+                        window.open(
+                            url + '/suratIzinAph.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                            '_blank'
+                        );
+                    } else {
+                        return toast.error('Kode Barcode Tidak Sesuai');
+                    }
+                }).catch(error => {
+                    return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
+                });
+            } catch (error: any) {
+                toast.error(error.response.data.massage);
+            }
         } else {
             if (value?.[1] == 'kuasa_hukum') {
                 try {
@@ -141,6 +164,29 @@ export default function Index({ userData, setuserData }: any) {
                     }
                 }).catch(error => {
                     // return toast.error('Kode Barcode Tidak Sesuai');
+                });
+            } catch (error: any) {
+                // toast.error(error.response.data.massage);
+            }
+        } else if (value?.[1] == 'aph') {
+            try {
+                await axios({
+                    method: "GET",
+                    url: '/api/kunjunganAph/' + value[0],
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }).then((res: any) => {
+                    if (res.data.data) {
+                        window.open(
+                            url + '/suratIzinAph.html?uuid=' + value?.[0] + '&petugas=' + userData.namaLengkap + '&NIP=' + userData.NIP,
+                            '_blank'
+                        );
+                    } else {
+                        // return toast.error('Kode Barcode Tidak Sesuai');
+                    }
+                }).catch(error => {
+                    // return toast.error('Kode Barcode Tidak Sesuai, Server Sedang Sibuk');
                 });
             } catch (error: any) {
                 // toast.error(error.response.data.massage);

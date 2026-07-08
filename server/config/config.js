@@ -1,9 +1,9 @@
 module.exports = {
   development: {
-    username: "root",
-    password: "",
+    username: "postgres",
+    password: "postgres",
     database: "easy_rube_app",
     host: "127.0.0.1",
-    dialect: "mysql",
+    dialect: "postgres",
   },
 };

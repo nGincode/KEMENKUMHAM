@@ -216,7 +216,7 @@ export default function ReactTable({ showData, search, action, modalData, dataFa
     let array: any = [];
     if (data?.[0]) {
         Object.keys(data[0]).map((val: any, i: number) => {
-            if (val == 'uuid' || val == 'addressJson' || val == 'itemJson' || val == 'id' || val == 'tahanan_id' || val == 'historyKunjungan') { } else {
+            if (val == 'tahanan_ids_string' || val == 'uuid' || val == 'addressJson' || val == 'itemJson' || val == 'id' || val == 'tahanan_id' || val == 'historyKunjungan') { } else {
                 if (val === 'img') {
                     array.push({
                         id: showData?.includes('img') ? 'img2' : 'img',
@@ -586,6 +586,9 @@ export default function ReactTable({ showData, search, action, modalData, dataFa
                             : null}
                         {action.kunjunganKuasaHukum ?
                             <a target="_blank" href={'suratIzinKuasaHukum.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
+                            : null}
+                        {action.kunjunganAph ?
+                            <a target="_blank" href={'suratIzinAph.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
                             : null}
                         {action.titipan ?
                             <a target="_blank" href={'titipan.html?uuid=' + row.original.uuid + '&petugas=' + action.userData?.namaLengkap + '&NIP=' + action.userData?.NIP} ><i className="iconly-Light-Scan hp-cursor-pointer hp-transition hp-hover-text-color-primary-1 text-black-80 mr-2" style={{ fontSize: "24px" }} /></a>
