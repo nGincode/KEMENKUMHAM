@@ -13,7 +13,6 @@ COPY package*.json ./
 RUN npm install
 
 RUN chmod +x node_modules/.bin/next
-RUN npm run build
 
 # Copy semua source code
 COPY . .
