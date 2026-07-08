@@ -6,6 +6,7 @@ services:
     network_mode: "host"
     volumes:
       - ./.env:/app/.env
+      - ./public/uploads:/app/public/uploads
     ports:
       - "1999:1999"
     environment:
