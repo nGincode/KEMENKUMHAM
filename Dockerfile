@@ -12,6 +12,9 @@ COPY package*.json ./
 # Install dependencies (termasuk devDependencies untuk build Next.js)
 RUN npm install
 
+RUN chmod +x node_modules/.bin/next
+RUN npm run build
+
 # Copy semua source code
 COPY . .
 
