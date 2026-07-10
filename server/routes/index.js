@@ -485,25 +485,14 @@ router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
 });
 
 router.post("/kunjunganUsersAph", async (req, res) => {
-  const { nama, NIA, tahanan, noHp, lembaga, tujuan } = req.body;
+  const { nama, NIA, tahanan, noHp, lembaga, tujuan } = req.body; // tahanan sekarang berupa array
   const { suratTugas, KTA, suratIzin, selfi } = req.files;
 
+  const { kunjungan_aph, sequelize } = require("../models"); // Pastikan sequelize di-require
   const uuid = Crypto.randomUUID();
 
-  const { kunjungan_aph } = require("../models");
-
-  const totalWaktuKunj = await kunjungan_aph.findAll({
-    where: {
-      waktuKunjungan: moment().format("YYYY-MM-DD"),
-    },
-  });
-
-  if (totalWaktuKunj.length > 200) {
-    return res.json({
-      status: 400,
-      massage: "Maaf, Waktu Kunjungan Melebihi Batas",
-    });
-  }
+  // 1. Jalankan Transaksi
+  const t = await sequelize.transaction();
 
   const fileUpload = (files, type, dirname) => {
     if (files) {
@@ -515,45 +504,57 @@ router.post("/kunjunganUsersAph", async (req, res) => {
     }
   };
 
-  const data = {
-    uuid: uuid,
-    waktuKunjungan: moment().format("YYYY-MM-DD"),
-    user_id: 0,
-    nama: nama,
-    NIA: NIA,
-    lembaga: lembaga,
-    tujuan: tujuan,
-    tahanan_id: tahanan,
-    noHp: noHp,
-    img: fileUpload(
-      KTA,
-      "image",
-      `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_kta`,
-    ),
-    selfi: fileUpload(
-      selfi,
-      "image",
-      `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`,
-    ),
-    suratIzin: fileUpload(
-      suratIzin,
-      "image",
-      `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`,
-    ),
-    suratTugas: fileUpload(
-      suratTugas,
-      "image",
-      `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratTugas`,
-    ),
-  };
+  try {
+    const data = {
+      uuid: uuid,
+      waktuKunjungan: moment().format("YYYY-MM-DD"),
+      user_id: 0,
+      nama: nama,
+      NIA: NIA,
+      lembaga: lembaga,
+      tujuan: tujuan,
+      noHp: noHp,
+      img: fileUpload(
+        KTA,
+        "image",
+        `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_kta`,
+      ),
+      selfi: fileUpload(
+        selfi,
+        "image",
+        `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`,
+      ),
+      suratIzin: fileUpload(
+        suratIzin,
+        "image",
+        `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`,
+      ),
+      suratKuasa: fileUpload(
+        suratTugas,
+        "image",
+        `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratTugas`,
+      ),
+    };
 
-  await kunjungan_aph.create(data);
+    // 2. Simpan ke kunjungan_aph
+    const newKunjungan = await kunjungan_aph.create(data, { transaction: t });
 
-  res.json({
-    status: 200,
-    massage: "Berhasil dibuat",
-    data: data,
-  });
+    // 3. Simpan relasi ke tabel pivot (kunjungan_aph_tahanan)
+    // tahanan biasanya dikirim sebagai array string ["1", "2"], kita perlu memastikan ini
+    const tahananIds = Array.isArray(tahanan) ? tahanan : [tahanan];
+    await newKunjungan.addTahanans(tahananIds, { transaction: t });
+
+    await t.commit();
+
+    res.json({
+      status: 200,
+      message: "Berhasil dibuat",
+      data: newKunjungan,
+    });
+  } catch (error) {
+    await t.rollback();
+    res.status(500).json({ status: 500, message: error.message });
+  }
 });
 
 router.post("/pengajuanUsers", async (req, res) => {
