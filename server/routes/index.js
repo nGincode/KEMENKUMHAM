@@ -413,7 +413,8 @@ router.post("/kunjunganUsers", async (req, res) => {
 });
 
 router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
-  const { nama, NIA, tahanan, noHp, lembaga, tujuan } = req.body;
+  const { nama, NIA, noHp, lembaga, tujuan } = req.body;
+  const tahanan = req.body["tahanan[]"];
   const { suratKuasa, KTA, suratIzin, selfi } = req.files;
 
   const uuid = Crypto.randomUUID();
@@ -451,7 +452,7 @@ router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
     NIA: NIA,
     lembaga: lembaga,
     tujuan: tujuan,
-    tahanan_id: tahanan,
+    tahanan_id: tahanan ?? null,
     noHp: noHp,
     img: fileUpload(
       KTA,
@@ -485,8 +486,9 @@ router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
 });
 
 router.post("/kunjunganUsersAph", async (req, res) => {
-  const { nama, NIA, tahanan, noHp, lembaga, tujuan } = req.body; // tahanan sekarang berupa array
-  const { suratTugas, KTA, suratIzin, selfi } = req.files;
+  const { nama, NIA, noHp, lembaga, tujuan } = req.body; // tahanan sekarang berupa array
+  const tahanan = req.body["tahanan[]"];
+  const { suratKuasa, KTA, suratIzin, selfi } = req.files;
 
   const { kunjungan_aph, sequelize } = require("../models"); // Pastikan sequelize di-require
   const uuid = Crypto.randomUUID();
@@ -530,18 +532,16 @@ router.post("/kunjunganUsersAph", async (req, res) => {
         `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`,
       ),
       suratKuasa: fileUpload(
-        suratTugas,
+        suratKuasa,
         "image",
-        `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratTugas`,
+        `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratKuasa`,
       ),
     };
 
-    // 2. Simpan ke kunjungan_aph
     const newKunjungan = await kunjungan_aph.create(data, { transaction: t });
 
-    // 3. Simpan relasi ke tabel pivot (kunjungan_aph_tahanan)
-    // tahanan biasanya dikirim sebagai array string ["1", "2"], kita perlu memastikan ini
     const tahananIds = Array.isArray(tahanan) ? tahanan : [tahanan];
+
     await newKunjungan.addTahanans(tahananIds, { transaction: t });
 
     await t.commit();
