@@ -65,11 +65,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      suratKuasa: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      suratIzin: {
+      suratTugas: {
         type: DataTypes.STRING,
         allowNull: true,
       },

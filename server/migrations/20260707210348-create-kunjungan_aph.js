@@ -53,11 +53,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      suratKuasa: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      suratIzin: {
+      suratTugas: {
         type: Sequelize.STRING,
         allowNull: true,
       },

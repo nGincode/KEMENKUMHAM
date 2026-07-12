@@ -488,7 +488,7 @@ router.post("/kunjunganUsersKuasaHukum", async (req, res) => {
 router.post("/kunjunganUsersAph", async (req, res) => {
   const { nama, NIA, noHp, lembaga, tujuan } = req.body; // tahanan sekarang berupa array
   const tahanan = req.body["tahanan[]"];
-  const { suratKuasa, KTA, suratIzin, selfi } = req.files;
+  const { suratTugas, KTA, selfi } = req.files;
 
   const { kunjungan_aph, sequelize } = require("../models"); // Pastikan sequelize di-require
   const uuid = Crypto.randomUUID();
@@ -526,15 +526,10 @@ router.post("/kunjunganUsersAph", async (req, res) => {
         "image",
         `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_selfi`,
       ),
-      suratIzin: fileUpload(
-        suratIzin,
+      suratTugas: fileUpload(
+        suratTugas,
         "image",
-        `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratIzin`,
-      ),
-      suratKuasa: fileUpload(
-        suratKuasa,
-        "image",
-        `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratKuasa`,
+        `/kunjunganAph/${moment().format("YYYY-MM-DD")}_${uuid}_suratTugas`,
       ),
     };
 
